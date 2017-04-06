@@ -206,6 +206,12 @@
             </span>
           {% endif %}
 
+          {% if theme.leancloud_visitors.enable %}
+         <span id="{{ url_for(post.path) }}"class="leancloud_visitors"  data-flag-title="{{ post.title }}">
+            &nbsp; | &nbsp; {{__('post.visitors')}}
+            </span>
+          {% endif %}
+
           {% if theme.post_wordcount.wordcount or theme.post_wordcount.min2read %}
             <div class="post-wordcount">
               {% if theme.post_wordcount.wordcount %}
