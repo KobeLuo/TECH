@@ -17,10 +17,11 @@ GCD是基于队列的封装，**下面浅要解析GCD的队列**。</blockquote>
 下面是Apple官方提供的获取线程相关函数
 
 - void dispatch_sync(dispatch_queue_t queue, dispatch_block_t block);获取一个异步线程队列，queue用于指定block执行体所在的队列
+<!--more-->
 - void dispatch_sync_f(dispatch_queue_t queue,void *_Nullable contex,dispatch_function_t work); 跟dispatch_sync类似，只不过接收的是一个dispatch_function_t的函数。
 - void dispatch_async(dispatch_queue_t queue, dispatch_block_t block); 获取一个异步线程，接收一个闭包block.
 - void dispatch_async_f(dispatch_queue_t queue,void *_Nullable context,dispatch_function_t work);获取一个异步线程,接收一个函数指针.
-<!--more-->
+
 ### GCD获取队列的方式
 
 -  dispatch_queue_t dispatch_get_main_queue() //获取主队列
@@ -43,25 +44,22 @@ QOS_CLASS_UTILITY                     //低优先级，等同于DISPATCH_QUEUE_P
 QOS_CLASS_BACKGROUND         //后台级,用户用户无法感知的一些数据处理，等同于DISPATCH_QUEUE_PRIORITY_BACKGROUND
 ```
 
-- 自己创建的队列.
+- 自己创建的队列
 
-``dispatch_queue_t dispatch_queue_create(const char *_Nullable label,dispatch_queue_attr_t _Nullable attr);``
-label表示该队列的唯一标识字符串，可以使用
-``const char *dispatch_queue_get_label(dispatch_queue_t _Nullable queue);``来获取该字符串,参数二attr指定队列的执行顺序，有以下参数:
-
+GCD中使用dispatch_queue_t dispatch_queue_create(const char *_Nullable label,dispatch_queue_attr_t _Nullable attr);来创建一个队列，其中label表示该队列的唯一标识字符串，使用const char *dispatch_queue_get_label(dispatch_queue_t _Nullable queue);来获取该字符串,参数attr指定队列的执行顺序，有以下参数:
 ```
-DISPATCH_QUEUE_SERIAL                 //指定串行（FIFO）队列,等同于传入参数NULL
+DISPATCH_QUEUE_SERIAL        //指定串行（FIFO）队列,等同于传入参数NULL
 DISPATCH_QUEUE_CONCURRENT    //指定并发队列,
-dispatch_queue_attr_t dispatch_queue_attr_make_with_qos_class(dispatch_queue_attr_t _Nullable attr,dispatch_qos_class_t qos_class, int relative_priority);产生一个基于QOS_CLASS的队列.
+dispatch_queue_attr_t dispatch_queue_attr_make_with_qos_class(dispatch_queue_attr_t _Nullable attr,dispatch_qos_class_t qos_class, int relative_priority);//产生一个基于QOS_CLASS的队列.
 ```
 
-### dispatch_apply应用
+#### dispatch_apply应用
 
 dispatch_apply必须要结合dispatch_async 或者dispatch_async_f函数一起使用,如果脱离了dispatch_async函数,程序很容易crash，需要特别关注.
-在指定的queue中去直接执行dispatch_appl(count,queue,block);会直接引发crash!
+在指定的queue中去直接执行dispatch_apply(count,queue,block);会直接引发crash!
 
 - void dispatch_apply(size_t iterations, dispatch_queue_t queue,DISPATCH_NOESCAPE void (^block)(size_t));
-应用一个block,执行block代码块iterations次，每次执行的index通过size_t参数传递到block代码块内部
+应用一个block,循环执行block代码块的次数是iterations次，每次执行的index通过size_t参数传递到block代码块内部
 *queue*:指定apply函数接收的闭包block执行对应的队列方式,如果是串行队列,跟for循环功能一致，无法达到优化性能的目的。
 如果是并行队列,则重复执行block的顺序不定,以达到优化性能的目的，下面是2个简单的例子:
 
@@ -271,4 +269,4 @@ NSLog(@"context is : %@",[NSString stringWithUTF8String:dispatch_queue_get_speci
 ```
 
 {% note info %} PS：
-dispatch_queue的知识大致如此，水平有限，如有错误之处，请各位大神及时指出 {% endnote %}
+dispatch_queue的知识大致如此，水平有限，如有错误之处，请及时指出 {% endnote %}
