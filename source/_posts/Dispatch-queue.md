@@ -20,7 +20,7 @@ GCD是基于队列的封装，**下面浅要解析GCD的队列**。</blockquote>
 - void dispatch_sync_f(dispatch_queue_t queue,void *_Nullable contex,dispatch_function_t work); 跟dispatch_sync类似，只不过接收的是一个dispatch_function_t的函数。
 - void dispatch_async(dispatch_queue_t queue, dispatch_block_t block); 获取一个异步线程，接收一个闭包block.
 - void dispatch_async_f(dispatch_queue_t queue,void *_Nullable context,dispatch_function_t work);获取一个异步线程,接收一个函数指针.
-
+<!--more-->
 ### GCD获取队列的方式
 
 -  dispatch_queue_t dispatch_get_main_queue() //获取主队列
