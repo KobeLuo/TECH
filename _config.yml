@@ -81,4 +81,4 @@ search:
 deploy:
   type: git
   repo: git@KobeV5:KobeLuo/KobeLuo.github.io.git
-  branch: master
+  branch: gh-pages
