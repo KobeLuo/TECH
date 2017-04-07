@@ -297,7 +297,7 @@ mathjax:
 
 # Disqus
 disqus:
-  enable: false
+  enable: true
   shortname:
   count: true
 
@@ -379,7 +379,7 @@ facebook_sdk:
 facebook_comments_plugin:
   enable: false
   num_of_posts: 10  # min posts num is 1
-  width: 100%       # default width is 550px
+  width: 100  %       # default width is 550px
   scheme: light     # default scheme is light (light or dark)
 
 # VKontakte API Support.
@@ -419,7 +419,7 @@ busuanzi_count:
 
 
 # Tencent analytics ID
-# tencent_analytics:
+tencent_analytics: 61591835
 
 # Tencent MTA ID
 # tencent_mta:
