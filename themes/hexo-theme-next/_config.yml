@@ -376,11 +376,11 @@ facebook_sdk:
 # Facebook comments plugin
 # This plugin depends on Facebook SDK.
 # If facebook_sdk.enable is false, Facebook comments plugin is unavailable.
-facebook_comments_plugin:
-  enable: false
-  num_of_posts: 10  # min posts num is 1
-  width: 100  %       # default width is 550px
-  scheme: light     # default scheme is light (light or dark)
+# facebook_comments_plugin:
+  # enable: false
+  # num_of_posts: 10  # min posts num is 1
+  # width: 100  %       # default width is 550px
+  # scheme: light     # default scheme is light (light or dark)
 
 # VKontakte API Support.
 # To get your AppID visit https://vk.com/editapp?act=create
@@ -401,25 +401,25 @@ leancloud_visitors:
 
 # Show PV/UV of the website/page with busuanzi.
 # Get more information on http://ibruce.info/2015/04/04/busuanzi/
-busuanzi_count:
-  # count values only if the other configs are false
-  enable: false
-  # custom uv span for the whole site
-  site_uv: true
-  site_uv_header: <i class="fa fa-user"></i>
-  site_uv_footer:
-  # custom pv span for the whole site
-  site_pv: true
-  site_pv_header: <i class="fa fa-eye"></i>
-  site_pv_footer:
-  # custom pv span for one page only
-  page_pv: true
-  page_pv_header: <i class="fa fa-file-o"></i>
-  page_pv_footer:
+# busuanzi_count:
+#   # count values only if the other configs are false
+#   enable: false
+#   # custom uv span for the whole site
+#   site_uv: true
+#   site_uv_header: <i class="fa fa-user"></i>
+#   site_uv_footer:
+#   # custom pv span for the whole site
+#   site_pv: true
+#   site_pv_header: <i class="fa fa-eye"></i>
+#   site_pv_footer:
+#   # custom pv span for one page only
+#   page_pv: true
+#   page_pv_header: <i class="fa fa-file-o"></i>
+#   page_pv_footer:
 
 
 # Tencent analytics ID
-tencent_analytics: 61591835
+# tencent_analytics: 61591835
 
 # Tencent MTA ID
 # tencent_mta:
