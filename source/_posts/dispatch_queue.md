@@ -1,6 +1,7 @@
 ---
-title: Dispatch_queue
+title: GCD系列:队列(dispatch_queue)
 date: 2017-03-20 11:44:22
+type: "categories"
 categories: Objective-C
 tags: [GCD,Dispatch queue,队列]
 ---
@@ -268,5 +269,7 @@ NSLog(@"context is : %@",[NSString stringWithUTF8String:dispatch_queue_get_speci
 
 ```
 
-{% note info %} PS：
-dispatch_queue的知识大致如此，水平有限，如有错误之处，请及时指出 {% endnote %}
+{% note info %} 
+PS：
+dispatch_queue的知识大致如此，水平有限，如有错误之处，请及时指出 
+{% endnote %}
