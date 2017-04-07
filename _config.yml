@@ -5,7 +5,7 @@
 # Site
 title: kobeLuo的技术笔记
 subtitle: 简于心 精于行
-description:
+description: 一个iOS和Mac OS开发的技术渣
 author: luo gang
 language: zh-Hans
 timezone: Asia/Shanghai
@@ -45,8 +45,8 @@ highlight:
 
 # Category & Tag
 default_category: uncategorized
-category_map:
-tag_map:
+category_map: categories
+tag_map: tags
 
 # Date / Time format
 ## Hexo uses Moment.js to parse and display date
