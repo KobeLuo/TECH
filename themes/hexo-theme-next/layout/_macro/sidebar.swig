@@ -39,7 +39,8 @@
 
           {% if config.archive_dir != '/' %}
             <div class="site-state-item site-state-posts">
-              <a href="{{ url_for(theme.menu.archives) }}">
+              <!-- <a href="{{ url_for(theme.menu.archives) }}"> -->
+              <a href="/archives">
                 <span class="site-state-item-count">{{ site.posts.length }}</span>
                 <span class="site-state-item-name">{{ __('state.posts') }}</span>
               </a>
@@ -47,27 +48,26 @@
           {% endif %}
 
           {% if site.categories.length > 0 %}
-            {% set categoriesPageQuery = site.pages.find({type: 'categories'}, {lean: true}) %}
-            {% set hasCategoriesPage = categoriesPageQuery.length > 0 %}
             <div class="site-state-item site-state-categories">
-              {% if hasCategoriesPage %}<a href="{{ url_for(categoriesPageQuery[0].path) }}">{% endif %}
+              <!-- {% if theme.menu.categories %}<a href="{{ url_for(theme.menu.categories) }}">{% endif %} -->
+              <a href="/categories">
                 <span class="site-state-item-count">{{ site.categories.length }}</span>
                 <span class="site-state-item-name">{{ __('state.categories') }}</span>
-              {% if hasCategoriesPage %}</a>{% endif %}
+              <!-- {% if theme.menu.categories %}</a>{% endif %} -->
+              </a>
             </div>
           {% endif %}
 
           {% if site.tags.length > 0 %}
-            {% set tagsPageQuery = site.pages.find({type: 'tags'}, {lean: true}) %}
-            {% set hasTagsPage = tagsPageQuery.length > 0 %}
             <div class="site-state-item site-state-tags">
-              {% if hasTagsPage %}<a href="{{ url_for(tagsPageQuery[0].path) }}">{% endif %}
+              <!-- {% if theme.menu.tags %}<a href="{{ url_for(theme.menu.tags) }}">{% endif %} -->
+              <a href="/tags">
                 <span class="site-state-item-count">{{ site.tags.length }}</span>
                 <span class="site-state-item-name">{{ __('state.tags') }}</span>
-              {% if hasTagsPage %}</a>{% endif %}
+              <!-- {% if theme.menu.tags %}</a>{% endif %} -->
+              </a>
             </div>
           {% endif %}
-
         </nav>
 
         {% if theme.rss %}
