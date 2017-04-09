@@ -3,7 +3,8 @@
 # ---------------------------------------------------------------
 
 # Put your favicon.ico into `hexo-site/source/` directory.
-favicon: /images/favicon.ico
+# favicon: /images/favicon.ico
+favicon: https://dn-anine.qbox.me/favicon.ico
 
 # Set default keywords (Use a comma to separate)
 keywords: "Hexo, NexT"
