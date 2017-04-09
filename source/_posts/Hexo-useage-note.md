@@ -1,5 +1,5 @@
 ---
-title: Hexo useage note
+title: Hexo使用笔记
 type: categories
 comments: true
 date: 2017-04-07 21:20:19
