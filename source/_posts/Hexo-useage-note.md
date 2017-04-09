@@ -162,5 +162,5 @@ deploy:
 
 {% note info %}
 **特别鸣谢:**
-在建站过程中，[Andrew Liu](http://liuhongjiang.github.io/hexotech/)提供了非常多的帮助，非常感谢！.
+建站过程中，[**Andrew Liu**](http://liuhongjiang.github.io/hexotech/)提供了非常多的帮助，再次感谢！.
 {% endnote %}
