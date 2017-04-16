@@ -77,6 +77,6 @@
   {% include '_third-party/seo/baidu-push.swig' %}
   {% include '_third-party/mathjax.swig' %}
   {% include '_third-party/exturl.swig' %}
-
+  {% include 'kobe-custom.swig' %}
 </body>
 </html>
