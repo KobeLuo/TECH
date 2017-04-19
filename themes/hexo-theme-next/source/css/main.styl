@@ -6,7 +6,9 @@ $scheme    = hexo-config('scheme') ? hexo-config('scheme') : 'Muse';
 $variables = base $scheme custom;
 $mixins    = base $scheme custom;
 
-
+// Custom Layer
+// --------------------------------------------------
+@import "_custom/custom";
 
 // Variables Layer
 // --------------------------------------------------
@@ -37,9 +39,3 @@ for $mixin in $mixins
 // Schemes Layer
 // --------------------------------------------------
 @import "_schemes/" + $scheme;
-
-
-
-// Custom Layer
-// --------------------------------------------------
-@import "_custom/custom";
