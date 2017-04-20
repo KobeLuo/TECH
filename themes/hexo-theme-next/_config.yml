@@ -154,8 +154,8 @@ social_icons:
 
 
 reward_comment: 坚持原创技术分享，您的支持将鼓励我继续创作！
-wechatpay: /images/wechat-reward-image.jpeg
-alipay: /images/alipay-reward-image.jpeg
+wechatpay: https://dn-anine.qbox.me/reward_wechat.jpeg
+alipay: https://dn-anine.qbox.me/reward_alipay.jpeg
 # Sidebar Avatar
 # in theme directory(source/images): /images/avatar.jpg
 # in site  directory(source/uploads): /uploads/avatar.jpg
