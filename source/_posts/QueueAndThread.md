@@ -3,7 +3,7 @@ title: OC中的多线程理解
 type: categories
 comments: true
 date: 2017-04-14 18:35:33
-categories: OC
+categories: Objective-C
 tags: [线程，队列，同步，异步，串行，并行，多线程]
 ---
 

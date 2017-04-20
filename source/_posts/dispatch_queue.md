@@ -103,7 +103,7 @@ dispatch_async(dispatch_get_main_queue(), ^{
 
 		NSLog(@"index....%lu",index);
 	});
-	//dispatch_apply是串行执行，知道10次invoke complete的时候，才继续往下执行.
+	//dispatch_apply是串行执行，直到10次invoke complete的时候，才继续往下执行.
 	NSLog(@"ddddd");
 	});
 }
