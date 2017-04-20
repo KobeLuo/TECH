@@ -8,7 +8,9 @@ tags: [线程，队列，同步，异步，串行，并行，多线程]
 ---
 
 {% cq %}
-这篇博客，系统的讲解，
+这段时间面试较多，
+发现很多OC开发者连多线程中的一些基本概念都很模糊，
+为了帮助到大家理解，这篇文章系统的阐述了
 **线程和队列？
 同步和异步？
 串行与并行？**
@@ -49,7 +51,8 @@ dispatch_queue_create(const char *_Nullable label,dispatch_queue_attr_t _Nullabl
 //创建一个队列，label用来指定队列的特定标识，attr用来指定队列调度的方式是串行还是并行。
 {% endcodeblock %}
 
-- dispatch_get_main_queue() 用来获取主队列，该队列非常特殊,它直接是关联到主线程上面的，<span class="conclusion" id="user-content-mainQueue">也就是说，所有的任务加到该队列上都会自动在主线程中执行</span>,关于这一点，我们会在下面举例说明，你可以使用三种方法`dispatch_main`,` UIApplicationMain (iOS) or NSApplicationMain (macOS)`或` CFRunLoopRef`来调用提交到主线程的任务;由于是系统派发管理的队列，在该队列上使用 `dispatch_suspend`, `dispatch_resume`, `dispatch_set_context`无效。
+
+- dispatch_get_main_queue() 用来获取主队列，该队列非常特殊,它直接是关联到主线程上面的，[查看解释](#user-content-mainQueue),<span class="conclusion">也就是说，所有的任务加到该队列上都会自动在主线程中执行</span>,关于这一点，我们会在下面举例说明，你可以使用三种方法`dispatch_main`,` UIApplicationMain (iOS) or NSApplicationMain (macOS)`或` CFRunLoopRef`来调用提交到主线程的任务;由于是系统派发管理的队列，在该队列上使用 `dispatch_suspend`, `dispatch_resume`, `dispatch_set_context`无效。
 
 - dispatch_get_global_queue(long identifier, unsigned long flags) 跟main queue一样，该队列由系统派发因此无法使用GCD修改该队列，identifier推荐使用QOS方式指定，细看请右转[【GCD系列:Dispatch_queue】](http://www.kobeluo.com/TECH/2017/03/20/dispatch_queue/)
 
@@ -199,8 +202,8 @@ dispatch_queue_t queue = dispatch_queue_create("queue.demo", DISPATCH_QUEUE_SERI
 <span class="conclusion">尽管Queue是一个并行队列，但因为在同一线程执行循环，代码最终将串行执行下去</span>
 <hr>
 
-[主队列对应主线程](#user-content-mainQueue);
-<span class="codeDemo">2:为什么调用dispatch_get_main_queue()可以回到主线程</span>
+
+<span class="codeDemo" id="user-content-mainQueue">2:为什么调用dispatch_get_main_queue()可以回到主线程</span>
 地球人都知道，使用函数`dispatch_async(dispatch_get_main_queue(), ^{codeBlock});`可以回到主线程，
 分析代码我们发现这句代码的意思是:将脱离于当前线程（去另一个`线程T`）执行的codeBlock加入到主队列(mainQueue)中，
 那么问题来了，为什么`线程T`就一定指向了主线程呢？官方文档:`Returns the serial dispatch queue associated with the application’s main thread `
@@ -234,9 +237,114 @@ dispatch_queue_t queue = dispatch_queue_create("queue.demo", DISPATCH_QUEUE_SERI
 <hr>
 <span class="codeDemo">3:线程死锁到底是怎样造成的</span>
 
+<span class="conclusion">造成线程死锁的方式只有一种，那就是让任务之间相互等待，两个任务都永远无法完成</span>
 
-{% note info %} 
-未完，待续。。。。
-{% endnote%}
+下面我们来分析一种典型的线程死锁方式，上代码:
+{% codeblock lang:objc %}
++ (void)classicDeadlock {
 
+	NSLog(@"currentThread:%@",[NSThread currentThread]);//task 1
+	//doingTask begin
+	dispatch_sync(dispatch_get_main_queue(), ^{
+
+		NSLog(@"dead lock ....");//task 2
+	});
+	//doingTask end
+
+	NSLog(@"classic method test end!");// task3
+}
+
+调用方式如下://invoke deadlock method
+dispatch_async(dispatch_get_main_queue(), ^{
+
+	[[self class] classicDeadlock]; //task 0
+});
+{% endcodeblock %}
+**代码解释:**
+- classicDeadlock中task1处打印了当前线程，然后将 在当前线程执行的task2加入到mainqueue中，最后是task3。
+- 调用方式，使用mainqueue的特性将类方法调度至主线程执行,[查看理解](#user-content-mainQueue);。
+
+**执行结果:**
+这段代码执行完成task1之后就将陷入死锁，那么造成死锁的原因到底是什么？这篇文章上面的基础概念应该可以给你满意的答案。
+来来来，我们一步一步的分析这段代码:
+{% codeblock lang:objc %}
+1.假设mainQueue当前是空闲状态，如下:
+mainQueue:____________________
+
+2.调用函数(invoke deadlock method),调用此函数时,将task0加入到mainQueue中，mainQueue如下:
+mainQueue:__task0__________________
+
+3.执行task0，task0的执行图如下:
+task0(mainThread)  
+	- task1
+	- task2 ，task2是同步执行的，因此task3需要等待task2执行结束。
+	- task3
+
+- 执行task1,
+- 紧接着就是将同步执行task2加入到mainQueue中,此时mainQueue任务列表如下:
+mainQueue:__task0__task2______________
+
+由于mainQueue是系统派发的串行队列，！！！！所以task2需要等待task0执行结束，
+而此时task0执行到doingTask处，task2是同步加入到mainqueue中的，因此，！！！！task0又必须等待task2执行结束。
+这样:task2和task0其实就形成了相互等待，永远也不可能完成，即造成了主线程死锁。
+{% endcodeblock %}
+
+{% note info %}
+<span id="user-content-deadlock">通过以上分析可以发现,造成线程死锁的条件就是:</span>
+<span class="conclusion">代码块A由串行队列调度并在指定线程执行,代码块A中包含了一个代码块B，其属性是加入到代码块A所在的队列中去同步执行代码块B</span>
+{% endnote %}
+
+
+<br>
+
+<span class="conclusion">假设我们将`//doingTask`处改成dispatch_async，还会造成死锁吗？ 由于mainqueue的特殊性[查看理解](#user-content-mainQueue);答案是:肯定的。</span>
+
+<hr>
+
+**现在我们把问题引申到多线程中的任意线程:**，顺便复习一下线程死锁的条件，来看一下代码：
+{% codeblock lang:objc %}
+
++ (void)testThreadDeadlockQithQueue:(dispatch_queue_t)queue {
+
+	NSLog(@"currentThread:%@",[NSThread currentThread]);//task 5
+	//codeBlock 2 begin
+	dispatch_sync(queue, ^{
+
+		NSLog(@"dead lock ....");//task 6
+	});
+	//codeBlock 2 end
+	NSLog(@"classic method test end!");// task7
+}
+
+调用处这样写：
+dispatch_queue_t serialQueue = dispatch_queue_create("serial.queque.demo", DISPATCH_QUEUE_SERIAL);
+dispatch_async(serialQueue, ^{
+
+	[[self class] testThreadDeadlockQithQueue:serialQueue]; //task 4
+});
+
+{% endcodeblock %}
+
+按照上面描述的[死锁条件](#user-content-deadlock)，在类方法`testThreadDeadlockQithQueue:`调用处，
+1.创建一个serialQueue串行队列,
+2.在某个指定线程(ThreadA)中执行类方法`testThreadDeadlockQithQueue:`,代码块task4.
+3.在代码块task4中包含了一个代码块`codeBlock 2`,其属性是，在当前线程同步执行，并加入到当前线程所在的同步队列`serialQueue`中，
+4.即造成ThreadA线程死锁！！！。有兴趣的朋友可以复制代码撸一把。
+<br>
+<span class="conclusion">假设我们将`//codeBlock 2`处改成dispatch_async，还会造成死锁吗？答案是: 否定的。</span>
+由于//doingTask是异步执行的，所以实际上task0执行的代码变成了：
+**threadA**
+	task1
+	task3
+
+**threadB**
+	task2
+当mainThread执行到`//codeBlock 2`时，task2就将跳转至另外一个线程去执行，此时task0将不再等待task2的执行结束，那就不能构成死锁的条件了，由于task2依然需要等待task0执行结束，
+
+---
+
+{% note info %}
+由于博主各种杂事阐释，导致这篇博客前后经历了一周才完成，
+行文不流畅之处，多多包涵，同时也欢迎大家跟我留言:kobev5@126.com
+{% endnote %}
 
