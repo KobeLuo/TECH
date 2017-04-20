@@ -297,10 +297,10 @@ mathjax:
 #duoshuo_shortname:
 
 # Disqus
-disqus:
-  enable: true
-  shortname:
-  count: true
+# disqus:
+#   enable: true
+#   shortname:
+#   count: true
 
 # Hypercomments
 #hypercomments_id:
@@ -367,12 +367,12 @@ duoshuo_info:
 
 # Facebook SDK Support.
 # https://github.com/iissnan/hexo-theme-next/pull/410
-facebook_sdk:
-  enable: false
-  app_id:       #<app_id>
-  fb_admin:     #<user_id>
-  like_button:  #true
-  webmaster:    #true
+# facebook_sdk:
+#   enable: false
+#   app_id:       #<app_id>
+#   fb_admin:     #<user_id>
+#   like_button:  #true
+#   webmaster:    #true
 
 # Facebook comments plugin
 # This plugin depends on Facebook SDK.
@@ -385,12 +385,12 @@ facebook_sdk:
 
 # VKontakte API Support.
 # To get your AppID visit https://vk.com/editapp?act=create
-vkontakte_api:
-  enable: false
-  app_id:       #<app_id>
-  like:         true
-  comments:     true
-  num_of_posts: 10
+# vkontakte_api:
+#   enable: false
+#   app_id:       #<app_id>
+#   like:         true
+#   comments:     true
+#   num_of_posts: 10
 
 
 # Show number of visitors to each article.
