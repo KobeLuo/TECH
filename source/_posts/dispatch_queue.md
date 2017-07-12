@@ -271,7 +271,7 @@ GCD允许给一个队列通过特定的key值关联属性contenxt,有点类似�
 - void *_Nullable dispatch_queue_get_specific(dispatch_queue_t queue, const void *key);
 //通过key,从一个queue读取context
 - void *_Nullable dispatch_get_specific(const void *key);
-//测试当前队列是否是key对应的queue队列（有待认证。。）
+//返回当前子系统特定的上下文(context)子系统(好无力的解释。。。😭)， 如果在一个block块中执行，并且已经设置了context,则用于获取该队列key对应的context,否则返回在目标队列中执行dispatch_get_specific()的结果；如果当前队列是一个全局并发队列,则返回NULL(全局队列由系统派发，所有的设置无效)
 示例代码如下:
 
 {% codeblock lang:objc %}

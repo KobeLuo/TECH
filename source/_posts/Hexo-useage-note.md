@@ -7,7 +7,7 @@ categories: Hexo
 tags: [hexo使用]
 ---
 
-{% cq %} 
+{% cq %}
 
 博主使用过博客站点有简书,CSDN,博客园,都不同程度的遇到了各种坑,MarkDown使用起来很不方便,文章看起来乱糟糟的,
 痛定思痛，决定使用GitPages+Hexo来实现编写博客,在完成完成Hexo配置的过程中，踩了不少坑，决定记录下来供大家参考.
@@ -25,10 +25,10 @@ tags: [hexo使用]
 
 **1.创建一个Github账号，添加一个Repository**
 
-{% note danger %} 
+{% note danger %}
 **注意： 如果想要使用username.github.io这种方式访问你的博客站点，
 Repository的名字一定要与用户名username相同**(username/username.github.io)
-仓库名创建之后一定像这样:KobeLuo/KobeLuo.github.io      
+仓库名创建之后一定像这样:KobeLuo/KobeLuo.github.io
 {% endnote %}
 博主曾经在这里踩过坑，导致博客站点报404，一直无法访问
 
@@ -62,23 +62,24 @@ Enter file in which to save the key (/Users/name/.ssh/id_rsa):**`在此输入id_
 
 #### 这里重点说一下多个github账号对应多个SSHKey账号的管理:
 如果你有多个Github账号，由于Github账号SSHKey的唯一性，就必须生成多个SSHKey，多个SSHKey只要生成的时候指定的名字不一样即可，假设你生成了两个rsa名为id_rsa_name1和id_rsa_name2,
-那么你需要在.ssh目录里边创建一个名为`config`的文件，里边的配置信息如下:
+那么你需要在.ssh目录里(`cd ~/.ssh`)创建一个名为`config`的文件，里边的配置信息如下:
 
 {% codeblock lang:objc %}
 Host kobe_old //所有使用id_rsa_kobe_old.pub作为公钥的github链接中的github.com需要换成kobe_old
-HostName 			github.com					
+HostName 			github.com
 User				git
 IdentityFile		~/.ssh/id_rsa_kobe_old
 
 Host kobe_new //所有使用id_rsa_kobe_new.pub作为公钥的github链接中的github.com需要换成kobe_new
-HostName 			github.com				
+HostName 			github.com
 User				git
-IdentityFile		~/.ssh/id_rsa_kobe_new 
+IdentityFile		~/.ssh/id_rsa_kobe_new
 {% endcodeblock %}
 {% note info %}
 从远程clone一个仓库时，例如https://github.com:KobeLuo/Kobeluo.github.io/
 当有多个SSHKey时，``需要将github.io改成kobe_new``如果该账号使用kobe_new对应的SSHKey
 更改后的远程地址是https://kobe_new:KobeLuo/Kobeluo.github.io/
+按照以上步骤添加好远程地址后，即可正常push和pull代码.
 {% endnote %}
 
 
@@ -114,7 +115,7 @@ hexo new page "foldername"
 //创建一个新页面
 hexo g  (hexo generate)
 //生成静态页面
-hexo s  (hexo server) ,如果报错就执行代码 
+hexo s  (hexo server) ,如果报错就执行代码
 //链接本地服务器
 hexo d  (hexo deploy)
 //发布到指定服务器
