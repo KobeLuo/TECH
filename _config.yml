@@ -80,5 +80,5 @@ search:
 ## Docs: https://hexo.io/docs/deployment.html
 deploy:
   type: git
-  repo: git@KobeV5:KobeLuo/TECH.git
+  repo: git@github.com:KobeLuo/TECH.git
   branch: gh-pages

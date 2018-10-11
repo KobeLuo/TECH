@@ -477,11 +477,12 @@ use_motion: true
 # Fancybox
 fancybox: true
 
-# Canvas-nest
-canvas_nest: true
+# Canvas-nest 动画
+canvas_nest: false
 
-#three_waves
+#three_waves 动画
 three_waves: false
+
 
 # Script Vendors.
 # Set a CDN address for the vendor you want to customize.
