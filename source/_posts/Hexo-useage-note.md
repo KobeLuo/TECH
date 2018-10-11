@@ -160,6 +160,8 @@ deploy:
 
 - https://hexo.io/docs/
 
+- https://www.jianshu.com/p/35e197cb1273
+
 {% note info %}
 **特别鸣谢:**
 建站过程中，[**Andrew Liu**](http://liuhongjiang.github.io/hexotech/)提供了非常多的帮助，再次感谢！.
