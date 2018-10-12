@@ -120,6 +120,8 @@ hexo d  (hexo deploy)
 //发布到指定服务器
 hexo clean //清理静态页面站点，博主使用过一次，会把git配置和hexo搞乱，慎用。
 
+npm install --save hexo-filter-flowchart 
+//画流程图的[插件](https://github.com/bubkoo/hexo-filter-flowchart)
 {% endcodeblock %}
 
 执行hexo s可能会报错，如果报错则执行以下命令：
@@ -194,17 +196,22 @@ branch: gh-pages
 
 下面是一些记录的hexo站点:
 
-- http://www.jianshu.com/p/ab21abc31153
-
-
-- http://www.jianshu.com/p/35e197cb1273
-
-
+官方站点
 - https://hexo.io/docs/
 
+hexo填坑教程
+- http://www.jianshu.com/p/ab21abc31153    
+- http://www.jianshu.com/p/35e197cb1273     
 - https://www.jianshu.com/p/35e197cb1273
+
+hexo 用法教程
+- https://www.jianshu.com/p/9a56f7c13a79     
+
+
 
 {% note info %}
 **特别鸣谢:**
 建站过程中，[**Andrew Liu**](http://liuhongjiang.github.io/hexotech/)提供了非常多的帮助，再次感谢！.
 {% endnote %}
+
+

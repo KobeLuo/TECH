@@ -17,6 +17,17 @@ root: /TECH/
 permalink: :year/:month/:day/:title/
 permalink_defaults:
 
+#流程图
+flowchart:
+  raphael: https://cdnjs.cloudflare.com/ajax/libs/raphael/2.2.7/raphael.min.js
+  flowchart: https://cdnjs.cloudflare.com/ajax/libs/flowchart/1.6.5/flowchart.min.js
+  options:
+    scale: 1
+    line-width: 2
+    line-length: 50
+    text-margin: 10
+    font-size: 12
+
 # Directory
 source_dir: source
 public_dir: public
@@ -34,7 +45,7 @@ titlecase: false # Transform title into titlecase
 external_link: true # Open external links in new tab
 filename_case: 0
 render_drafts: false
-post_asset_folder: false
+post_asset_folder: true
 relative_link: false
 future: true
 highlight:

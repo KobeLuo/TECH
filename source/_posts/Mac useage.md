@@ -17,5 +17,7 @@ tags: 常用命令
 {% endnote %}
 <!--more-->
 
+![system preference screenshot](osxfuse/fusePanel.png)
+
 
 {% cq %} xxxx xxxx xxxx {% endcq %}
