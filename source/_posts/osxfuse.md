@@ -1,5 +1,5 @@
 ---
-title: mac上建立基于osx fuse的虚拟磁盘(未完)
+title: mac上建立基于osx fuse的虚拟磁盘
 date: 2017-07-24 20:25:04
 type: "categories"
 categories: Objective-C
@@ -157,3 +157,44 @@ override func preallocateFile(atPath path: String!, userData: Any!, options: Int
 
 ##### 事件详解
 以create函数为例来分析一下事件的过程。
+```swift create file event
+override func createFile(atPath path: String!, attributes: [AnyHashable : Any]! = [:], flags: Int32, userData: AutoreleasingUnsafeMutablePointer<AnyObject?>!) throws {
+
+    guard let mode = attributes[FileAttributeKey.posixPermissions] as? mode_t else {
+        throw NSError(posixErrorCode: EPERM)
+    }
+
+    let originalPath = rootPath.appending(path)
+
+    let fileDescriptor = open((originalPath as NSString).utf8String!, flags, mode)
+
+    if fileDescriptor < 0 {
+        throw NSError(posixErrorCode: errno)
+    }
+
+    userData.pointee = NSNumber(value: fileDescriptor)
+}
+```
+**参数解析**
+- mode 是[open2](http://www.man7.org/linux/man-pages/man2/open.2.html)函数的参数，该参数必须指定为`O_CREAT`或者`O_TMPFILE`flag，如果不是这两个参数，那么该参数将被忽略。
+> 以下是官方解释
+The mode argument specifies the file mode bits be applied when a new file is created.  
+This argument must be supplied when O_CREAT or O_TMPFILE is specified in flags; 
+if neither O_CREAT nor O_TMPFILE is specified, then mode is ignored.
+- originalPath 是指实际文件系统中文件的路劲
+- flags 用于指定文件创建时的打开方式的集合，官方的解释如下:
+> 以下是官方解释
+The argument flags must include one of the following access modes: O_RDONLY, O_WRONLY, or O_RDWR.  
+These request opening the file read-only, write-only, or read/write, respectively.
+In addition, zero or more file creation flags and file status flags can be bitwise-or'd in flags.  
+The file creation flags are O_CLOEXEC, O_CREAT, O_DIRECTORY, O_EXCL, O_NOCTTY, O_NOFOLLOW, O_TMPFILE, and O_TRUNC.
+- fileDescription 是指文件句柄，该文件句柄用于文件操作过程中的唯一标志符。
+- userData是一个指针，用来存储文件操作过程中用户定义的数据，该字段在实际项目中作用很大。
+{% note danger %}
+**总结:**
+
+通过解析create函数，可以看出，APFS将所有的事件都会发送到loopInvoke，至于怎么处理事件，由开发者自己来决定！
+也正因为如此，Mount开发需要谨慎对待，处理不善，可能就无法正常运转Mount盘。
+{% endnote %}
+
+
