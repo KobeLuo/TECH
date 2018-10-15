@@ -383,6 +383,13 @@
       {% if is_index and not isLast %}
         <div class="post-eof"></div>
       {% endif %}
+
+      <div>
+          {% if not is_index %}
+          {% include 'message-end.swig' %}
+          {% endif %}
+      </div>
+
     </footer>
   </article>
 

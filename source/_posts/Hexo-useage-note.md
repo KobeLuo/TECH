@@ -199,7 +199,8 @@ branch: gh-pages
 官方站点
 - https://hexo.io/docs/
 
-hexo填坑教程
+hexo建站教程
+- https://zhuanlan.zhihu.com/p/30836436
 - http://www.jianshu.com/p/ab21abc31153    
 - http://www.jianshu.com/p/35e197cb1273     
 - https://www.jianshu.com/p/35e197cb1273
