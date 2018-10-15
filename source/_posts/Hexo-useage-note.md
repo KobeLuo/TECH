@@ -46,7 +46,8 @@ branch2是平时写博客过程中，需要使用git命令push源代码的分支
 
 如果你的博客站点不是以username.github.io，那么需要按照[**git发布配置规范**](https://help.github.com/articles/configuring-a-publishing-source-for-github-pages/)配置站点，此时settings->GitPages->Source可以选择，通常情况下会有master、gh-pages和/docs供你选择，选择好静态页面的发布分支后,再考虑源代码托管到哪个分支上面。
 
-#### 关于SSHKey    
+<span id="jump"> </span>
+#### 关于SSHKey     
 首先进入用户目录下的.ssh目录
 {% codeblock lang:objc %}
 cd ~/.ssh
@@ -102,7 +103,7 @@ www	CNAME	your.blog.address(我这里是:KobeLuo.github.io)
 ---
 
 #### hexo安装
-请自行查阅[**hexo官方安装教程](https://hexo.io/zh-cn/docs/)
+请自行查阅[hexo官方安装教程](https://hexo.io/zh-cn/docs/)
 
 #### hexo命令
 hexo有自己独立的一套命令
@@ -207,7 +208,6 @@ hexo建站教程
 
 hexo 用法教程
 - https://www.jianshu.com/p/9a56f7c13a79     
-
 
 
 {% note info %}

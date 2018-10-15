@@ -3,7 +3,7 @@ title: Mac使用笔记
 date: 2016-04-06 17:48:11
 type: "categories"
 categories: MAC相关
-tags: 常用命令
+tags: [常用命令]
 ---
 
 
