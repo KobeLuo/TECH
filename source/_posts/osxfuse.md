@@ -197,5 +197,5 @@ The file creation flags are O_CLOEXEC, O_CREAT, O_DIRECTORY, O_EXCL, O_NOCTTY, O
 也正因为如此，Mount开发需要谨慎对待，处理不善，可能就无法正常运转Mount盘。
 {% endnote %}
 
-
+[博客收录入口](http://blog.sina.com.cn/s/blog_8b94e9b40100w49w.html)
 
