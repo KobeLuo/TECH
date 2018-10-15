@@ -5,7 +5,7 @@
   
 
 
-<html class="theme-next muse use-motion" lang="zh-Hans">
+<html class="theme-next mist use-motion" lang="zh-Hans">
 <head>
   <meta charset="UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -93,7 +93,7 @@
 <meta name="keywords" content="GCD,dispatch_semaphore,信号量">
 <meta property="og:type" content="article">
 <meta property="og:title" content="GCD系列:信号量(dispatch_semaphore)">
-<meta property="og:url" content="http://yoursite.com/2017/03/28/dispatch-semaphore/index.html">
+<meta property="og:url" content="http://kobeluo.com/TECH/2017/03/28/dispatch-semaphore/index.html">
 <meta property="og:site_name" content="kobeLuo的技术笔记">
 <meta property="og:description" content="信号量有点像具备N个task并行能力的channel,当channel的并行能力未达到上限时可以任意往里边加task，当达到channel上限时，需要task完成才可以加入新的task.">
 <meta property="og:locale" content="zh-Hans">
@@ -108,7 +108,7 @@
   var NexT = window.NexT || {};
   var CONFIG = {
     root: '/TECH/',
-    scheme: 'Muse',
+    scheme: 'Mist',
     sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":true,"scrollpercent":true},
     fancybox: true,
     motion: true,
@@ -128,7 +128,7 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2017/03/28/dispatch-semaphore/"/>
+  <link rel="canonical" href="http://kobeluo.com/TECH/2017/03/28/dispatch-semaphore/"/>
 
 
 
@@ -309,10 +309,10 @@
   
 
   <article class="post post-type-categories " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/TECH/2017/03/28/dispatch-semaphore/">
+    <link itemprop="mainEntityOfPage" href="http://kobeluo.com/TECH/TECH/2017/03/28/dispatch-semaphore/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="luo gang">
+      <meta itemprop="name" content="KOBE LUO">
       <meta itemprop="description" content="">
       <meta itemprop="image" content="/TECH/images/avatar.jpeg">
     </span>
@@ -490,13 +490,13 @@
     <div id="QR" style="display: none;">
       
         <div id="wechat" style="display: inline-block">
-          <img id="wechat_qr" src="https://wx2.sinaimg.cn/mw690/006AZU4wgy1fw6n5xbgnmj30og0zktaf.jpg" alt="luo gang WeChat Pay"/>
+          <img id="wechat_qr" src="https://wx2.sinaimg.cn/mw690/006AZU4wgy1fw6n5xbgnmj30og0zktaf.jpg" alt="KOBE LUO WeChat Pay"/>
           <p>微信打赏</p>
         </div>
       
       
         <div id="alipay" style="display: inline-block">
-          <img id="alipay_qr" src="https://wx4.sinaimg.cn/mw690/006AZU4wgy1fw6n5w7j3kj30go0p0wfj.jpg" alt="luo gang Alipay"/>
+          <img id="alipay_qr" src="https://wx4.sinaimg.cn/mw690/006AZU4wgy1fw6n5w7j3kj30go0p0wfj.jpg" alt="KOBE LUO Alipay"/>
           <p>支付宝打赏</p>
         </div>
       
@@ -510,6 +510,21 @@
     <div>
       
         
+  <ul class="post-copyright">
+    <li class="post-copyright-author">
+      <strong>本文作者：</strong>
+      KOBE LUO
+    </li>
+    <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="http://kobeluo.com/TECH/2017/03/28/dispatch-semaphore/" title="GCD系列:信号量(dispatch_semaphore)">http://kobeluo.com/TECH/2017/03/28/dispatch-semaphore/</a>
+    </li>
+    <li class="post-copyright-license">
+      <strong>版权声明： </strong>
+      本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 3.0</a> 许可协议。转载请注明出处！
+    </li>
+  </ul>
+
 
       
     </div>
@@ -615,8 +630,8 @@
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
           <img class="site-author-image" itemprop="image"
                src="/TECH/images/avatar.jpeg"
-               alt="luo gang" />
-          <p class="site-author-name" itemprop="name">luo gang</p>
+               alt="KOBE LUO" />
+          <p class="site-author-name" itemprop="name">KOBE LUO</p>
            
               <p class="site-description motion-element" itemprop="description">一个iOS和Mac OS开发的技术渣</p>
           
@@ -625,8 +640,8 @@
 
           
             <div class="site-state-item site-state-posts">
-              <!-- <a href="/TECH/archives"> -->
-              <a href="/archives">
+              <a href="/TECH/archives"> 
+              <!-- <a href="/archives">-->
                 <span class="site-state-item-count">6</span>
                 <span class="site-state-item-name">日志</span>
               </a>
@@ -635,23 +650,23 @@
 
           
             <div class="site-state-item site-state-categories">
-              <!-- <a href="/TECH/categories"> -->
-              <a href="/categories">
+              <a href="/TECH/categories">
+              <!-- <a href="/categories"> -->
                 <span class="site-state-item-count">3</span>
                 <span class="site-state-item-name">分类</span>
-              <!-- </a> -->
               </a>
+              <!-- </a> -->
             </div>
           
 
           
             <div class="site-state-item site-state-tags">
-              <!-- <a href="/TECH/tags"> -->
-              <a href="/tags">
+              <a href="/TECH/tags">
+              <!-- <a href="/tags"> -->
                 <span class="site-state-item-count">12</span>
                 <span class="site-state-item-name">标签</span>
-              <!-- </a> -->
               </a>
+              <!-- </a> -->
             </div>
           
         </nav>
@@ -753,7 +768,7 @@
   <span class="with-love">
     <i class="fa fa-heart"></i>
   </span>
-  <span class="author" itemprop="copyrightHolder">luo gang</span>
+  <span class="author" itemprop="copyrightHolder">KOBE LUO</span>
 </div>
 
 
@@ -764,7 +779,7 @@
 <div class="theme-info">
   主题 -
   <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
-    NexT.Muse
+    NexT.Mist
   </a>
 </div>
 
@@ -858,7 +873,7 @@
     
       <script type="text/javascript">
         var disqus_config = function () {
-          this.page.url = 'http://yoursite.com/2017/03/28/dispatch-semaphore/';
+          this.page.url = 'http://kobeluo.com/TECH/2017/03/28/dispatch-semaphore/';
           this.page.identifier = '2017/03/28/dispatch-semaphore/';
           this.page.title = 'GCD系列:信号量(dispatch_semaphore)';
         };

@@ -5,12 +5,12 @@
   <subtitle>不完美源自对完美的追求</subtitle>
   <link href="/TECH/atom.xml" rel="self"/>
   
-  <link href="http://yoursite.com/"/>
+  <link href="http://kobeluo.com/TECH/"/>
   <updated>2018-10-15T02:31:11.454Z</updated>
-  <id>http://yoursite.com/</id>
+  <id>http://kobeluo.com/TECH/</id>
   
   <author>
-    <name>luo gang</name>
+    <name>KOBE LUO</name>
     
   </author>
   
@@ -18,8 +18,8 @@
   
   <entry>
     <title>mac上建立基于osx fuse的虚拟磁盘</title>
-    <link href="http://yoursite.com/2017/07/24/osxfuse/"/>
-    <id>http://yoursite.com/2017/07/24/osxfuse/</id>
+    <link href="http://kobeluo.com/TECH/2017/07/24/osxfuse/"/>
+    <id>http://kobeluo.com/TECH/2017/07/24/osxfuse/</id>
     <published>2017-07-24T12:25:04.000Z</published>
     <updated>2018-10-15T02:31:11.454Z</updated>
     
@@ -32,21 +32,21 @@
     
     </summary>
     
-      <category term="Objective-C" scheme="http://yoursite.com/categories/Objective-C/"/>
+      <category term="Objective-C" scheme="http://kobeluo.com/TECH/categories/Objective-C/"/>
     
     
-      <category term="FUSE" scheme="http://yoursite.com/tags/FUSE/"/>
+      <category term="FUSE" scheme="http://kobeluo.com/TECH/tags/FUSE/"/>
     
-      <category term="Mount Disk" scheme="http://yoursite.com/tags/Mount-Disk/"/>
+      <category term="Mount Disk" scheme="http://kobeluo.com/TECH/tags/Mount-Disk/"/>
     
-      <category term="LookbackFS" scheme="http://yoursite.com/tags/LookbackFS/"/>
+      <category term="LookbackFS" scheme="http://kobeluo.com/TECH/tags/LookbackFS/"/>
     
   </entry>
   
   <entry>
     <title>Hexo使用笔记</title>
-    <link href="http://yoursite.com/2017/04/07/Hexo-useage-note/"/>
-    <id>http://yoursite.com/2017/04/07/Hexo-useage-note/</id>
+    <link href="http://kobeluo.com/TECH/2017/04/07/Hexo-useage-note/"/>
+    <id>http://kobeluo.com/TECH/2017/04/07/Hexo-useage-note/</id>
     <published>2017-04-07T13:20:19.000Z</published>
     <updated>2018-10-15T02:31:11.452Z</updated>
     
@@ -60,17 +60,17 @@
     
     </summary>
     
-      <category term="Hexo" scheme="http://yoursite.com/categories/Hexo/"/>
+      <category term="Hexo" scheme="http://kobeluo.com/TECH/categories/Hexo/"/>
     
     
-      <category term="hexo使用" scheme="http://yoursite.com/tags/hexo%E4%BD%BF%E7%94%A8/"/>
+      <category term="hexo使用" scheme="http://kobeluo.com/TECH/tags/hexo%E4%BD%BF%E7%94%A8/"/>
     
   </entry>
   
   <entry>
     <title>GCD系列:信号量(dispatch_semaphore)</title>
-    <link href="http://yoursite.com/2017/03/28/dispatch-semaphore/"/>
-    <id>http://yoursite.com/2017/03/28/dispatch-semaphore/</id>
+    <link href="http://kobeluo.com/TECH/2017/03/28/dispatch-semaphore/"/>
+    <id>http://kobeluo.com/TECH/2017/03/28/dispatch-semaphore/</id>
     <published>2017-03-28T12:44:35.000Z</published>
     <updated>2018-10-15T02:30:19.597Z</updated>
     
@@ -82,21 +82,21 @@
     
     </summary>
     
-      <category term="Objective-C" scheme="http://yoursite.com/categories/Objective-C/"/>
+      <category term="Objective-C" scheme="http://kobeluo.com/TECH/categories/Objective-C/"/>
     
     
-      <category term="GCD" scheme="http://yoursite.com/tags/GCD/"/>
+      <category term="GCD" scheme="http://kobeluo.com/TECH/tags/GCD/"/>
     
-      <category term="dispatch_semaphore" scheme="http://yoursite.com/tags/dispatch-semaphore/"/>
+      <category term="dispatch_semaphore" scheme="http://kobeluo.com/TECH/tags/dispatch-semaphore/"/>
     
-      <category term="信号量" scheme="http://yoursite.com/tags/%E4%BF%A1%E5%8F%B7%E9%87%8F/"/>
+      <category term="信号量" scheme="http://kobeluo.com/TECH/tags/%E4%BF%A1%E5%8F%B7%E9%87%8F/"/>
     
   </entry>
   
   <entry>
     <title>GCD系列:代码块(dispatch_block)</title>
-    <link href="http://yoursite.com/2017/03/27/dispatch-block/"/>
-    <id>http://yoursite.com/2017/03/27/dispatch-block/</id>
+    <link href="http://kobeluo.com/TECH/2017/03/27/dispatch-block/"/>
+    <id>http://kobeluo.com/TECH/2017/03/27/dispatch-block/</id>
     <published>2017-03-27T12:25:04.000Z</published>
     <updated>2018-10-15T02:30:19.597Z</updated>
     
@@ -108,21 +108,21 @@
     
     </summary>
     
-      <category term="Objective-C" scheme="http://yoursite.com/categories/Objective-C/"/>
+      <category term="Objective-C" scheme="http://kobeluo.com/TECH/categories/Objective-C/"/>
     
     
-      <category term="GCD" scheme="http://yoursite.com/tags/GCD/"/>
+      <category term="GCD" scheme="http://kobeluo.com/TECH/tags/GCD/"/>
     
-      <category term="Dispatch block" scheme="http://yoursite.com/tags/Dispatch-block/"/>
+      <category term="Dispatch block" scheme="http://kobeluo.com/TECH/tags/Dispatch-block/"/>
     
-      <category term="dispatch代码块" scheme="http://yoursite.com/tags/dispatch%E4%BB%A3%E7%A0%81%E5%9D%97/"/>
+      <category term="dispatch代码块" scheme="http://kobeluo.com/TECH/tags/dispatch%E4%BB%A3%E7%A0%81%E5%9D%97/"/>
     
   </entry>
   
   <entry>
     <title>GCD系列:队列(dispatch_queue)</title>
-    <link href="http://yoursite.com/2017/03/20/dispatch_queue/"/>
-    <id>http://yoursite.com/2017/03/20/dispatch_queue/</id>
+    <link href="http://kobeluo.com/TECH/2017/03/20/dispatch_queue/"/>
+    <id>http://kobeluo.com/TECH/2017/03/20/dispatch_queue/</id>
     <published>2017-03-20T03:44:22.000Z</published>
     <updated>2018-10-15T02:31:11.453Z</updated>
     
@@ -134,21 +134,21 @@
     
     </summary>
     
-      <category term="Objective-C" scheme="http://yoursite.com/categories/Objective-C/"/>
+      <category term="Objective-C" scheme="http://kobeluo.com/TECH/categories/Objective-C/"/>
     
     
-      <category term="GCD" scheme="http://yoursite.com/tags/GCD/"/>
+      <category term="GCD" scheme="http://kobeluo.com/TECH/tags/GCD/"/>
     
-      <category term="Dispatch queue" scheme="http://yoursite.com/tags/Dispatch-queue/"/>
+      <category term="Dispatch queue" scheme="http://kobeluo.com/TECH/tags/Dispatch-queue/"/>
     
-      <category term="队列" scheme="http://yoursite.com/tags/%E9%98%9F%E5%88%97/"/>
+      <category term="队列" scheme="http://kobeluo.com/TECH/tags/%E9%98%9F%E5%88%97/"/>
     
   </entry>
   
   <entry>
     <title>Mac使用笔记</title>
-    <link href="http://yoursite.com/2016/04/06/Mac%20useage/"/>
-    <id>http://yoursite.com/2016/04/06/Mac useage/</id>
+    <link href="http://kobeluo.com/TECH/2016/04/06/Mac%20useage/"/>
+    <id>http://kobeluo.com/TECH/2016/04/06/Mac useage/</id>
     <published>2016-04-06T09:48:11.000Z</published>
     <updated>2018-10-15T02:31:11.453Z</updated>
     
@@ -163,10 +163,10 @@
     
     </summary>
     
-      <category term="MAC相关" scheme="http://yoursite.com/categories/MAC%E7%9B%B8%E5%85%B3/"/>
+      <category term="MAC相关" scheme="http://kobeluo.com/TECH/categories/MAC%E7%9B%B8%E5%85%B3/"/>
     
     
-      <category term="常用命令" scheme="http://yoursite.com/tags/%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/"/>
+      <category term="常用命令" scheme="http://kobeluo.com/TECH/tags/%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/"/>
     
   </entry>
   
