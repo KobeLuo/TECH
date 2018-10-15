@@ -208,7 +208,7 @@ git reset commitID
 //将当前分支指向commitID指向的节点,并将commit节点之后所提交的所有内容回滚.
 git reset --soft commitID
 git reset --hard commitID
-12
+123
 ```
 [更多用法](https://git-scm.com/docs/git-reset)
 
