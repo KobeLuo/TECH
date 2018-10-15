@@ -97,7 +97,7 @@ Github提供gitpages服务可以生成独立二级域名，如非必要，你大
 www	CNAME	your.blog.address(我这里是:KobeLuo.github.io)
 {% endcodeblock %}
 
-配置完成之后，等待10分钟，等待域名生效。
+配置完成之后，等10分钟，等待域名生效。
 
 ### 关于[Hexo主题](https://github.com/iissnan/hexo-theme-next)模板
 ---
