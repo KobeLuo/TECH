@@ -76,7 +76,20 @@ git branch -d theBranch
 git branch -D theBranch
 //强行删除theBranch,如果当前分支在theBranch,则删除失败。
 
+git push origin :theBranch
+//删除远程theBranch分支
 
+git branch -m theBranch newBranch
+//将theBranch分支 更名为 newBranch分支，git reflog的所有结果也将同时变更
+
+git branch -M theBranch newBranch
+//官方定义，`move/rename a branch, even if target exists`，个人感觉非常不安全的操作方式.
+
+git branch --merged
+//仅打印已经合并过的分支列表
+
+git branch --no-merged
+//仅打印未合并的分支列表
 ```
 
 ## 5. 
