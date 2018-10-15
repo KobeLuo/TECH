@@ -1,0 +1,1170 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/TECH/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/TECH/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/TECH/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="FUSE,Mount Disk,LookbackFS," />
+
+
+
+
+
+  <link rel="alternate" href="/TECH/atom.xml" title="kobeLuo的技术笔记" type="application/atom+xml" />
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/TECH/images/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="苹果文件系统AFPS允许用户挂载自己的磁盘(Mount disk)，类似PCloud；也允许用户通过底层API来监控某个文件夹的变化来做同步，类似DropBox，最终目的都是为了实现本地文件与服务端同步来方便人们的工作和生活，博主对于两种方式来同步文件都有一定涉猎，国内外目前针对Mount盘的文献和资料相对较少，博主在工作过程中遇到过很多的坑，共享出来，希望能帮助到有缘人。">
+<meta name="keywords" content="FUSE,Mount Disk,LookbackFS">
+<meta property="og:type" content="article">
+<meta property="og:title" content="mac上建立基于osx fuse的虚拟磁盘">
+<meta property="og:url" content="http://yoursite.com/2017/07/24/osxfuse/index.html">
+<meta property="og:site_name" content="kobeLuo的技术笔记">
+<meta property="og:description" content="苹果文件系统AFPS允许用户挂载自己的磁盘(Mount disk)，类似PCloud；也允许用户通过底层API来监控某个文件夹的变化来做同步，类似DropBox，最终目的都是为了实现本地文件与服务端同步来方便人们的工作和生活，博主对于两种方式来同步文件都有一定涉猎，国内外目前针对Mount盘的文献和资料相对较少，博主在工作过程中遇到过很多的坑，共享出来，希望能帮助到有缘人。">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://yoursite.com/TECH/2017/07/24/osxfuse/fusePanel.png">
+<meta property="og:image" content="http://yoursite.com/TECH/2017/07/24/osxfuse/mountinfo.png">
+<meta property="og:image" content="http://yoursite.com/TECH/2017/07/24/osxfuse/path.png">
+<meta property="og:updated_time" content="2018-10-15T02:31:11.454Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="mac上建立基于osx fuse的虚拟磁盘">
+<meta name="twitter:description" content="苹果文件系统AFPS允许用户挂载自己的磁盘(Mount disk)，类似PCloud；也允许用户通过底层API来监控某个文件夹的变化来做同步，类似DropBox，最终目的都是为了实现本地文件与服务端同步来方便人们的工作和生活，博主对于两种方式来同步文件都有一定涉猎，国内外目前针对Mount盘的文献和资料相对较少，博主在工作过程中遇到过很多的坑，共享出来，希望能帮助到有缘人。">
+<meta name="twitter:image" content="http://yoursite.com/TECH/2017/07/24/osxfuse/fusePanel.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/TECH/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/07/24/osxfuse/"/>
+
+
+
+
+
+  <title> mac上建立基于osx fuse的虚拟磁盘 | kobeLuo的技术笔记 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/TECH/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">kobeLuo的技术笔记</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">简于心 精于行</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/TECH/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/TECH/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/TECH/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/TECH/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/TECH/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于作者
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocapitalize="off" autocomplete="off" autocorrect="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-categories " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/TECH/2017/07/24/osxfuse/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="luo gang">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/TECH/images/avatar.jpeg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="kobeLuo的技术笔记">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                mac上建立基于osx fuse的虚拟磁盘
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-07-24T20:25:04+08:00">
+                2017-07-24
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/TECH/categories/Objective-C/" itemprop="url" rel="index">
+                    <span itemprop="name">Objective-C</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/TECH/2017/07/24/osxfuse/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count"
+                        data-disqus-identifier="2017/07/24/osxfuse/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+             <span id="/TECH/2017/07/24/osxfuse/" class="leancloud_visitors" data-flag-title="mac上建立基于osx fuse的虚拟磁盘">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数 </span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <blockquote class="blockquote-center"><p>苹果文件系统<a href="https://www.google.co.kr/search?q=APFS&amp;oq=APFS&amp;aqs=chrome..69i57j0l5.5335j0j7&amp;sourceid=chrome&amp;ie=UTF-8" target="_blank" rel="noopener">AFPS</a>允许用户挂载自己的磁盘(Mount disk)，类似<a href="https://www.pcloud.com/zh/" target="_blank" rel="noopener">PCloud</a>；也允许用户通过底层API来监控某个文件夹的变化来做同步，类似<a href="https://www.dropbox.com/" target="_blank" rel="noopener">DropBox</a>，最终目的都是为了实现本地文件与服务端同步来方便人们的工作和生活，博主对于两种方式来同步文件都有一定涉猎，国内外目前针对Mount盘的文献和资料相对较少，博主在工作过程中遇到过很多的坑，共享出来，希望能帮助到有缘人。</p>
+</blockquote>
+<a id="more"></a>
+<h3 id="OSX-FUSE"><a href="#OSX-FUSE" class="headerlink" title="OSX FUSE"></a><a href="https://osxfuse.github.io/" target="_blank" rel="noopener">OSX FUSE</a></h3><hr>
+<h4 id="osxfuse介绍"><a href="#osxfuse介绍" class="headerlink" title="osxfuse介绍"></a>osxfuse介绍</h4><p>关于osx fuse，官方的介绍已经非常详尽了，它主要针对Mac OS文件系统相关的一些操作提供底层的SDK帮助,其主要功能如下:<br><div class="note info"><ol>
+<li>AccessibilityFS </li>
+<li>LoopbackFS   </li>
+<li>SpotlightFS    </li>
+<li>SSHfs</li>
+<li>other functions</li>
+</ol>
+</div></p>
+<ul>
+<li><strong>LoopbackFS</strong> 将Finder中某个文件夹作为一个独立的文件系统挂载起来;</li>
+<li><strong>SpotlightFS</strong>   OS特有的文件系统，连接spotlight使用的，当使用spotlight搜索时，会存储搜索结果;</li>
+<li><strong>SSHfs</strong>  基于SSH的文件系统，用于挂载远程的文件系统。<br>本篇文章将主要介绍使用OSX FUSE来搭建自己的mount盘.</li>
+</ul>
+<h4 id="osxfuse安装"><a href="#osxfuse安装" class="headerlink" title="osxfuse安装"></a>osxfuse安装</h4><p>下载<a href="https://github.com/osxfuse/osxfuse/releases" target="_blank" rel="noopener">osx fuse.dmg</a>，安装后<code>system preferences</code>底部会多一个FUSE item，<img src="/TECH/2017/07/24/osxfuse/fusePanel.png" alt="system preference screenshot"><br>下载<a href="https://github.com/osxfuse/framework" target="_blank" rel="noopener">osxfuse.framwork</a>，使用xcode编译后导入到自己自己工程中。</p>
+<h4 id="osxfuse结构介绍"><a href="#osxfuse结构介绍" class="headerlink" title="osxfuse结构介绍"></a>osxfuse结构介绍</h4><p>这里以<a href="https://github.com/osxfuse/filesystems" target="_blank" rel="noopener">LookbackFS</a>的swift版本为例介绍fuse的基本概念及用法.<br><figure class="highlight swift"><figcaption><span>需要初始化的参数</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">var</span> rootPath: <span class="type">String</span>!</span><br><span class="line"><span class="keyword">private</span> <span class="built_in">lazy</span> <span class="keyword">var</span> loopFileSystem: <span class="type">LoopbackFS</span> = &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="type">LoopbackFS</span>(rootPath: <span class="keyword">self</span>.rootPath)</span><br><span class="line">&#125;()</span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span> <span class="built_in">lazy</span> <span class="keyword">var</span> userFileSystem: <span class="type">GMUserFileSystem</span> = &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="type">GMUserFileSystem</span>(delegate: <span class="keyword">self</span>.loopFileSystem, isThreadSafe: <span class="literal">false</span>)</span><br><span class="line">&#125;()</span><br></pre></td></tr></table></figure></p>
+<ul>
+<li>rootPath 由于LookbackFS是义某个文件夹作为mount的对象，因此rootPath就是本地某个文件夹地址；</li>
+<li>loopFileSystem该参数作为osx回调的代理，用来接收所有从底层过来的消息；</li>
+<li>userFileSystem该参数主要作为启动mount的载体，加载mount需要的各项参数。</li>
+</ul>
+<h4 id="Mount挂载"><a href="#Mount挂载" class="headerlink" title="Mount挂载"></a>Mount挂载</h4><figure class="highlight swift"><figcaption><span>Mount</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">self</span>.rootPath = rootPath</span><br><span class="line"></span><br><span class="line">addNotifications()</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> options: [<span class="type">String</span>] = [<span class="string">"native_xattr"</span>, <span class="string">"volname=LoopbackFS"</span>]</span><br><span class="line"><span class="keyword">if</span> <span class="keyword">let</span> volumeIconPath = <span class="type">Bundle</span>.main.path(forResource: <span class="string">"LoopbackFS"</span>,</span><br><span class="line">ofType: <span class="string">"icns"</span>) &#123;</span><br><span class="line"></span><br><span class="line">    options.insert(<span class="string">"volicon=<span class="subst">\(volumeIconPath)</span>"</span>, at: <span class="number">0</span>)</span><br><span class="line">&#125;</span><br><span class="line">userFileSystem.mount(atPath: <span class="string">"/Volumes/loop"</span>, withOptions: options)</span><br></pre></td></tr></table></figure>
+<p>该片段代码展示了mount 过程的细节，其中<a href="https://github.com/osxfuse/osxfuse/wiki/Mount-options" target="_blank" rel="noopener">options</a>是OSX FUSE指定的某些特定参数，用以实现不同的mount盘功能。<br>而<code>/Volumes/loop</code>则是在macbook上挂载的mount盘的地址,如下图:</p>
+<p><img src="/TECH/2017/07/24/osxfuse/mountinfo.png" alt="mount disk info"><br>图中可以看出，mount盘在Macintosh中的地址是<code>/Volumes/loop</code>,而显示的名字是<code>LoopbackFS</code>。<br><img src="/TECH/2017/07/24/osxfuse/path.png" alt="mount disk info"><br>接下来是注册mount结果的通知<br><figure class="highlight swift"><figcaption><span>Notification</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">addNotifications</span><span class="params">()</span></span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="type">NotificationCenter</span>.<span class="keyword">default</span>.addObserver(forName: <span class="type">NSNotification</span>.<span class="type">Name</span>(kGMUserFileSystemDidMount), object: <span class="literal">nil</span>, queue: <span class="literal">nil</span>) &#123; notification <span class="keyword">in</span></span><br><span class="line">        <span class="type">Log</span>.record(info: <span class="string">"Got didMount notification."</span>)</span><br><span class="line">        <span class="comment">//do something.</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="type">NotificationCenter</span>.<span class="keyword">default</span>.addObserver(forName: <span class="type">NSNotification</span>.<span class="type">Name</span>(kGMUserFileSystemMountFailed), object: <span class="literal">nil</span>, queue: .main) &#123; notification <span class="keyword">in</span></span><br><span class="line">        <span class="type">Log</span>.record(info: <span class="string">"Got mountFailed notification."</span>)</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="type">NotificationCenter</span>.<span class="keyword">default</span>.addObserver(forName: <span class="type">NSNotification</span>.<span class="type">Name</span>(kGMUserFileSystemDidUnmount), object: <span class="literal">nil</span>, queue: <span class="literal">nil</span>) &#123; notification <span class="keyword">in</span></span><br><span class="line">        <span class="type">Log</span>.record(info: <span class="string">"Got didUnmount notification."</span>)</span><br><span class="line">        <span class="type">NSApplication</span>.shared().terminate(<span class="literal">nil</span>)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><br>当mount盘发生状态变更时会调用到该函数中，至此，mount盘就已经挂载到了APFS上。</p>
+<h3 id="Event-Stream"><a href="#Event-Stream" class="headerlink" title="Event Stream"></a>Event Stream</h3><hr>
+<h4 id="mount盘事件原理"><a href="#mount盘事件原理" class="headerlink" title="mount盘事件原理"></a>mount盘事件原理</h4><p>前文提到注册mount盘的过程实例化了一个loopFileSystem，以下简称loopInvoke，它主要用来接收从底层过来的所有的事件信息，loopInvoke实现了所有的GMUserFileSystem的代理方法。前文Mount的过程其实质是osxfuse向APFS注册了事件的回调反馈，用户在Mount盘中的任何行为，都将以flag的形式反馈给osx fuse，osx fuse通过解析这些flag并转化成上层可以读懂的事件反馈到loopInvoke实例，如果需要返回值，则将loopInvoke处理后的返回值返回给APFS。</p>
+<div id="flowchart-0" class="flow-chart"></div>
+
+<h4 id="loopInvoke事件详解"><a href="#loopInvoke事件详解" class="headerlink" title="loopInvoke事件详解"></a>loopInvoke事件详解</h4><h5 id="回调函数列表"><a href="#回调函数列表" class="headerlink" title="回调函数列表:"></a>回调函数列表:</h5><p>先看一下loopInvoke回调事件函数列表如下:<br><figure class="highlight swift"><figcaption><span>函数列表</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//create</span></span><br><span class="line"><span class="keyword">override</span> <span class="function"><span class="keyword">func</span> <span class="title">createDirectory</span><span class="params">(atPath path: String!, attributes: [AnyHashable : Any]! = [:])</span></span> <span class="keyword">throws</span></span><br><span class="line"><span class="keyword">override</span> <span class="function"><span class="keyword">func</span> <span class="title">createFile</span><span class="params">(atPath path: String!, attributes: [AnyHashable : Any]! = [:], flags: Int32, userData: AutoreleasingUnsafeMutablePointer&lt;AnyObject?&gt;!)</span></span> <span class="keyword">throws</span></span><br><span class="line"><span class="comment">//remove</span></span><br><span class="line"><span class="keyword">override</span> <span class="function"><span class="keyword">func</span> <span class="title">removeDirectory</span><span class="params">(atPath path: String!)</span></span> <span class="keyword">throws</span></span><br><span class="line"><span class="keyword">override</span> <span class="function"><span class="keyword">func</span> <span class="title">removeItem</span><span class="params">(atPath path: String!)</span></span> <span class="keyword">throws</span></span><br><span class="line"><span class="comment">//other important</span></span><br><span class="line"><span class="keyword">override</span> <span class="function"><span class="keyword">func</span> <span class="title">moveItem</span><span class="params">(atPath source: String!, toPath destination: String!)</span></span> <span class="keyword">throws</span></span><br><span class="line"><span class="keyword">override</span> <span class="function"><span class="keyword">func</span> <span class="title">openFile</span><span class="params">(atPath path: String!, mode: Int32, userData: AutoreleasingUnsafeMutablePointer&lt;AnyObject?&gt;!)</span></span> <span class="keyword">throws</span></span><br><span class="line"><span class="keyword">override</span> <span class="function"><span class="keyword">func</span> <span class="title">releaseFile</span><span class="params">(atPath path: String!, userData: Any!)</span></span></span><br><span class="line"><span class="keyword">override</span> <span class="function"><span class="keyword">func</span> <span class="title">readFile</span><span class="params">(atPath path: String!, userData: Any!, buffer: UnsafeMutablePointer&lt;Int8&gt;!, size: Int, offset: off_t, error: NSErrorPointer)</span></span> -&gt; <span class="type">Int32</span></span><br><span class="line"><span class="keyword">override</span> <span class="function"><span class="keyword">func</span> <span class="title">writeFile</span><span class="params">(atPath path: String!, userData: Any!, buffer: UnsafePointer&lt;Int8&gt;!, size: Int, offset: off_t, error: NSErrorPointer)</span></span> -&gt; <span class="type">Int32</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">override</span> <span class="function"><span class="keyword">func</span> <span class="title">exchangeDataOfItem</span><span class="params">(atPath path1: String!, withItemAtPath path2: String!)</span></span> <span class="keyword">throws</span></span><br><span class="line"><span class="keyword">override</span> <span class="function"><span class="keyword">func</span> <span class="title">contentsOfDirectory</span><span class="params">(atPath path: String!)</span></span> <span class="keyword">throws</span> -&gt; [<span class="type">Any</span>]</span><br><span class="line"><span class="comment">//attributes</span></span><br><span class="line"><span class="keyword">override</span> <span class="function"><span class="keyword">func</span> <span class="title">finderAttributes</span><span class="params">(atPath path: String!)</span></span> <span class="keyword">throws</span> -&gt; [<span class="type">AnyHashable</span> : <span class="type">Any</span>]</span><br><span class="line"><span class="keyword">override</span> <span class="function"><span class="keyword">func</span> <span class="title">resourceAttributes</span><span class="params">(atPath path: String!)</span></span> <span class="keyword">throws</span> -&gt; [<span class="type">AnyHashable</span> : <span class="type">Any</span>]</span><br><span class="line"><span class="keyword">override</span> <span class="function"><span class="keyword">func</span> <span class="title">attributesOfItem</span><span class="params">(atPath path: String!, userData: Any!)</span></span> <span class="keyword">throws</span> -&gt; [<span class="type">AnyHashable</span> : <span class="type">Any</span>]</span><br><span class="line"><span class="keyword">override</span> <span class="function"><span class="keyword">func</span> <span class="title">attributesOfFileSystem</span><span class="params">(forPath path: String!)</span></span> <span class="keyword">throws</span> -&gt; [<span class="type">AnyHashable</span> : <span class="type">Any</span>]</span><br><span class="line"><span class="keyword">override</span> <span class="function"><span class="keyword">func</span> <span class="title">setAttributes</span><span class="params">(<span class="number">_</span> attributes: [AnyHashable : Any]!, ofItemAtPath path: String!, userData: Any!)</span></span> <span class="keyword">throws</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">override</span> <span class="function"><span class="keyword">func</span> <span class="title">extendedAttributesOfItem</span><span class="params">(atPath path: Any!)</span></span> <span class="keyword">throws</span> -&gt; [<span class="type">Any</span>]</span><br><span class="line"><span class="keyword">public</span> <span class="keyword">override</span> <span class="function"><span class="keyword">func</span> <span class="title">value</span><span class="params">(ofExtendedAttribute name: String!, ofItemAtPath path: String!, position: off_t)</span></span> <span class="keyword">throws</span> -&gt; <span class="type">Data</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">override</span> <span class="function"><span class="keyword">func</span> <span class="title">setExtendedAttribute</span><span class="params">(<span class="number">_</span> name: String!, ofItemAtPath path: String!, value: Data!, position: off_t, options: Int32)</span></span> <span class="keyword">throws</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">override</span> <span class="function"><span class="keyword">func</span> <span class="title">removeExtendedAttribute</span><span class="params">(<span class="number">_</span> name: String!, ofItemAtPath path: String!)</span></span> <span class="keyword">throws</span></span><br><span class="line"><span class="comment">//link </span></span><br><span class="line"><span class="keyword">override</span> <span class="function"><span class="keyword">func</span> <span class="title">linkItem</span><span class="params">(atPath path: String!, toPath otherPath: String!)</span></span> <span class="keyword">throws</span></span><br><span class="line"><span class="comment">//symbolic link</span></span><br><span class="line"><span class="keyword">override</span> <span class="function"><span class="keyword">func</span> <span class="title">createSymbolicLink</span><span class="params">(atPath path: String!, withDestinationPath otherPath: String!)</span></span> <span class="keyword">throws</span></span><br><span class="line"><span class="keyword">override</span> <span class="function"><span class="keyword">func</span> <span class="title">destinationOfSymbolicLink</span><span class="params">(atPath path: String!)</span></span> <span class="keyword">throws</span> -&gt; <span class="type">String</span></span><br><span class="line"><span class="comment">//pre alloc</span></span><br><span class="line"><span class="keyword">override</span> <span class="function"><span class="keyword">func</span> <span class="title">preallocateFile</span><span class="params">(atPath path: String!, userData: Any!, options: Int32, offset: off_t, length: off_t)</span></span> <span class="keyword">throws</span></span><br></pre></td></tr></table></figure></p>
+<p>哇！！！乱七八糟一大堆函数回调，实际上仔细归类后发现，基本上涵盖了文件操作的所有细节。</p>
+<div class="note danger"><p><strong>这些细节全部由你来掌控！</strong></p>
+<ul>
+<li>当用户创建一个文件A时，APFS会通过OSX FUSE传递到loopInvoke，告诉你现在收到一个信号是创建了一个A文件，问你怎么办？</li>
+<li>当APFS需要读取A文件的属性时发出信号向你询问A文件的属性应该是怎样的？</li>
+<li>当A文件被更名成B文件时，发出信号告诉你有这个事情，至于是否需要更名成B文件或者抛错，由你来决定！</li>
+</ul>
+</div>
+<h5 id="事件详解"><a href="#事件详解" class="headerlink" title="事件详解"></a>事件详解</h5><p>以create函数为例来分析一下事件的过程。<br><figure class="highlight swift"><figcaption><span>create file event</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">override</span> <span class="function"><span class="keyword">func</span> <span class="title">createFile</span><span class="params">(atPath path: String!, attributes: [AnyHashable : Any]! = [:], flags: Int32, userData: AutoreleasingUnsafeMutablePointer&lt;AnyObject?&gt;!)</span></span> <span class="keyword">throws</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">guard</span> <span class="keyword">let</span> mode = attributes[<span class="type">FileAttributeKey</span>.posixPermissions] <span class="keyword">as</span>? mode_t <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="keyword">throw</span> <span class="type">NSError</span>(posixErrorCode: <span class="type">EPERM</span>)</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">let</span> originalPath = rootPath.appending(path)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">let</span> fileDescriptor = <span class="keyword">open</span>((originalPath <span class="keyword">as</span> <span class="type">NSString</span>).utf8String!, flags, mode)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> fileDescriptor &lt; <span class="number">0</span> &#123;</span><br><span class="line">        <span class="keyword">throw</span> <span class="type">NSError</span>(posixErrorCode: errno)</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    userData.pointee = <span class="type">NSNumber</span>(value: fileDescriptor)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p><strong>参数解析</strong></p>
+<ul>
+<li>mode 是<a href="http://www.man7.org/linux/man-pages/man2/open.2.html" target="_blank" rel="noopener">open2</a>函数的参数，该参数必须指定为<code>O_CREAT</code>或者<code>O_TMPFILE</code>flag，如果不是这两个参数，那么该参数将被忽略。<blockquote>
+<p>以下是官方解释<br>The mode argument specifies the file mode bits be applied when a new file is created.<br>This argument must be supplied when O_CREAT or O_TMPFILE is specified in flags;<br>if neither O_CREAT nor O_TMPFILE is specified, then mode is ignored.</p>
+</blockquote>
+</li>
+<li>originalPath 是指实际文件系统中文件的路劲</li>
+<li>flags 用于指定文件创建时的打开方式的集合，官方的解释如下:<blockquote>
+<p>以下是官方解释<br>The argument flags must include one of the following access modes: O_RDONLY, O_WRONLY, or O_RDWR.<br>These request opening the file read-only, write-only, or read/write, respectively.<br>In addition, zero or more file creation flags and file status flags can be bitwise-or’d in flags.<br>The file creation flags are O_CLOEXEC, O_CREAT, O_DIRECTORY, O_EXCL, O_NOCTTY, O_NOFOLLOW, O_TMPFILE, and O_TRUNC.</p>
+</blockquote>
+</li>
+<li>fileDescription 是指文件句柄，该文件句柄用于文件操作过程中的唯一标志符。</li>
+<li>userData是一个指针，用来存储文件操作过程中用户定义的数据，该字段在实际项目中作用很大。<div class="note danger"><p><strong>总结:</strong></p>
+<p>通过解析create函数，可以看出，APFS将所有的事件都会发送到loopInvoke，至于怎么处理事件，由开发者自己来决定！<br>也正因为如此，Mount开发需要谨慎对待，处理不善，可能就无法正常运转Mount盘。</p>
+</div>
+</li>
+</ul>
+<p><script src="https://cdnjs.cloudflare.com/ajax/libs/raphael/2.2.7/raphael.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/flowchart/1.6.5/flowchart.min.js"></script><textarea id="flowchart-0-code" style="display: none">st=>start: Start
+e=>end: End
+evt=>operation: User Operation
+op1=>operation: APFS 
+op2=>operation: Fuse parse and generate
+op3=>operation: loopInvoke handle event
+cond=>condition: has return value?
+st->evt->op1->op2->op3(right)->cond
+cond(yes,top)->op1
+cond(no,bottom)->e</textarea><textarea id="flowchart-0-options" style="display: none">{"scale":1,"line-width":2,"line-length":50,"text-margin":10,"font-size":12}</textarea><script>  var code = document.getElementById("flowchart-0-code").value;  var options = JSON.parse(decodeURIComponent(document.getElementById("flowchart-0-options").value));  var diagram = flowchart.parse(code);  diagram.drawSVG("flowchart-0", options);</script></p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+  <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+    <div>坚持原创技术分享，您的支持将鼓励我继续创作！</div>
+    <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+      <span>赏</span>
+    </button>
+    <div id="QR" style="display: none;">
+      
+        <div id="wechat" style="display: inline-block">
+          <img id="wechat_qr" src="https://wx2.sinaimg.cn/mw690/006AZU4wgy1fw6n5xbgnmj30og0zktaf.jpg" alt="luo gang WeChat Pay"/>
+          <p>微信打赏</p>
+        </div>
+      
+      
+        <div id="alipay" style="display: inline-block">
+          <img id="alipay_qr" src="https://wx4.sinaimg.cn/mw690/006AZU4wgy1fw6n5w7j3kj30go0p0wfj.jpg" alt="luo gang Alipay"/>
+          <p>支付宝打赏</p>
+        </div>
+      
+    </div>
+  </div>
+
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/TECH/tags/FUSE/" rel="tag"># FUSE</a>
+          
+            <a href="/TECH/tags/Mount-Disk/" rel="tag"># Mount Disk</a>
+          
+            <a href="/TECH/tags/LookbackFS/" rel="tag"># LookbackFS</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/TECH/2017/04/07/Hexo-useage-note/" rel="next" title="Hexo使用笔记">
+                <i class="fa fa-chevron-left"></i> Hexo使用笔记
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/TECH/images/avatar.jpeg"
+               alt="luo gang" />
+          <p class="site-author-name" itemprop="name">luo gang</p>
+           
+              <p class="site-description motion-element" itemprop="description">一个iOS和Mac OS开发的技术渣</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <!-- <a href="/TECH/archives"> -->
+              <a href="/archives">
+                <span class="site-state-item-count">6</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-categories">
+              <!-- <a href="/TECH/categories"> -->
+              <a href="/categories">
+                <span class="site-state-item-count">3</span>
+                <span class="site-state-item-name">分类</span>
+              <!-- </a> -->
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <!-- <a href="/TECH/tags"> -->
+              <a href="/tags">
+                <span class="site-state-item-count">12</span>
+                <span class="site-state-item-name">标签</span>
+              <!-- </a> -->
+              </a>
+            </div>
+          
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/TECH/atom.xml" rel="alternate">
+              <i class="fa fa-rss"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="http://douban.com" target="_blank" title="豆瓣">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  豆瓣
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://www.zhihu.com" target="_blank" title="知乎">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  知乎
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#OSX-FUSE"><span class="nav-number">1.</span> <span class="nav-text">OSX FUSE</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#osxfuse介绍"><span class="nav-number">1.1.</span> <span class="nav-text">osxfuse介绍</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#osxfuse安装"><span class="nav-number">1.2.</span> <span class="nav-text">osxfuse安装</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#osxfuse结构介绍"><span class="nav-number">1.3.</span> <span class="nav-text">osxfuse结构介绍</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Mount挂载"><span class="nav-number">1.4.</span> <span class="nav-text">Mount挂载</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Event-Stream"><span class="nav-number">2.</span> <span class="nav-text">Event Stream</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#mount盘事件原理"><span class="nav-number">2.1.</span> <span class="nav-text">mount盘事件原理</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#loopInvoke事件详解"><span class="nav-number">2.2.</span> <span class="nav-text">loopInvoke事件详解</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#回调函数列表"><span class="nav-number">2.2.1.</span> <span class="nav-text">回调函数列表:</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#事件详解"><span class="nav-number">2.2.2.</span> <span class="nav-text">事件详解</span></a></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2015 - 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">luo gang</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/TECH/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/TECH/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/TECH/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/TECH/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/TECH/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/TECH/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/TECH/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/TECH/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/TECH/js/src/affix.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/TECH/js/src/schemes/pisces.js?v=5.1.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/TECH/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/TECH/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/TECH/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  
+
+    
+      <script id="dsq-count-scr" src="https://.disqus.com/count.js" async></script>
+    
+
+    
+      <script type="text/javascript">
+        var disqus_config = function () {
+          this.page.url = 'http://yoursite.com/2017/07/24/osxfuse/';
+          this.page.identifier = '2017/07/24/osxfuse/';
+          this.page.title = 'mac上建立基于osx fuse的虚拟磁盘';
+        };
+        var d = document, s = d.createElement('script');
+        s.src = 'https://.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', '' + +new Date());
+        (d.head || d.body).appendChild(s);
+      </script>
+    
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length == 0) {
+      search_path = "search.xml";
+    }
+    var path = "/TECH/" + search_path;
+    // monitor main search box;
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.popup').toggle();
+    }
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+      $.ajax({
+        url: path,
+        dataType: "xml",
+        async: true,
+        success: function( xmlResponse ) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = $( "entry", xmlResponse ).map(function() {
+            return {
+              title: $( "title", this ).text(),
+              content: $("content",this).text(),
+              url: $( "url" , this).text()
+            };
+          }).get();
+          var $input = document.getElementById(search_id);
+          var $resultContent = document.getElementById(content_id);
+          $input.addEventListener('input', function(){
+            var matchcounts = 0;
+            var str='<ul class=\"search-result-list\">';
+            var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+            $resultContent.innerHTML = "";
+            if (this.value.trim().length > 1) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var content_index = [];
+                var data_title = data.title.trim().toLowerCase();
+                var data_content = data.content.trim().replace(/<[^>]+>/g,"").toLowerCase();
+                var data_url = decodeURIComponent(data.url);
+                var index_title = -1;
+                var index_content = -1;
+                var first_occur = -1;
+                // only match artiles with not empty titles and contents
+                if(data_title != '') {
+                  keywords.forEach(function(keyword, i) {
+                    index_title = data_title.indexOf(keyword);
+                    index_content = data_content.indexOf(keyword);
+                    if( index_title >= 0 || index_content >= 0 ){
+                      isMatch = true;
+                      if (i == 0) {
+                        first_occur = index_content;
+                      }
+                    }
+
+                  });
+                }
+                // show search results
+                if (isMatch) {
+                  matchcounts += 1;
+                  str += "<li><a href='"+ data_url +"' class='search-result-title'>"+ data_title +"</a>";
+                  var content = data.content.trim().replace(/<[^>]+>/g,"");
+                  if (first_occur >= 0) {
+                    // cut out 100 characters
+                    var start = first_occur - 20;
+                    var end = first_occur + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if(start == 0){
+                      end = 50;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    var match_content = content.substring(start, end);
+                    // highlight all keywords
+                    keywords.forEach(function(keyword){
+                      var regS = new RegExp(keyword, "gi");
+                      match_content = match_content.replace(regS, "<b class=\"search-keyword\">"+keyword+"</b>");
+                    });
+
+                    str += "<p class=\"search-result\">" + match_content +"...</p>"
+                  }
+                  str += "</li>";
+                }
+              })};
+            str += "</ul>";
+            if (matchcounts == 0) { str = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>' }
+            if (keywords == "") { str = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>' }
+            $resultContent.innerHTML = str;
+          });
+          proceedsearch();
+        }
+      });}
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched == false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(function(e){
+      $('.popup').hide();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    });
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+  <script>AV.initialize("cTAOGJvwpiIkJufS2JmsnjMf-gzGzoHsz", "pYWSupIvureEPupAE8VAv3AR");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+
+  
+
+  
+
+
+</body>
+</html>

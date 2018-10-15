@@ -1,0 +1,1151 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/TECH/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/TECH/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/TECH/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="GCD,Dispatch queue,队列," />
+
+
+
+
+
+  <link rel="alternate" href="/TECH/atom.xml" title="kobeLuo的技术笔记" type="application/atom+xml" />
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/TECH/images/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="GCD是基于C封装的函数,具备非常高的效率,在ARC环境下,无须主动管理内存,无须dispatch_retain和dispatch_release,可以将重点关注在业务逻辑上。GCD是基于队列的封装，下面浅要解析GCD的队列。">
+<meta name="keywords" content="GCD,Dispatch queue,队列">
+<meta property="og:type" content="article">
+<meta property="og:title" content="GCD系列:队列(dispatch_queue)">
+<meta property="og:url" content="http://yoursite.com/2017/03/20/dispatch_queue/index.html">
+<meta property="og:site_name" content="kobeLuo的技术笔记">
+<meta property="og:description" content="GCD是基于C封装的函数,具备非常高的效率,在ARC环境下,无须主动管理内存,无须dispatch_retain和dispatch_release,可以将重点关注在业务逻辑上。GCD是基于队列的封装，下面浅要解析GCD的队列。">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-10-15T02:31:11.453Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="GCD系列:队列(dispatch_queue)">
+<meta name="twitter:description" content="GCD是基于C封装的函数,具备非常高的效率,在ARC环境下,无须主动管理内存,无须dispatch_retain和dispatch_release,可以将重点关注在业务逻辑上。GCD是基于队列的封装，下面浅要解析GCD的队列。">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/TECH/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/03/20/dispatch_queue/"/>
+
+
+
+
+
+  <title> GCD系列:队列(dispatch_queue) | kobeLuo的技术笔记 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/TECH/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">kobeLuo的技术笔记</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">简于心 精于行</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/TECH/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/TECH/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/TECH/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/TECH/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/TECH/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于作者
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocapitalize="off" autocomplete="off" autocorrect="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-categories " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/TECH/2017/03/20/dispatch_queue/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="luo gang">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/TECH/images/avatar.jpeg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="kobeLuo的技术笔记">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                GCD系列:队列(dispatch_queue)
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-03-20T11:44:22+08:00">
+                2017-03-20
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/TECH/categories/Objective-C/" itemprop="url" rel="index">
+                    <span itemprop="name">Objective-C</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/TECH/2017/03/20/dispatch_queue/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count"
+                        data-disqus-identifier="2017/03/20/dispatch_queue/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+             <span id="/TECH/2017/03/20/dispatch_queue/" class="leancloud_visitors" data-flag-title="GCD系列:队列(dispatch_queue)">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数 </span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p><blockquote class="blockquote-center">GCD是基于C封装的函数,具备非常高的效率,<br>在ARC环境下,无须主动管理内存,<br>无须dispatch_retain和dispatch_release,<br>可以将重点关注在业务逻辑上。<br>GCD是基于队列的封装，<strong>下面浅要解析GCD的队列</strong>。<br></blockquote><br><a id="more"></a></p>
+<h3 id="GCD获取线程的方式"><a href="#GCD获取线程的方式" class="headerlink" title="GCD获取线程的方式"></a>GCD获取线程的方式</h3><hr>
+<p>下面是Apple官方提供的获取线程相关函数</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">- <span class="keyword">void</span> <span class="built_in">dispatch_sync</span>(<span class="built_in">dispatch_queue_t</span> queue, dispatch_block_t block);</span><br><span class="line"><span class="comment">//获取一个异步线程队列，queue用于指定block执行体所在的队列</span></span><br><span class="line">- <span class="keyword">void</span> dispatch_sync_f(<span class="built_in">dispatch_queue_t</span> queue,<span class="keyword">void</span> *_Nullable contex,dispatch_function_t work); </span><br><span class="line"><span class="comment">//跟dispatch_sync类似，只不过接收的是一个dispatch_function_t的函数。</span></span><br><span class="line">- <span class="keyword">void</span> <span class="built_in">dispatch_async</span>(<span class="built_in">dispatch_queue_t</span> queue, dispatch_block_t block); </span><br><span class="line"><span class="comment">//获取一个异步线程，接收一个闭包block.</span></span><br><span class="line">- <span class="keyword">void</span> dispatch_async_f(<span class="built_in">dispatch_queue_t</span> queue,<span class="keyword">void</span> *_Nullable context,dispatch_function_t work);</span><br><span class="line"><span class="comment">//获取一个异步线程,接收一个函数指针.</span></span><br></pre></td></tr></table></figure>
+<h3 id="GCD获取队列的方式"><a href="#GCD获取队列的方式" class="headerlink" title="GCD获取队列的方式"></a>GCD获取队列的方式</h3><hr>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">-  <span class="built_in">dispatch_queue_t</span> dispatch_get_main_queue(); </span><br><span class="line"><span class="comment">//获取主队列</span></span><br><span class="line">- <span class="built_in">dispatch_queue_t</span> dispatch_get_global_queue(<span class="keyword">long</span> identifier, <span class="keyword">unsigned</span> <span class="keyword">long</span> flags); </span><br><span class="line"><span class="comment">//获取全局队列,由系统分配,分配完成后不可更改,flags是预留字段，传递任何非0值将返回一个NULL值引发异常，identifier指定全局队列的级别，队列的级别如下:</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#define DISPATCH_QUEUE_PRIORITY_HIGH 2</span></span><br><span class="line"><span class="meta">#define DISPATCH_QUEUE_PRIORITY_DEFAULT 0</span></span><br><span class="line"><span class="meta">#define DISPATCH_QUEUE_PRIORITY_LOW (-2)</span></span><br><span class="line"><span class="meta">#define DISPATCH_QUEUE_PRIORITY_BACKGROUND INT16_MIN</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li>推荐使用基于QOS_CLASS的属性级别.</li>
+</ul>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">QOS_CLASS_USER_INTERACTIVE  </span><br><span class="line"><span class="comment">//最高优先级,用于UI更新等与用户交互的操作.</span></span><br><span class="line">QOS_CLASS_USER_INITIATED        </span><br><span class="line"><span class="comment">//初始化优先级，用于初始化等，等同于DISPATCH_QUEUE_PRIORITY_HIGH</span></span><br><span class="line">QOS_CLASS_DEFAULT                   </span><br><span class="line"><span class="comment">//默认优先级，等同于DISPATCH_QUEUE_PRIORITY_DEFAULT</span></span><br><span class="line">QOS_CLASS_UTILITY                     </span><br><span class="line"><span class="comment">//低优先级，等同于DISPATCH_QUEUE_PRIORITY_LOW</span></span><br><span class="line">QOS_CLASS_BACKGROUND         </span><br><span class="line"><span class="comment">//后台级,用户用户无法感知的一些数据处理，等同于DISPATCH_QUEUE_PRIORITY_BACKGROUND</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li>自己创建的队列</li>
+</ul>
+<p>GCD中使用<code>dispatch_queue_t dispatch_queue_create(const char *_Nullable label,dispatch_queue_attr_t _Nullable attr);</code>来创建一个队列，其中label表示该队列的唯一标识字符串，使用<code>const char *dispatch_queue_get_label(dispatch_queue_t _Nullable queue);</code>来获取该字符串,参数attr指定队列的执行顺序，有以下参数:</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">DISPATCH_QUEUE_SERIAL        </span><br><span class="line"><span class="comment">//指定串行（FIFO）队列,等同于传入参数NULL</span></span><br><span class="line">DISPATCH_QUEUE_CONCURRENT    </span><br><span class="line"><span class="comment">//指定并发队列,</span></span><br><span class="line">dispatch_queue_attr_t dispatch_queue_attr_make_with_qos_class(dispatch_queue_attr_t _Nullable attr,dispatch_qos_class_t qos_class, <span class="keyword">int</span> relative_priority);</span><br><span class="line"><span class="comment">//产生一个基于QOS_CLASS的队列.</span></span><br></pre></td></tr></table></figure>
+<h4 id="dispatch-apply应用"><a href="#dispatch-apply应用" class="headerlink" title="dispatch_apply应用"></a>dispatch_apply应用</h4><hr>
+<p>dispatch_apply必须要结合dispatch_async 或者dispatch_async_f函数一起使用,如果脱离了dispatch_async函数,程序很容易crash，需要特别关注.<br>在指定的queue中去直接执行dispatch_apply(count,queue,block);会直接引发crash!</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">- <span class="keyword">void</span> dispatch_apply(size_t iterations, <span class="built_in">dispatch_queue_t</span> queue,DISPATCH_NOESCAPE <span class="keyword">void</span> (^block)(size_t));</span><br></pre></td></tr></table></figure>
+<p>应用一个block,循环执行block代码块的次数是iterations次，每次执行的index通过size_t参数传递到block代码块内部<br><em>queue</em>:指定apply函数接收的闭包block执行对应的队列方式,如果是串行队列,跟for循环功能一致，无法达到优化性能的目的。<br>如果是并行队列,则重复执行block的顺序不定,以达到优化性能的目的，下面是2个简单的例子:</p>
+<h4 id="case-1"><a href="#case-1" class="headerlink" title="case 1:"></a>case 1:</h4><figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">void</span> dispatchApply() &#123;</span><br><span class="line"></span><br><span class="line"><span class="built_in">dispatch_queue_t</span> queue = dispatch_get_global_queue(<span class="number">0</span>, <span class="number">0</span>);</span><br><span class="line"></span><br><span class="line"><span class="built_in">dispatch_async</span>(dispatch_get_main_queue(), ^&#123;</span><br><span class="line"></span><br><span class="line">	<span class="comment">//执行的顺序取决于queue是串行还是并行，如果使用串行就跟for循环一样,没有意义</span></span><br><span class="line">	<span class="comment">//Dispatch_apply函数主要的功能是提高性能.</span></span><br><span class="line">	dispatch_apply(<span class="number">10</span>, queue, ^(size_t index) &#123;</span><br><span class="line"></span><br><span class="line">		<span class="built_in">NSLog</span>(<span class="string">@"index....%lu"</span>,index);</span><br><span class="line">	&#125;);</span><br><span class="line">	<span class="comment">//dispatch_apply是串行执行，知道10次invoke complete的时候，才继续往下执行.</span></span><br><span class="line">	<span class="built_in">NSLog</span>(<span class="string">@"ddddd"</span>);</span><br><span class="line">	&#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>输出结果:  <strong>可以看出，是并行执行的，达到了apply优化性能的目的.</strong><br><figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">2017</span><span class="number">-02</span><span class="number">-27</span> <span class="number">14</span>:<span class="number">56</span>:<span class="number">03.856182</span> dispatch_queue[<span class="number">3154</span>:<span class="number">130315</span>] index...<span class="number">.0</span></span><br><span class="line"><span class="number">2017</span><span class="number">-02</span><span class="number">-27</span> <span class="number">14</span>:<span class="number">56</span>:<span class="number">03.856182</span> dispatch_queue[<span class="number">3154</span>:<span class="number">130336</span>] index...<span class="number">.2</span></span><br><span class="line"><span class="number">2017</span><span class="number">-02</span><span class="number">-27</span> <span class="number">14</span>:<span class="number">56</span>:<span class="number">03.856205</span> dispatch_queue[<span class="number">3154</span>:<span class="number">130337</span>] index...<span class="number">.1</span></span><br><span class="line"><span class="number">2017</span><span class="number">-02</span><span class="number">-27</span> <span class="number">14</span>:<span class="number">56</span>:<span class="number">03.856240</span> dispatch_queue[<span class="number">3154</span>:<span class="number">130315</span>] index...<span class="number">.4</span></span><br><span class="line"><span class="number">2017</span><span class="number">-02</span><span class="number">-27</span> <span class="number">14</span>:<span class="number">56</span>:<span class="number">03.856251</span> dispatch_queue[<span class="number">3154</span>:<span class="number">130336</span>] index...<span class="number">.5</span></span><br><span class="line"><span class="number">2017</span><span class="number">-02</span><span class="number">-27</span> <span class="number">14</span>:<span class="number">56</span>:<span class="number">03.856208</span> dispatch_queue[<span class="number">3154</span>:<span class="number">130335</span>] index...<span class="number">.3</span></span><br><span class="line"><span class="number">2017</span><span class="number">-02</span><span class="number">-27</span> <span class="number">14</span>:<span class="number">56</span>:<span class="number">03.856272</span> dispatch_queue[<span class="number">3154</span>:<span class="number">130315</span>] index...<span class="number">.6</span></span><br><span class="line"><span class="number">2017</span><span class="number">-02</span><span class="number">-27</span> <span class="number">14</span>:<span class="number">56</span>:<span class="number">03.856278</span> dispatch_queue[<span class="number">3154</span>:<span class="number">130336</span>] index...<span class="number">.8</span></span><br><span class="line"><span class="number">2017</span><span class="number">-02</span><span class="number">-27</span> <span class="number">14</span>:<span class="number">56</span>:<span class="number">03.856280</span> dispatch_queue[<span class="number">3154</span>:<span class="number">130337</span>] index...<span class="number">.7</span></span><br><span class="line"><span class="number">2017</span><span class="number">-02</span><span class="number">-27</span> <span class="number">14</span>:<span class="number">56</span>:<span class="number">03.856293</span> dispatch_queue[<span class="number">3154</span>:<span class="number">130335</span>] index...<span class="number">.9</span></span><br><span class="line"><span class="number">2017</span><span class="number">-02</span><span class="number">-27</span> <span class="number">14</span>:<span class="number">56</span>:<span class="number">03.856327</span> dispatch_queue[<span class="number">3154</span>:<span class="number">130315</span>] ddddd</span><br></pre></td></tr></table></figure></p>
+<h4 id="case-2"><a href="#case-2" class="headerlink" title="case 2:"></a>case 2:</h4><figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">void</span> dispatchApplySerial() &#123;</span><br><span class="line"></span><br><span class="line">	<span class="built_in">dispatch_queue_t</span> queue = dispatch_get_main_queue();</span><br><span class="line"></span><br><span class="line">	<span class="built_in">dispatch_async</span>(dispatch_get_global_queue(<span class="number">0</span>, <span class="number">0</span>), ^&#123;</span><br><span class="line"></span><br><span class="line">		<span class="comment">//执行的顺序取决于queue是串行还是并行，如果使用串行就跟for循环一样,没有意义</span></span><br><span class="line">		<span class="comment">//Dispatch_apply函数主要的功能是提高性能.</span></span><br><span class="line">		dispatch_apply(<span class="number">10</span>, queue, ^(size_t index) &#123;</span><br><span class="line"></span><br><span class="line">			<span class="built_in">NSLog</span>(<span class="string">@"index....%lu"</span>,index);</span><br><span class="line">		&#125;);</span><br><span class="line">		<span class="comment">//dispatch_apply是串行执行，知道10次invoke complete的时候，才继续往下执行.</span></span><br><span class="line">		<span class="built_in">NSLog</span>(<span class="string">@"ddddd"</span>);</span><br><span class="line">	&#125;);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">输出结果:</span><br><span class="line"><span class="number">2017</span><span class="number">-02</span><span class="number">-27</span> <span class="number">14</span>:<span class="number">53</span>:<span class="number">40.472788</span> dispatch_queue[<span class="number">3096</span>:<span class="number">128184</span>] index...<span class="number">.0</span></span><br><span class="line"><span class="number">2017</span><span class="number">-02</span><span class="number">-27</span> <span class="number">14</span>:<span class="number">53</span>:<span class="number">40.472830</span> dispatch_queue[<span class="number">3096</span>:<span class="number">128184</span>] index...<span class="number">.1</span></span><br><span class="line"><span class="number">2017</span><span class="number">-02</span><span class="number">-27</span> <span class="number">14</span>:<span class="number">53</span>:<span class="number">40.472842</span> dispatch_queue[<span class="number">3096</span>:<span class="number">128184</span>] index...<span class="number">.2</span></span><br><span class="line"><span class="number">2017</span><span class="number">-02</span><span class="number">-27</span> <span class="number">14</span>:<span class="number">53</span>:<span class="number">40.472851</span> dispatch_queue[<span class="number">3096</span>:<span class="number">128184</span>] index...<span class="number">.3</span></span><br><span class="line"><span class="number">2017</span><span class="number">-02</span><span class="number">-27</span> <span class="number">14</span>:<span class="number">53</span>:<span class="number">40.472860</span> dispatch_queue[<span class="number">3096</span>:<span class="number">128184</span>] index...<span class="number">.4</span></span><br><span class="line"><span class="number">2017</span><span class="number">-02</span><span class="number">-27</span> <span class="number">14</span>:<span class="number">53</span>:<span class="number">40.472868</span> dispatch_queue[<span class="number">3096</span>:<span class="number">128184</span>] index...<span class="number">.5</span></span><br><span class="line"><span class="number">2017</span><span class="number">-02</span><span class="number">-27</span> <span class="number">14</span>:<span class="number">53</span>:<span class="number">40.472877</span> dispatch_queue[<span class="number">3096</span>:<span class="number">128184</span>] index...<span class="number">.6</span></span><br><span class="line"><span class="number">2017</span><span class="number">-02</span><span class="number">-27</span> <span class="number">14</span>:<span class="number">53</span>:<span class="number">40.472885</span> dispatch_queue[<span class="number">3096</span>:<span class="number">128184</span>] index...<span class="number">.7</span></span><br><span class="line"><span class="number">2017</span><span class="number">-02</span><span class="number">-27</span> <span class="number">14</span>:<span class="number">53</span>:<span class="number">40.472893</span> dispatch_queue[<span class="number">3096</span>:<span class="number">128184</span>] index...<span class="number">.8</span></span><br><span class="line"><span class="number">2017</span><span class="number">-02</span><span class="number">-27</span> <span class="number">14</span>:<span class="number">53</span>:<span class="number">40.472902</span> dispatch_queue[<span class="number">3096</span>:<span class="number">128184</span>] index...<span class="number">.9</span></span><br><span class="line"><span class="number">2017</span><span class="number">-02</span><span class="number">-27</span> <span class="number">14</span>:<span class="number">53</span>:<span class="number">40.472931</span> dispatch_queue[<span class="number">3096</span>:<span class="number">128223</span>] ddddddddd</span><br></pre></td></tr></table></figure>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">- <span class="keyword">void</span> dispatch_apply_f(size_t iterations, <span class="built_in">dispatch_queue_t</span> queue,<span class="keyword">void</span> *_Nullable context,<span class="keyword">void</span> (*work)(<span class="keyword">void</span> *_Nullable, size_t));</span><br></pre></td></tr></table></figure>
+<p>跟dispatch_apply功能一致,方法接收一个函数指针.</p>
+<h3 id="void-dispatch-set-target-queue-dispatch-object-t-object-dispatch-queue-t-Nullable-queue"><a href="#void-dispatch-set-target-queue-dispatch-object-t-object-dispatch-queue-t-Nullable-queue" class="headerlink" title="void dispatch_set_target_queue(dispatch_object_t object,dispatch_queue_t _Nullable queue);"></a>void dispatch_set_target_queue(dispatch_object_t object,dispatch_queue_t _Nullable queue);</h3><hr>
+<p>dispatch_set_target_queue可以将object指向的dispatch_object_t对象的队列方式按照参数2的queue的队列方式去执行，它的一大功能就是可以把并发的函数变为串行执行,下面是例子:<br><figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">void</span> setTargetQueue() &#123;</span><br><span class="line"></span><br><span class="line">	<span class="built_in">dispatch_queue_t</span> _serialQueue = dispatch_queue_create(<span class="string">"this.is.serial.queue"</span>, DISPATCH_QUEUE_SERIAL);</span><br><span class="line">	<span class="built_in">dispatch_queue_t</span> _concurrcyQueue = dispatch_queue_create(<span class="string">"this.is.concurrency.queue"</span>, DISPATCH_QUEUE_CONCURRENT);</span><br><span class="line">	<span class="comment">//	dispatch_set_target_queue(_concurrcyQueue,_serialQueue);</span></span><br><span class="line">	<span class="built_in">NSInteger</span> index = <span class="number">0</span>;</span><br><span class="line">	<span class="keyword">while</span> (index ++ &lt; <span class="number">5</span>) &#123;</span><br><span class="line"></span><br><span class="line">		<span class="built_in">dispatch_async</span>(_concurrcyQueue, ^&#123; <span class="built_in">NSLog</span>(<span class="string">@"11111111111"</span>); &#125;);</span><br><span class="line">		<span class="built_in">dispatch_async</span>(_concurrcyQueue, ^&#123; <span class="built_in">NSLog</span>(<span class="string">@"22222222222"</span>); &#125;);</span><br><span class="line">		<span class="built_in">dispatch_async</span>(_serialQueue, ^&#123;	<span class="built_in">NSLog</span>(<span class="string">@"3333333333"</span>); &#125;);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//执行的结果如下：</span></span><br><span class="line"><span class="number">2017</span><span class="number">-02</span><span class="number">-27</span> <span class="number">15</span>:<span class="number">22</span>:<span class="number">42.853347</span> dispatch_queue[<span class="number">3443</span>:<span class="number">148056</span>] <span class="number">3333333333</span></span><br><span class="line"><span class="number">2017</span><span class="number">-02</span><span class="number">-27</span> <span class="number">15</span>:<span class="number">22</span>:<span class="number">42.853346</span> dispatch_queue[<span class="number">3443</span>:<span class="number">148077</span>] <span class="number">11111111111</span></span><br><span class="line"><span class="number">2017</span><span class="number">-02</span><span class="number">-27</span> <span class="number">15</span>:<span class="number">22</span>:<span class="number">42.853367</span> dispatch_queue[<span class="number">3443</span>:<span class="number">148069</span>] <span class="number">11111111111</span></span><br><span class="line"><span class="number">2017</span><span class="number">-02</span><span class="number">-27</span> <span class="number">15</span>:<span class="number">22</span>:<span class="number">42.853375</span> dispatch_queue[<span class="number">3443</span>:<span class="number">148057</span>] <span class="number">22222222222</span></span><br><span class="line"><span class="number">2017</span><span class="number">-02</span><span class="number">-27</span> <span class="number">15</span>:<span class="number">22</span>:<span class="number">42.853437</span> dispatch_queue[<span class="number">3443</span>:<span class="number">148056</span>] <span class="number">3333333333</span></span><br><span class="line"><span class="number">2017</span><span class="number">-02</span><span class="number">-27</span> <span class="number">15</span>:<span class="number">22</span>:<span class="number">42.853475</span> dispatch_queue[<span class="number">3443</span>:<span class="number">148077</span>] <span class="number">22222222222</span></span><br><span class="line"><span class="number">2017</span><span class="number">-02</span><span class="number">-27</span> <span class="number">15</span>:<span class="number">22</span>:<span class="number">42.853482</span> dispatch_queue[<span class="number">3443</span>:<span class="number">148069</span>] <span class="number">11111111111</span></span><br><span class="line"><span class="number">2017</span><span class="number">-02</span><span class="number">-27</span> <span class="number">15</span>:<span class="number">22</span>:<span class="number">42.853499</span> dispatch_queue[<span class="number">3443</span>:<span class="number">148057</span>] <span class="number">22222222222</span></span><br><span class="line"><span class="number">2017</span><span class="number">-02</span><span class="number">-27</span> <span class="number">15</span>:<span class="number">22</span>:<span class="number">42.853507</span> dispatch_queue[<span class="number">3443</span>:<span class="number">148056</span>] <span class="number">3333333333</span></span><br><span class="line"><span class="number">2017</span><span class="number">-02</span><span class="number">-27</span> <span class="number">15</span>:<span class="number">22</span>:<span class="number">42.853519</span> dispatch_queue[<span class="number">3443</span>:<span class="number">148077</span>] <span class="number">11111111111</span></span><br><span class="line"><span class="number">2017</span><span class="number">-02</span><span class="number">-27</span> <span class="number">15</span>:<span class="number">22</span>:<span class="number">42.853529</span> dispatch_queue[<span class="number">3443</span>:<span class="number">148069</span>] <span class="number">22222222222</span></span><br><span class="line"><span class="number">2017</span><span class="number">-02</span><span class="number">-27</span> <span class="number">15</span>:<span class="number">22</span>:<span class="number">42.853538</span> dispatch_queue[<span class="number">3443</span>:<span class="number">148057</span>] <span class="number">11111111111</span></span><br><span class="line"><span class="number">2017</span><span class="number">-02</span><span class="number">-27</span> <span class="number">15</span>:<span class="number">22</span>:<span class="number">42.853546</span> dispatch_queue[<span class="number">3443</span>:<span class="number">148056</span>] <span class="number">3333333333</span></span><br><span class="line"><span class="number">2017</span><span class="number">-02</span><span class="number">-27</span> <span class="number">15</span>:<span class="number">22</span>:<span class="number">42.853557</span> dispatch_queue[<span class="number">3443</span>:<span class="number">148077</span>] <span class="number">22222222222</span></span><br><span class="line"><span class="number">2017</span><span class="number">-02</span><span class="number">-27</span> <span class="number">15</span>:<span class="number">22</span>:<span class="number">42.853585</span> dispatch_queue[<span class="number">3443</span>:<span class="number">148056</span>] <span class="number">3333333333</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//可以看出，执行结果很混乱，属于并发执行,现在打开set_target_queue注释,得到以下结果:</span></span><br><span class="line"><span class="number">2017</span><span class="number">-02</span><span class="number">-27</span> <span class="number">15</span>:<span class="number">25</span>:<span class="number">06.510355</span> dispatch_queue[<span class="number">3470</span>:<span class="number">149395</span>] <span class="number">11111111111</span></span><br><span class="line"><span class="number">2017</span><span class="number">-02</span><span class="number">-27</span> <span class="number">15</span>:<span class="number">25</span>:<span class="number">06.510405</span> dispatch_queue[<span class="number">3470</span>:<span class="number">149395</span>] <span class="number">22222222222</span></span><br><span class="line"><span class="number">2017</span><span class="number">-02</span><span class="number">-27</span> <span class="number">15</span>:<span class="number">25</span>:<span class="number">06.510423</span> dispatch_queue[<span class="number">3470</span>:<span class="number">149395</span>] <span class="number">3333333333</span></span><br><span class="line"><span class="number">2017</span><span class="number">-02</span><span class="number">-27</span> <span class="number">15</span>:<span class="number">25</span>:<span class="number">06.510438</span> dispatch_queue[<span class="number">3470</span>:<span class="number">149395</span>] <span class="number">11111111111</span></span><br><span class="line"><span class="number">2017</span><span class="number">-02</span><span class="number">-27</span> <span class="number">15</span>:<span class="number">25</span>:<span class="number">06.510452</span> dispatch_queue[<span class="number">3470</span>:<span class="number">149395</span>] <span class="number">22222222222</span></span><br><span class="line"><span class="number">2017</span><span class="number">-02</span><span class="number">-27</span> <span class="number">15</span>:<span class="number">25</span>:<span class="number">06.510465</span> dispatch_queue[<span class="number">3470</span>:<span class="number">149395</span>] <span class="number">3333333333</span></span><br><span class="line"><span class="number">2017</span><span class="number">-02</span><span class="number">-27</span> <span class="number">15</span>:<span class="number">25</span>:<span class="number">06.510477</span> dispatch_queue[<span class="number">3470</span>:<span class="number">149395</span>] <span class="number">11111111111</span></span><br><span class="line"><span class="number">2017</span><span class="number">-02</span><span class="number">-27</span> <span class="number">15</span>:<span class="number">25</span>:<span class="number">06.510491</span> dispatch_queue[<span class="number">3470</span>:<span class="number">149395</span>] <span class="number">22222222222</span></span><br><span class="line"><span class="number">2017</span><span class="number">-02</span><span class="number">-27</span> <span class="number">15</span>:<span class="number">25</span>:<span class="number">06.510501</span> dispatch_queue[<span class="number">3470</span>:<span class="number">149395</span>] <span class="number">3333333333</span></span><br><span class="line"><span class="number">2017</span><span class="number">-02</span><span class="number">-27</span> <span class="number">15</span>:<span class="number">25</span>:<span class="number">06.510512</span> dispatch_queue[<span class="number">3470</span>:<span class="number">149395</span>] <span class="number">11111111111</span></span><br><span class="line"><span class="number">2017</span><span class="number">-02</span><span class="number">-27</span> <span class="number">15</span>:<span class="number">25</span>:<span class="number">06.510524</span> dispatch_queue[<span class="number">3470</span>:<span class="number">149395</span>] <span class="number">22222222222</span></span><br><span class="line"><span class="number">2017</span><span class="number">-02</span><span class="number">-27</span> <span class="number">15</span>:<span class="number">25</span>:<span class="number">06.510536</span> dispatch_queue[<span class="number">3470</span>:<span class="number">149395</span>] <span class="number">3333333333</span></span><br><span class="line"><span class="number">2017</span><span class="number">-02</span><span class="number">-27</span> <span class="number">15</span>:<span class="number">25</span>:<span class="number">06.510548</span> dispatch_queue[<span class="number">3470</span>:<span class="number">149395</span>] <span class="number">11111111111</span></span><br><span class="line"><span class="number">2017</span><span class="number">-02</span><span class="number">-27</span> <span class="number">15</span>:<span class="number">25</span>:<span class="number">06.510560</span> dispatch_queue[<span class="number">3470</span>:<span class="number">149395</span>] <span class="number">22222222222</span></span><br><span class="line"><span class="number">2017</span><span class="number">-02</span><span class="number">-27</span> <span class="number">15</span>:<span class="number">25</span>:<span class="number">06.510575</span> dispatch_queue[<span class="number">3470</span>:<span class="number">149395</span>] <span class="number">3333333333</span></span><br><span class="line">这就是典型的dispatch_set_target并发变FIFO串行执行功能.</span><br></pre></td></tr></table></figure></p>
+<h3 id="延时函数-dispatch-after"><a href="#延时函数-dispatch-after" class="headerlink" title="延时函数 dispatch_after"></a>延时函数 dispatch_after</h3><hr>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">- <span class="keyword">void</span> dispatch_after(dispatch_time_t when,<span class="built_in">dispatch_queue_t</span> queue,dispatch_block_t block);</span><br></pre></td></tr></table></figure>
+<ol>
+<li>参数1 when指定block执行的时间，</li>
+<li>参数2 queue指定block执行的队列形式，</li>
+<li>参数3 block指定延时函数接收的闭包.</li>
+</ol>
+<ul>
+<li>void dispatch_after_f(dispatch_time_t when,dispatch_queue_t queue,void *_Nullable context,dispatch_function_t work);<br>1.跟dispatch_after功能一样.<br>2.参数3 work指定延时函数接收一个函数指针.</li>
+</ul>
+<h3 id="原子性操作-Dispatch-barrier"><a href="#原子性操作-Dispatch-barrier" class="headerlink" title="原子性操作 Dispatch_barrier"></a>原子性操作 Dispatch_barrier</h3><hr>
+<p>dispatch_barrier在多线程编程中用来保证某个值域的原子性。在多线程操作中，同时对于同一个值的读取不会有问题，但如果同时对一个值进行修改就会产生冲突，此时dispatch_barrier可以很好的解决这个问题，dispatch_barrier就像一个盒子，当盒子内的任务没有出来前，盒子外的任务全部维护到一个队列中。<br><strong>相关函数如下:</strong><br><figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">- <span class="keyword">void</span> dispatch_barrier_sync(<span class="built_in">dispatch_queue_t</span> queue, dispatch_block_t block);</span><br><span class="line"><span class="comment">//将闭包放入同步环境的queue队列中执行.</span></span><br><span class="line">- <span class="keyword">void</span> dispatch_barrier_sync_f(<span class="built_in">dispatch_queue_t</span> queue,<span class="keyword">void</span> *_Nullable context,dispatch_function_t work);</span><br><span class="line"><span class="comment">//将函数放入同步环境中的queue执行</span></span><br><span class="line">- <span class="keyword">void</span> dispatch_barrier_async(<span class="built_in">dispatch_queue_t</span> queue, dispatch_block_t block);</span><br><span class="line"><span class="comment">//将闭包放入异步环境的queue队列中执行.</span></span><br><span class="line">- <span class="keyword">void</span> dispatch_barrier_async_f(<span class="built_in">dispatch_queue_t</span> queue,<span class="keyword">void</span> *_Nullable context,dispatch_function_t work);</span><br><span class="line"><span class="comment">//将函数放入异步环境中的queue执行</span></span><br></pre></td></tr></table></figure></p>
+<p><strong>事例代码如下：</strong></p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">NSMutableDictionary</span> *_vars;</span><br><span class="line"><span class="keyword">void</span> setVars(<span class="built_in">NSMutableDictionary</span> *vars) &#123;</span><br><span class="line"></span><br><span class="line">	<span class="built_in">dispatch_queue_t</span> _serialQueue = dispatch_queue_create(<span class="string">"this.is.serial.queue"</span>, DISPATCH_QUEUE_SERIAL);</span><br><span class="line">	dispatch_barrier_async(_serialQueue, ^&#123;</span><br><span class="line"></span><br><span class="line">		_vars = vars;</span><br><span class="line">	&#125;);</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<h3 id="为一个队列添加属性和获取属性"><a href="#为一个队列添加属性和获取属性" class="headerlink" title="为一个队列添加属性和获取属性"></a>为一个队列添加属性和获取属性</h3><p>GCD允许给一个队列通过特定的key值关联属性contenxt,有点类似于使用runtime的objc_associated,在类别中给一个类添加属性，用于实际业务需要.<br>当key对应的context发生变化时，会触发C函数destructor.</p>
+<ul>
+<li>void dispatch_queue_set_specific(dispatch_queue_t queue, const void <em>key,void </em>_Nullable context, dispatch_function_t _Nullable destructor);<br>//通过key,为一个queue设置context</li>
+<li>void <em>_Nullable dispatch_queue_get_specific(dispatch_queue_t queue, const void </em>key);<br>//通过key,从一个queue读取context</li>
+<li>void <em>_Nullable dispatch_get_specific(const void </em>key);<br>//测试当前队列是否是key对应的queue队列（有待认证。。）<br>示例代码如下:</li>
+</ul>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">void</span> destructorInvoke(<span class="keyword">const</span> <span class="keyword">void</span> *string) &#123;</span><br><span class="line"></span><br><span class="line">	<span class="built_in">NSLog</span>(<span class="string">@"destructor -----&gt;%@"</span>,[[<span class="built_in">NSString</span> alloc] initWithUTF8String:(<span class="keyword">char</span> *)string]);</span><br><span class="line">&#125;</span><br><span class="line"><span class="built_in">dispatch_queue_t</span> _serialQueue;</span><br><span class="line"><span class="keyword">void</span> dispatchSpecific() &#123;</span><br><span class="line"></span><br><span class="line">	setSpecific(<span class="string">@"1"</span>);</span><br><span class="line">	setSpecific(<span class="string">@"2"</span>);</span><br><span class="line">	setSpecific(<span class="string">@"3"</span>);</span><br><span class="line">	setSpecific(<span class="string">@"4"</span>);</span><br><span class="line">	setSpecific(<span class="string">@"5"</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">void</span> setSpecific(<span class="built_in">NSString</span> *context) &#123;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">if</span> (!_serialQueue) &#123;</span><br><span class="line"></span><br><span class="line">		_serialQueue = dispatch_queue_create(<span class="string">"serial.queue"</span>, DISPATCH_QUEUE_SERIAL);</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">const</span> <span class="keyword">char</span> *key = <span class="string">"set one context"</span>;</span><br><span class="line">	<span class="built_in">NSLog</span>(<span class="string">@"set string:%@"</span>,context);</span><br><span class="line">	dispatch_queue_set_specific(_serialQueue, key, context.UTF8String, &amp;destructorInvoke);</span><br><span class="line"></span><br><span class="line">	<span class="built_in">NSLog</span>(<span class="string">@"context is : %@"</span>,[<span class="built_in">NSString</span> stringWithUTF8String:dispatch_queue_get_specific(_serialQueue,key)]);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">输出结果:</span><br><span class="line"><span class="number">2017</span><span class="number">-02</span><span class="number">-27</span> <span class="number">16</span>:<span class="number">14</span>:<span class="number">25.026095</span> dispatch_queue[<span class="number">3855</span>:<span class="number">177340</span>] set string:<span class="number">1</span></span><br><span class="line"><span class="number">2017</span><span class="number">-02</span><span class="number">-27</span> <span class="number">16</span>:<span class="number">14</span>:<span class="number">25.026151</span> dispatch_queue[<span class="number">3855</span>:<span class="number">177340</span>] context is : <span class="number">1</span></span><br><span class="line"><span class="number">2017</span><span class="number">-02</span><span class="number">-27</span> <span class="number">16</span>:<span class="number">14</span>:<span class="number">25.026166</span> dispatch_queue[<span class="number">3855</span>:<span class="number">177340</span>] set string:<span class="number">2</span></span><br><span class="line"><span class="number">2017</span><span class="number">-02</span><span class="number">-27</span> <span class="number">16</span>:<span class="number">14</span>:<span class="number">25.026194</span> dispatch_queue[<span class="number">3855</span>:<span class="number">177340</span>] context is : <span class="number">2</span></span><br><span class="line"><span class="number">2017</span><span class="number">-02</span><span class="number">-27</span> <span class="number">16</span>:<span class="number">14</span>:<span class="number">25.026206</span> dispatch_queue[<span class="number">3855</span>:<span class="number">177340</span>] set string:<span class="number">3</span></span><br><span class="line"><span class="number">2017</span><span class="number">-02</span><span class="number">-27</span> <span class="number">16</span>:<span class="number">14</span>:<span class="number">25.026212</span> dispatch_queue[<span class="number">3855</span>:<span class="number">177396</span>] destructor -----&gt;<span class="number">1</span></span><br><span class="line"><span class="number">2017</span><span class="number">-02</span><span class="number">-27</span> <span class="number">16</span>:<span class="number">14</span>:<span class="number">25.026225</span> dispatch_queue[<span class="number">3855</span>:<span class="number">177340</span>] context is : <span class="number">3</span></span><br><span class="line"><span class="number">2017</span><span class="number">-02</span><span class="number">-27</span> <span class="number">16</span>:<span class="number">14</span>:<span class="number">25.026228</span> dispatch_queue[<span class="number">3855</span>:<span class="number">177396</span>] destructor -----&gt;<span class="number">2</span></span><br><span class="line"><span class="number">2017</span><span class="number">-02</span><span class="number">-27</span> <span class="number">16</span>:<span class="number">14</span>:<span class="number">25.026241</span> dispatch_queue[<span class="number">3855</span>:<span class="number">177340</span>] set string:<span class="number">4</span></span><br><span class="line"><span class="number">2017</span><span class="number">-02</span><span class="number">-27</span> <span class="number">16</span>:<span class="number">14</span>:<span class="number">25.026298</span> dispatch_queue[<span class="number">3855</span>:<span class="number">177340</span>] context is : <span class="number">4</span></span><br><span class="line"><span class="number">2017</span><span class="number">-02</span><span class="number">-27</span> <span class="number">16</span>:<span class="number">14</span>:<span class="number">25.026307</span> dispatch_queue[<span class="number">3855</span>:<span class="number">177396</span>] destructor -----&gt;<span class="number">3</span></span><br><span class="line"><span class="number">2017</span><span class="number">-02</span><span class="number">-27</span> <span class="number">16</span>:<span class="number">14</span>:<span class="number">25.026315</span> dispatch_queue[<span class="number">3855</span>:<span class="number">177340</span>] set string:<span class="number">5</span></span><br><span class="line"><span class="number">2017</span><span class="number">-02</span><span class="number">-27</span> <span class="number">16</span>:<span class="number">14</span>:<span class="number">25.026335</span> dispatch_queue[<span class="number">3855</span>:<span class="number">177340</span>] context is : <span class="number">5</span></span><br><span class="line"><span class="number">2017</span><span class="number">-02</span><span class="number">-27</span> <span class="number">16</span>:<span class="number">14</span>:<span class="number">25.026338</span> dispatch_queue[<span class="number">3855</span>:<span class="number">177396</span>] destructor -----&gt;<span class="number">4</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<div class="note info"><p>PS：<br>dispatch_queue的知识大致如此，水平有限，如有错误之处，请及时指出 </p>
+</div>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+  <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+    <div>坚持原创技术分享，您的支持将鼓励我继续创作！</div>
+    <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+      <span>赏</span>
+    </button>
+    <div id="QR" style="display: none;">
+      
+        <div id="wechat" style="display: inline-block">
+          <img id="wechat_qr" src="https://wx2.sinaimg.cn/mw690/006AZU4wgy1fw6n5xbgnmj30og0zktaf.jpg" alt="luo gang WeChat Pay"/>
+          <p>微信打赏</p>
+        </div>
+      
+      
+        <div id="alipay" style="display: inline-block">
+          <img id="alipay_qr" src="https://wx4.sinaimg.cn/mw690/006AZU4wgy1fw6n5w7j3kj30go0p0wfj.jpg" alt="luo gang Alipay"/>
+          <p>支付宝打赏</p>
+        </div>
+      
+    </div>
+  </div>
+
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/TECH/tags/GCD/" rel="tag"># GCD</a>
+          
+            <a href="/TECH/tags/Dispatch-queue/" rel="tag"># Dispatch queue</a>
+          
+            <a href="/TECH/tags/队列/" rel="tag"># 队列</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/TECH/2016/04/06/Mac useage/" rel="next" title="Mac使用笔记">
+                <i class="fa fa-chevron-left"></i> Mac使用笔记
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/TECH/2017/03/27/dispatch-block/" rel="prev" title="GCD系列:代码块(dispatch_block)">
+                GCD系列:代码块(dispatch_block) <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/TECH/images/avatar.jpeg"
+               alt="luo gang" />
+          <p class="site-author-name" itemprop="name">luo gang</p>
+           
+              <p class="site-description motion-element" itemprop="description">一个iOS和Mac OS开发的技术渣</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <!-- <a href="/TECH/archives"> -->
+              <a href="/archives">
+                <span class="site-state-item-count">6</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-categories">
+              <!-- <a href="/TECH/categories"> -->
+              <a href="/categories">
+                <span class="site-state-item-count">3</span>
+                <span class="site-state-item-name">分类</span>
+              <!-- </a> -->
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <!-- <a href="/TECH/tags"> -->
+              <a href="/tags">
+                <span class="site-state-item-count">12</span>
+                <span class="site-state-item-name">标签</span>
+              <!-- </a> -->
+              </a>
+            </div>
+          
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/TECH/atom.xml" rel="alternate">
+              <i class="fa fa-rss"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="http://douban.com" target="_blank" title="豆瓣">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  豆瓣
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://www.zhihu.com" target="_blank" title="知乎">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  知乎
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#GCD获取线程的方式"><span class="nav-number">1.</span> <span class="nav-text">GCD获取线程的方式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#GCD获取队列的方式"><span class="nav-number">2.</span> <span class="nav-text">GCD获取队列的方式</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#dispatch-apply应用"><span class="nav-number">2.1.</span> <span class="nav-text">dispatch_apply应用</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#case-1"><span class="nav-number">2.2.</span> <span class="nav-text">case 1:</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#case-2"><span class="nav-number">2.3.</span> <span class="nav-text">case 2:</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#void-dispatch-set-target-queue-dispatch-object-t-object-dispatch-queue-t-Nullable-queue"><span class="nav-number">3.</span> <span class="nav-text">void dispatch_set_target_queue(dispatch_object_t object,dispatch_queue_t _Nullable queue);</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#延时函数-dispatch-after"><span class="nav-number">4.</span> <span class="nav-text">延时函数 dispatch_after</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#原子性操作-Dispatch-barrier"><span class="nav-number">5.</span> <span class="nav-text">原子性操作 Dispatch_barrier</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#为一个队列添加属性和获取属性"><span class="nav-number">6.</span> <span class="nav-text">为一个队列添加属性和获取属性</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2015 - 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">luo gang</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/TECH/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/TECH/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/TECH/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/TECH/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/TECH/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/TECH/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/TECH/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/TECH/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/TECH/js/src/affix.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/TECH/js/src/schemes/pisces.js?v=5.1.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/TECH/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/TECH/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/TECH/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  
+
+    
+      <script id="dsq-count-scr" src="https://.disqus.com/count.js" async></script>
+    
+
+    
+      <script type="text/javascript">
+        var disqus_config = function () {
+          this.page.url = 'http://yoursite.com/2017/03/20/dispatch_queue/';
+          this.page.identifier = '2017/03/20/dispatch_queue/';
+          this.page.title = 'GCD系列:队列(dispatch_queue)';
+        };
+        var d = document, s = d.createElement('script');
+        s.src = 'https://.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', '' + +new Date());
+        (d.head || d.body).appendChild(s);
+      </script>
+    
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length == 0) {
+      search_path = "search.xml";
+    }
+    var path = "/TECH/" + search_path;
+    // monitor main search box;
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.popup').toggle();
+    }
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+      $.ajax({
+        url: path,
+        dataType: "xml",
+        async: true,
+        success: function( xmlResponse ) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = $( "entry", xmlResponse ).map(function() {
+            return {
+              title: $( "title", this ).text(),
+              content: $("content",this).text(),
+              url: $( "url" , this).text()
+            };
+          }).get();
+          var $input = document.getElementById(search_id);
+          var $resultContent = document.getElementById(content_id);
+          $input.addEventListener('input', function(){
+            var matchcounts = 0;
+            var str='<ul class=\"search-result-list\">';
+            var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+            $resultContent.innerHTML = "";
+            if (this.value.trim().length > 1) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var content_index = [];
+                var data_title = data.title.trim().toLowerCase();
+                var data_content = data.content.trim().replace(/<[^>]+>/g,"").toLowerCase();
+                var data_url = decodeURIComponent(data.url);
+                var index_title = -1;
+                var index_content = -1;
+                var first_occur = -1;
+                // only match artiles with not empty titles and contents
+                if(data_title != '') {
+                  keywords.forEach(function(keyword, i) {
+                    index_title = data_title.indexOf(keyword);
+                    index_content = data_content.indexOf(keyword);
+                    if( index_title >= 0 || index_content >= 0 ){
+                      isMatch = true;
+                      if (i == 0) {
+                        first_occur = index_content;
+                      }
+                    }
+
+                  });
+                }
+                // show search results
+                if (isMatch) {
+                  matchcounts += 1;
+                  str += "<li><a href='"+ data_url +"' class='search-result-title'>"+ data_title +"</a>";
+                  var content = data.content.trim().replace(/<[^>]+>/g,"");
+                  if (first_occur >= 0) {
+                    // cut out 100 characters
+                    var start = first_occur - 20;
+                    var end = first_occur + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if(start == 0){
+                      end = 50;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    var match_content = content.substring(start, end);
+                    // highlight all keywords
+                    keywords.forEach(function(keyword){
+                      var regS = new RegExp(keyword, "gi");
+                      match_content = match_content.replace(regS, "<b class=\"search-keyword\">"+keyword+"</b>");
+                    });
+
+                    str += "<p class=\"search-result\">" + match_content +"...</p>"
+                  }
+                  str += "</li>";
+                }
+              })};
+            str += "</ul>";
+            if (matchcounts == 0) { str = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>' }
+            if (keywords == "") { str = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>' }
+            $resultContent.innerHTML = str;
+          });
+          proceedsearch();
+        }
+      });}
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched == false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(function(e){
+      $('.popup').hide();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    });
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+  <script>AV.initialize("cTAOGJvwpiIkJufS2JmsnjMf-gzGzoHsz", "pYWSupIvureEPupAE8VAv3AR");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+
+  
+
+  
+
+
+</body>
+</html>
