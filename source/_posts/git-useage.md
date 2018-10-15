@@ -57,7 +57,9 @@ git remote remove newkey
 ```
 以上内容熟悉后，本地仓库克隆及commit及push基本已经可以了，
 关于多账号的sshkey问题，请[左转](http://www.kobev5.com/TECH/2017/04/07/Hexo-useage-note/#jump)
-## 4. git branch
+
+
+## 4. git branch 分支操作
 ```swift
 git branch 
 git branch --list
@@ -66,12 +68,13 @@ git branch --list
 git branch -a 
 //显示本地和远程已有的分支列表
 
-git branch -d
-//删除所有已merge的分支
+git branch -d theBranch
+//删除theBranch,有两种情况无法删除.
+//1.当前分支就是theBranch,你需要切换到其它分支删除theBranch分支；
+//2.theBranch分支的代码没有完全合并，首先你需要把代码合并到其它需要合并的分支。
 
-git branch -D
-//
-
+git branch -D theBranch
+//强行删除theBranch,如果当前分支在theBranch,则删除失败。
 
 
 ```
