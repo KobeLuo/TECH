@@ -2,12 +2,14 @@
 title: Git使用
 type: categories
 comments: true
-date: 2019-02-15 19:15:50
+date: 2018-02-15 19:15:50
 categories:
 tags: 
 - Git
 - 常用命令
 ---
+
+该文记录git常用命令和使用方法，记录的博主平时工作所需的一些基础命令，并不能保证完整性和正确性，一般情况下的git使用基本上是满足的，当然如果您有一些特殊的需求，还是需要多查阅[官方文档](https://git-scm.com/)
 
 ## 1. git init 初始化Git仓库
 ```ruby
@@ -53,9 +55,24 @@ git remote rename oldkey newkey
 git remote remove newkey
 //通过key删除本地远程仓库
 ```
-以上内容熟悉后，本地仓库克隆及commit及push基本已经可以了，关于多账号的sshkey问题，请[左转](http://www.kobev5.com/TECH/2017/04/07/Hexo-useage-note/#jump)
+以上内容熟悉后，本地仓库克隆及commit及push基本已经可以了，
+关于多账号的sshkey问题，请[左转](http://www.kobev5.com/TECH/2017/04/07/Hexo-useage-note/#jump)
 ## 4. git branch
 ```swift
+git branch 
+git branch --list
+//显示本地已有的分支
+
+git branch -a 
+//显示本地和远程已有的分支列表
+
+git branch -d
+//删除所有已merge的分支
+
+git branch -D
+//
+
+
 
 ```
 
