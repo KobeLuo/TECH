@@ -36,7 +36,7 @@ git remote
 //显示本地已设置的远程仓库的key
 
 git remote -v 
-//查看本地仓库指向的远程仓库地址, -v == --verbose
+//查看本地仓库指向的远程仓库地址, `-v` == `--verbose`
 
 git remote set-url origin https://remote.site.com   
 //设置远程仓库地址
@@ -92,8 +92,15 @@ git branch --no-merged
 //仅打印未合并的分支列表
 ```
 
-## 5. 
+## 5. git add 
 ```swift
+git add .
+//将当前变更添加到本地仓库
+
+git add . -v
+//将当前变更添加到本地仓库，并显示细节 `-v` == `--verbose`
+
+git add . -e
 
 ```
 ## 6. 
