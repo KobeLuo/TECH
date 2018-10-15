@@ -4,9 +4,13 @@
       <strong>{{ __('post.copyright.author') + __('symbol.colon') }}</strong>
       {{ config.author }}
     </li>
+    <li class="post-copyright-title">
+      <strong>{{ __('本文标题') + __('symbol.colon') }}</strong>
+      {{ post.title }}
+    </li>
     <li class="post-copyright-link">
       <strong>{{ __('post.copyright.link') + __('symbol.colon') }}</strong>
-      <a href="{{ post.permalink }}" title="{{ post.title }}">{{ post.permalink }}</a>
+      <a href="http://www.kobeluo.com/TECH/{{ post.path }}" title="{{ post.title }}">http://www.kobeluo.com/TECH/{{ post.path }}</a>
     </li>
     <li class="post-copyright-license">
       <strong>{{ __('post.copyright.license_title') + __('symbol.colon') }} </strong>
