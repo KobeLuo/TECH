@@ -67,12 +67,12 @@ git branch -a
 //显示本地和远程已有的分支列表
 
 git branch -d
-//删除所有已merge的分支
+//
 
 git branch -D
 //
 
-
+t1branch
 
 ```
 
