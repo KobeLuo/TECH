@@ -2,7 +2,7 @@
 title: Git使用
 type: categories
 comments: true
-date: 2018-02-15 19:15:50
+date: 2017-02-15 19:15:50
 categories:
 tags: 
 - Git
@@ -208,12 +208,16 @@ git reset commitID
 //将当前分支指向commitID指向的节点,并将commit节点之后所提交的所有内容回滚.
 
 git reset --soft commitID
-//
+//将当前分支节点指向commitID指向的节点位置，并将commitID节点之后的提交内容回滚.
 
 git reset --hard commitID
+//将当前分支节点指向commitID指向的节点位置，并将commitID节点之后的提交内容全部删除.
+//如果commitID之后的内容没有被push到远端服务器，那么`git reset --hard`将是非常危险的操作。
 
 ```
 [更多用法](https://git-scm.com/docs/git-reset)
+
+git reset 是具有一定危险性的操作方式，博主希望大家在执行命令前，一定先测试一下命令是否正确，是否能达到你想要的要求，千万不可带着试一试的态度去执行`git reset --hard`命令，很可能会导致你的代码丢失.
 
 
 ## git fsck --lost-found 
