@@ -100,7 +100,9 @@
 <meta property="og:image" content="http://kobeluo.com/TECH/2018/10/16/git-deep/git-structure.png">
 <meta property="og:image" content="http://kobeluo.com/TECH/2018/10/16/git-deep/git-structure-desc.png">
 <meta property="og:image" content="http://kobeluo.com/TECH/2018/10/16/git-deep/file-status-all.png">
-<meta property="og:updated_time" content="2018-10-16T04:29:39.508Z">
+<meta property="og:image" content="http://kobeluo.com/TECH/2018/10/16/git-deep/commit-root.png">
+<meta property="og:image" content="http://kobeluo.com/TECH/2018/10/16/git-deep/snap-pointer-relation.png">
+<meta property="og:updated_time" content="2018-10-16T07:21:51.533Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="git深入理解">
 <meta name="twitter:description" content="在git使用这篇文章中，博主列出了常用的git命令和一些使用方法，可以应付日常的开发工作，熟悉git的朋友应该知道，git是一个非常强大的工具，能使用git的常规命令只能说你掌握了git的基本操作，如果还需要更深入的理解git，理解每一条命令背后执行的操作和含义，则需要更为深刻的理解git的运行机制和设计原理，博主对于git的理解也很浅显，该文在谈及git内涵外，也希望有更多的大神能够相互交流，以">
@@ -365,7 +367,7 @@
               
                 <span class="post-meta-item-text">更新于</span>
               
-              <time title="更新于" itemprop="dateModified" datetime="2018-10-16T12:29:39+08:00">
+              <time title="更新于" itemprop="dateModified" datetime="2018-10-16T15:21:51+08:00">
                 2018-10-16
               </time>
             
@@ -436,7 +438,7 @@
                   <span class="post-meta-item-text">字数统计</span>
                 
                 <span title="字数统计">
-                  1k
+                  1.5k
                 </span>
               
 
@@ -452,7 +454,7 @@
                   <span class="post-meta-item-text">阅读时长</span>
                 
                 <span title="阅读时长">
-                  3
+                  5
                 </span>
               
             </div>
@@ -497,6 +499,12 @@
 <li>后者的代码将不被添加到暂存区；</li>
 <li>前者是较为安全的提交方式，一旦你执行了<code>git reset --hard</code>且未push到远端，那么代码将永久丢失。</li>
 </ul>
+<h2 id="git-commit-实现"><a href="#git-commit-实现" class="headerlink" title="git commit 实现"></a>git commit 实现</h2><p>假如说当前是一个全新的仓库，并执行以下命令：<br><figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">git <span class="keyword">init</span> </span><br><span class="line">git add <span class="type">README</span> test.rb <span class="type">LICENSE</span></span><br><span class="line">git commit -m :<span class="type">The</span> <span class="type">Initial</span> commit of my project:</span><br></pre></td></tr></table></figure></p>
+<p>当你运行<code>git commit</code>创建commit时，git checksums所有的子目录和git仓库中存储这些文件的<code>tree object</code>，同时git创建一个拥有元数据和一个指向<code>root project tree</code>的指针的<code>commit object</code>, 一个<code>commit object</code>其实质上就是一个<code>snapshot</code>.</p>
+<p>现在，git仓库包含了五个object,分别是三个文件(README test.rb LICENSE),一个包含跟目录下所有内容<br>和指定<code>name&lt;--&gt;file匹配</code>的列表的<code>tree</code>和一个包含所有提交元数据和指向<code>root true</code>的指针，<br>比较抽象，其实就是三个文件和一个snapshot和一个指向<code>root commit</code>的指针，如下图所示：<br><img src="/TECH/2018/10/16/git-deep/commit-root.png" alt="commit-root"></p>
+<p>此时如果你又提交了几次，那么关于snapshot和指针的关系图，如下所示：<br><img src="/TECH/2018/10/16/git-deep/snap-pointer-relation.png" alt="snap-pointer-relation"></p>
+<p>通过上图可以理解到git commit背后运行的规律：<br><div class="note info"><p>1.git commit并不是存储的变化的文件，而是存储的一些列snapshot和一个带链表结构的指向父指针的指针。<br>2.整个分支结构路由是靠链表结构的指针来运作的，所以当你<code>git branch newbranch</code>时，其实就是创建了一个新的指针，该指针指向当前的指针加上一个branch name,整个过程非常高效快速。<br>3.当通过<code>git checkout commitId</code>去切换到以前的某个分支时，其实是通过指针去挨个找寻父指针，并从父指针指向的snapshot中去将变更挨个恢复，因此你可以感觉到chekout越早的分支速度越慢，git需要遍历更多的指针去恢复变更数据。</p>
+</div></p>
 
       
     </div>
@@ -773,7 +781,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#官方文档"><span class="nav-number">1.</span> <span class="nav-text">官方文档</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#git仓库介绍"><span class="nav-number">2.</span> <span class="nav-text">git仓库介绍</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#关于git仓库基础构造的官方文档如下图"><span class="nav-number">2.1.</span> <span class="nav-text">关于git仓库基础构造的官方文档如下图</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#个人理解"><span class="nav-number">2.2.</span> <span class="nav-text">个人理解</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#git仓库代码树的三大状态"><span class="nav-number">2.2.1.</span> <span class="nav-text">git仓库代码树的三大状态:</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#git仓库的三大仓库区"><span class="nav-number">2.2.2.</span> <span class="nav-text">git仓库的三大仓库区</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#从实际项目出发理解"><span class="nav-number">2.2.3.</span> <span class="nav-text">从实际项目出发理解</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#文件的记录过程"><span class="nav-number">3.</span> <span class="nav-text">文件的记录过程</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#忽略暂存区提交"><span class="nav-number">4.</span> <span class="nav-text">忽略暂存区提交</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#官方文档"><span class="nav-number">1.</span> <span class="nav-text">官方文档</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#git仓库介绍"><span class="nav-number">2.</span> <span class="nav-text">git仓库介绍</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#关于git仓库基础构造的官方文档如下图"><span class="nav-number">2.1.</span> <span class="nav-text">关于git仓库基础构造的官方文档如下图</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#个人理解"><span class="nav-number">2.2.</span> <span class="nav-text">个人理解</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#git仓库代码树的三大状态"><span class="nav-number">2.2.1.</span> <span class="nav-text">git仓库代码树的三大状态:</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#git仓库的三大仓库区"><span class="nav-number">2.2.2.</span> <span class="nav-text">git仓库的三大仓库区</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#从实际项目出发理解"><span class="nav-number">2.2.3.</span> <span class="nav-text">从实际项目出发理解</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#文件的记录过程"><span class="nav-number">3.</span> <span class="nav-text">文件的记录过程</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#忽略暂存区提交"><span class="nav-number">4.</span> <span class="nav-text">忽略暂存区提交</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#git-commit-实现"><span class="nav-number">5.</span> <span class="nav-text">git commit 实现</span></a></li></ol></div>
             
 
           </div>
