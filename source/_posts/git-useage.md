@@ -1,15 +1,24 @@
 ---
-title: Git使用
+title: git使用
 type: categories
 comments: true
 date: 2016-07-15 19:15:50
-categories:
+categories: tools
+
 tags: 
-- Git
+- git
 - 常用命令
 ---
 
 该文记录git常用命令和使用方法，记录的博主平时工作所需的一些基础命令，并不能保证完整性和正确性，一般情况下的git使用基本上是满足的，当然如果您有一些特殊的需求，还是需要多查阅[官方文档](https://git-scm.com/)
+
+[git权威指南](https://git-scm.com/book/en/v2)
+
+## git help 查看帮助文档
+```swift
+git help init
+//查看git init 的帮助文档命令，其余的类推
+```
 
 ## git init 初始化Git仓库
 ```ruby
@@ -44,20 +53,46 @@ git remote set-url origin https://remote.site.com
 //设置远程仓库地址
 
 git remote add origin https://remote.site1.com
-git remote add key1 https://remote.site2.com
-//添加远程仓库地址，注意origin key1在本地是唯一的，多个远程地址key不能重复
+git remote add bookmark1 https://remote.site2.com
+//添加远程仓库地址，注意origin bookmark1在本地是唯一的，多个远程地址bookmark不能重复
 
 git remote get-url origin
-git remote get-url key1
-//获取指定key对应的远程仓库地址
+git remote get-url bookmark1
+//获取指定bookmark对应的远程仓库地址
 
-git remote rename oldkey newkey
-//更改远程地址对应的key名
+git remote rename bookmark1 bookmark2
+//更改bookmark名
 
-git remote remove newkey
-//通过key删除本地远程仓库
+git remote remove bookmark2
+//通过bookmark删除本地远程仓库
 ```
 [更多用法](https://git-scm.com/docs/git-remote)
+
+## git config 配置
+```swift
+git config --global
+//使用全局配置文件
+
+git config --system
+//使用系统配置文件
+
+git config --local
+//使用本地仓库的配置文件
+
+git config -f filepath
+//使用指定路径下的配置文件
+
+git config -l 
+//列出配置文件信息列表
+
+git config --global/--systme/--local user.name "yourname"
+//配置全局/系统/本地仓库的commit时的用户名
+
+git config --global/--systme/--local user.email "youremail"
+//配置全局/系统/本地仓库的commit时的邮箱
+```
+
+
 以上内容熟悉后，本地仓库克隆及commit及push基本已经可以了，
 关于多账号的sshkey问题，请[左转](http://www.kobev5.com/TECH/2017/04/07/Hexo-useage-note/#jump)
 
@@ -99,6 +134,34 @@ git branch --no-merged
 ```
 [更多用法](https://git-scm.com/docs/git-branch)
 
+## git status 代码状态
+```swift
+git status 
+//获取working copy的代码状态
+
+git status -s
+//更简单的展示working copy代码变更
+
+```
+[更多用法](https://git-scm.com/docs/git-status)
+
+## git stash 代码暂存
+```swift
+
+git stash 
+//将当前分支的代码暂存
+
+git stash pop 
+//将最后一次暂存的代码恢复
+
+git stash list
+//列出所有stash列表
+
+git stash drop
+//丢弃最后一次代码暂存内容
+```
+[更多用法](https://git-scm.com/docs/git-stash)
+
 ## git add 添加到本地仓库
 ```swift
 git add .
@@ -139,6 +202,36 @@ git checout -B oneBranch
 
 ```
 [更多用法](https://git-scm.com/docs/git-checkout)
+
+## git pull
+```swift
+git pull
+//默认拉取当前所在分支的全程分支代码，并合并到本地分支
+
+git pull origin branch
+//拉取远程变更历史，并合并变更
+```
+[更多用法](https://git-scm.com/docs/git-pull)
+
+## git fetch
+```swift
+git fetch 
+//拉取仓库默认远端的所有历史
+
+git fetch bookmark
+//拉取仓库指定的bookmark指向的远端所有历史
+```
+[更多用法](https://git-scm.com/docs/git-fetch)
+
+## git merge
+```swift
+git merge branch
+//合并本地branch分支代码到当前分支
+
+git merge bookmark branch
+//合并bookmark所在的远程branch分支代码到当前分支
+```
+[更多用法](https://git-scm.com/docs/git-merge)
 
 ## git push
 ```swift
@@ -220,5 +313,16 @@ git reset --hard commitID
 git reset 是具有一定危险性的操作方式，博主希望大家在执行命令前，一定先测试一下命令是否正确，是否能达到你想要的要求，千万不可带着试一试的态度去执行`git reset --hard`命令，很可能会导致你的代码丢失.
 
 
+## git version 查看版本信息
+```swift
+git --version
+//查看当前系统下的git版本信息
+```
+
 ## git fsck --lost-found 
 找回已经删除的文件，但是存在着add记录，博主未测试[链接](https://www.cnblogs.com/hope-markup/p/6683522.html)
+
+## git ls-files 列出工程的所有忽略文件
+```swift
+git ls-files --other --ignored --exclude-standard
+```
