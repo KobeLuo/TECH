@@ -97,7 +97,7 @@
 <meta property="og:site_name" content="kobeLuo的技术笔记">
 <meta property="og:description" content="博主使用过博客站点有简书、CSDN、博客园、都不同程度的遇到了各种不顺心，MarkDown使用起来也不是特别方便，决定使用GitPages+Hexo来实现编写博客，在完成完成Hexo配置的过程中，踩了不少坑，决定记录下来供大家参考。 个人博客站点:KobeLuo的博客">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-10-15T09:08:55.142Z">
+<meta property="og:updated_time" content="2018-10-16T00:36:17.185Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Hexo使用笔记">
 <meta name="twitter:description" content="博主使用过博客站点有简书、CSDN、博客园、都不同程度的遇到了各种不顺心，MarkDown使用起来也不是特别方便，决定使用GitPages+Hexo来实现编写博客，在完成完成Hexo配置的过程中，踩了不少坑，决定记录下来供大家参考。 个人博客站点:KobeLuo的博客">
@@ -361,8 +361,8 @@
               
                 <span class="post-meta-item-text">更新于</span>
               
-              <time title="更新于" itemprop="dateModified" datetime="2018-10-15T17:08:55+08:00">
-                2018-10-15
+              <time title="更新于" itemprop="dateModified" datetime="2018-10-16T08:36:17+08:00">
+                2018-10-16
               </time>
             
           </span>
@@ -432,7 +432,7 @@
                   <span class="post-meta-item-text">字数统计</span>
                 
                 <span title="字数统计">
-                  2k
+                  1.9k
                 </span>
               
 
@@ -479,6 +479,7 @@
 </div></p>
 <p>通常情况下建的博客站点都是在username.github.io这一层，GitPages会默认master作为hexo的发布分支(上面提到的branch1)，此时settings-&gt;Gitpages-&gt;Source下的branch是不可选择的，在这种情况下，开发分支就必须要使用其它的分支(比如develop分支或其他分支)来存储Hexo主题下的源代码。</p>
 <p>如果你的博客站点不是以username.github.io，那么需要按照<a href="https://help.github.com/articles/configuring-a-publishing-source-for-github-pages/" target="_blank" rel="noopener"><strong>git发布配置规范</strong></a>配置站点，此时settings-&gt;GitPages-&gt;Source可以选择，通常情况下会有master、gh-pages和/docs供你选择，选择好静态页面的发布分支后,再考虑源代码托管到哪个分支上面。</p>
+<p><span id="jump"> </span></p>
 <h4 id="关于SSHKey"><a href="#关于SSHKey" class="headerlink" title="关于SSHKey"></a>关于SSHKey</h4><p>首先进入用户目录下的.ssh目录<br><figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cd ~/.ssh</span><br></pre></td></tr></table></figure>使用ssh keygen生成一个SSHKey,需要提供一个邮箱<br><figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ssh-keygen -t rsa -C <span class="string">"your@email.address"</span></span><br></pre></td></tr></table></figure></p>
 <p>Enter file in which to save the key (/Users/name/.ssh/id_rsa):<strong><code>在此输入id_rsa的名字:id_rsa_name</code></strong><br>例如:id_rsa_person or id_rsa_company,如果只需要管理一个SSHKey,直接回车会默认生成id_rsa为名的SSHKey<br>配置了名字，后面一路回车<br>结束后，.ssh文件夹里边会包括id_rsa_name、id_rsa_name.pub两个文件，复制id_rsa_pub的内容拷贝到github设置的SSHKey选项中即可完成配置。</p>
 <h4 id="多账号管理"><a href="#多账号管理" class="headerlink" title="多账号管理:"></a>多账号管理:</h4><p>如果你有多个Github账号，由于Github账号SSHKey的唯一性，就必须生成多个SSHKey，多个SSHKey只要生成的时候指定的名字不一样即可，假设你生成了两个rsa名为id_rsa_name1和id_rsa_name2,<br>那么你需要在.ssh目录里边创建一个名为<code>config</code>的文件，里边的配置信息如下:</p>
@@ -493,9 +494,9 @@
 </li>
 </ul>
 <figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">主机记录	记录类型	记录值</span><br><span class="line">@	A	<span class="number">192.30</span><span class="number">.252</span><span class="number">.153</span></span><br><span class="line">@	A	<span class="number">192.30</span><span class="number">.252</span><span class="number">.154</span></span><br><span class="line">www	<span class="built_in">CNAME</span>	your.blog.address(我这里是:KobeLuo.github.io)</span><br></pre></td></tr></table></figure>
-<p>配置完成之后，等待10分钟，等待域名生效。</p>
+<p>配置完成之后，等10分钟，等待域名生效。</p>
 <h3 id="关于Hexo主题模板"><a href="#关于Hexo主题模板" class="headerlink" title="关于Hexo主题模板"></a>关于<a href="https://github.com/iissnan/hexo-theme-next" target="_blank" rel="noopener">Hexo主题</a>模板</h3><hr>
-<h4 id="hexo安装"><a href="#hexo安装" class="headerlink" title="hexo安装"></a>hexo安装</h4><p>请自行查阅<a href="https://hexo.io/zh-cn/docs/" target="_blank" rel="noopener">**hexo官方安装教程</a></p>
+<h4 id="hexo安装"><a href="#hexo安装" class="headerlink" title="hexo安装"></a>hexo安装</h4><p>请自行查阅<a href="https://hexo.io/zh-cn/docs/" target="_blank" rel="noopener">hexo官方安装教程</a></p>
 <h4 id="hexo命令"><a href="#hexo命令" class="headerlink" title="hexo命令"></a>hexo命令</h4><p>hexo有自己独立的一套命令</p>
 <figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">hexo new <span class="string">"article"</span></span><br><span class="line"><span class="comment">//创建一篇新文章</span></span><br><span class="line">hexo new page <span class="string">"foldername"</span></span><br><span class="line"><span class="comment">//创建一个新页面</span></span><br><span class="line">hexo g  (hexo generate)</span><br><span class="line"><span class="comment">//生成静态页面</span></span><br><span class="line">hexo s  (hexo server) ,如果报错就执行代码 </span><br><span class="line"><span class="comment">//链接本地服务器</span></span><br><span class="line">hexo d  (hexo deploy)</span><br><span class="line"><span class="comment">//发布到指定服务器</span></span><br><span class="line">hexo clean <span class="comment">//清理静态页面站点，博主使用过一次，会把git配置和hexo搞乱，慎用。</span></span><br><span class="line"></span><br><span class="line">npm install --save hexo-filter-flowchart </span><br><span class="line"><span class="comment">//画流程图的[插件](https://github.com/bubkoo/hexo-filter-flowchart)</span></span><br></pre></td></tr></table></figure>
 <p>执行hexo s可能会报错，如果报错则执行以下命令：<br><figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install hexo-server --save</span><br></pre></td></tr></table></figure></p>
@@ -725,7 +726,7 @@
             <div class="site-state-item site-state-posts">
               <a href="/TECH/archives"> 
               <!-- <a href="/archives">-->
-                <span class="site-state-item-count">6</span>
+                <span class="site-state-item-count">7</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -746,7 +747,7 @@
             <div class="site-state-item site-state-tags">
               <a href="/TECH/tags">
               <!-- <a href="/tags"> -->
-                <span class="site-state-item-count">12</span>
+                <span class="site-state-item-count">13</span>
                 <span class="site-state-item-name">标签</span>
               </a>
               <!-- </a> -->
