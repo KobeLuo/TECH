@@ -198,4 +198,3 @@ The file creation flags are O_CLOEXEC, O_CREAT, O_DIRECTORY, O_EXCL, O_NOCTTY, O
 {% endnote %}
 
 [博客收录入口](http://blog.sina.com.cn/s/blog_8b94e9b40100w49w.html)
-
