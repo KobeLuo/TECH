@@ -92,7 +92,7 @@
 <meta name="description" content="一个iOS和Mac OS开发的技术渣">
 <meta property="og:type" content="website">
 <meta property="og:title" content="kobeLuo的技术笔记">
-<meta property="og:url" content="http://kobeluo.com/index.html">
+<meta property="og:url" content="http://kobeluo.com/page/2/index.html">
 <meta property="og:site_name" content="kobeLuo的技术笔记">
 <meta property="og:description" content="一个iOS和Mac OS开发的技术渣">
 <meta property="og:locale" content="zh-Hans">
@@ -126,7 +126,7 @@
 
 
 
-  <link rel="canonical" href="http://kobeluo.com/"/>
+  <link rel="canonical" href="http://kobeluo.com/page/2/"/>
 
 
 
@@ -309,7 +309,7 @@
   
 
   <article class="post post-type-categories " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://kobeluo.com/TECH/2018/10/16/git-deep/">
+    <link itemprop="mainEntityOfPage" href="http://kobeluo.com/TECH/2017/03/20/dispatch_queue/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="KOBE LUO">
@@ -331,8 +331,8 @@
             
               
                 
-                <a class="post-title-link" href="/TECH/2018/10/16/git-deep/" itemprop="url">
-                  git深入理解
+                <a class="post-title-link" href="/TECH/2017/03/20/dispatch_queue/" itemprop="url">
+                  GCD系列:队列(dispatch_queue)
                 </a>
               
             
@@ -348,8 +348,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-10-16T09:53:11+08:00">
-                2018-10-16
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-03-20T11:44:22+08:00">
+                2017-03-20
               </time>
             
 
@@ -364,7 +364,222 @@
               
                 <span class="post-meta-item-text">更新于</span>
               
-              <time title="更新于" itemprop="dateModified" datetime="2018-10-16T15:21:51+08:00">
+              <time title="更新于" itemprop="dateModified" datetime="2018-10-15T10:31:11+08:00">
+                2018-10-15
+              </time>
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/TECH/categories/Objective-C/" itemprop="url" rel="index">
+                    <span itemprop="name">Objective-C</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/TECH/2017/03/20/dispatch_queue/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count"
+                        data-disqus-identifier="2017/03/20/dispatch_queue/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+             <span id="/TECH/2017/03/20/dispatch_queue/" class="leancloud_visitors" data-flag-title="GCD系列:队列(dispatch_queue)">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数 </span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计</span>
+                
+                <span title="字数统计">
+                  2.4k
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长</span>
+                
+                <span title="阅读时长">
+                  11
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <p><blockquote class="blockquote-center">GCD是基于C封装的函数,具备非常高的效率,<br>在ARC环境下,无须主动管理内存,<br>无须dispatch_retain和dispatch_release,<br>可以将重点关注在业务逻辑上。<br>GCD是基于队列的封装，<strong>下面浅要解析GCD的队列</strong>。<br></blockquote><br></p>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/TECH/2017/03/20/dispatch_queue/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+          
+    </div>
+    
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-categories " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://kobeluo.com/TECH/2016/07/15/git-useage/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="KOBE LUO">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/TECH/images/avatar.jpeg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="kobeLuo的技术笔记">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/TECH/2016/07/15/git-useage/" itemprop="url">
+                  git使用
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-07-15T19:15:50+08:00">
+                2016-07-15
+              </time>
+            
+
+            
+              <span class="post-meta-divider">|</span>
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-check-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">更新于</span>
+              
+              <time title="更新于" itemprop="dateModified" datetime="2018-10-16T16:21:50+08:00">
                 2018-10-16
               </time>
             
@@ -401,9 +616,9 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/TECH/2018/10/16/git-deep/#comments" itemprop="discussionUrl">
+                <a href="/TECH/2016/07/15/git-useage/#comments" itemprop="discussionUrl">
                   <span class="post-comments-count disqus-comment-count"
-                        data-disqus-identifier="2018/10/16/git-deep/" itemprop="commentCount"></span>
+                        data-disqus-identifier="2016/07/15/git-useage/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -411,7 +626,7 @@
 
           
           
-             <span id="/TECH/2018/10/16/git-deep/" class="leancloud_visitors" data-flag-title="git深入理解">
+             <span id="/TECH/2016/07/15/git-useage/" class="leancloud_visitors" data-flag-title="git使用">
                <span class="post-meta-divider">|</span>
                <span class="post-meta-item-icon">
                  <i class="fa fa-eye"></i>
@@ -435,7 +650,7 @@
                   <span class="post-meta-item-text">字数统计</span>
                 
                 <span title="字数统计">
-                  1.5k
+                  2.5k
                 </span>
               
 
@@ -451,7 +666,7 @@
                   <span class="post-meta-item-text">阅读时长</span>
                 
                 <span title="阅读时长">
-                  5
+                  10
                 </span>
               
             </div>
@@ -471,10 +686,14 @@
 
       
         
-          <p>在<a href="http://www.kobeluo.com/TECH/2016/07/15/git-useage" target="_blank" rel="noopener">git使用</a>这篇文章中，博主列出了常用的git命令和一些使用方法，可以应付日常的开发工作，熟悉git的朋友应该知道，git是一个非常强大的工具，能使用git的常规命令只能说你掌握了git的基本操作，如果还需要更深入的理解git，理解每一条命令背后执行的操作和含义，则需要更为深刻的理解git的运行机制和设计原理，博主对于git的理解也很浅显，该文在谈及git内涵外，也希望有更多的大神能够相互交流，以此增进对git的理解，毕竟进步源于分享嘛 ^.^。<br></p>
+          <p>该文记录git常用命令和使用方法，记录的博主平时工作所需的一些基础命令，并不能保证完整性和正确性，一般情况下的git使用基本上是满足的，当然如果您有一些特殊的需求，还是需要多查阅<a href="https://git-scm.com/" target="_blank" rel="noopener">官方文档</a></p>
+<p><a href="https://git-scm.com/book/en/v2" target="_blank" rel="noopener">git权威指南</a></p>
+<h2 id="git-help-查看帮助文档"><a href="#git-help-查看帮助文档" class="headerlink" title="git help 查看帮助文档"></a>git help 查看帮助文档</h2><figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">git help <span class="keyword">init</span></span><br><span class="line"><span class="comment">//查看git init 的帮助文档命令，其余的类推</span></span><br></pre></td></tr></table></figure>
+<h2 id="git-init-初始化Git仓库"><a href="#git-init-初始化Git仓库" class="headerlink" title="git init 初始化Git仓库"></a>git init 初始化Git仓库</h2><figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git init</span><br></pre></td></tr></table></figure>
+<p><code>Create an empty Git repository or reinitialize an existing one</code><br>命令执行后，在当前目录生成一个.git的隐藏目录，内含git仓库需要的资源。<br><a href="https://git-scm.com/docs/git-init" target="_blank" rel="noopener">更多用法</a></p>
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/TECH/2018/10/16/git-deep/#more" rel="contents">
+            <a class="btn" href="/TECH/2016/07/15/git-useage/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -524,7 +743,7 @@
   
 
   <article class="post post-type-categories " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://kobeluo.com/TECH/2017/07/24/osxfuse/">
+    <link itemprop="mainEntityOfPage" href="http://kobeluo.com/TECH/2016/04/06/Mac useage/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="KOBE LUO">
@@ -546,8 +765,8 @@
             
               
                 
-                <a class="post-title-link" href="/TECH/2017/07/24/osxfuse/" itemprop="url">
-                  mac上建立基于osx fuse的虚拟磁盘
+                <a class="post-title-link" href="/TECH/2016/04/06/Mac useage/" itemprop="url">
+                  Mac使用笔记
                 </a>
               
             
@@ -563,8 +782,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-07-24T20:25:04+08:00">
-                2017-07-24
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-04-06T17:48:11+08:00">
+                2016-04-06
               </time>
             
 
@@ -579,7 +798,7 @@
               
                 <span class="post-meta-item-text">更新于</span>
               
-              <time title="更新于" itemprop="dateModified" datetime="2018-10-16T08:36:17+08:00">
+              <time title="更新于" itemprop="dateModified" datetime="2018-10-16T09:02:24+08:00">
                 2018-10-16
               </time>
             
@@ -598,8 +817,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/TECH/categories/Objective-C/" itemprop="url" rel="index">
-                    <span itemprop="name">Objective-C</span>
+                  <a href="/TECH/categories/tools/" itemprop="url" rel="index">
+                    <span itemprop="name">tools</span>
                   </a>
                 </span>
 
@@ -616,9 +835,9 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/TECH/2017/07/24/osxfuse/#comments" itemprop="discussionUrl">
+                <a href="/TECH/2016/04/06/Mac useage/#comments" itemprop="discussionUrl">
                   <span class="post-comments-count disqus-comment-count"
-                        data-disqus-identifier="2017/07/24/osxfuse/" itemprop="commentCount"></span>
+                        data-disqus-identifier="2016/04/06/Mac useage/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -626,7 +845,7 @@
 
           
           
-             <span id="/TECH/2017/07/24/osxfuse/" class="leancloud_visitors" data-flag-title="mac上建立基于osx fuse的虚拟磁盘">
+             <span id="/TECH/2016/04/06/Mac useage/" class="leancloud_visitors" data-flag-title="Mac使用笔记">
                <span class="post-meta-divider">|</span>
                <span class="post-meta-item-icon">
                  <i class="fa fa-eye"></i>
@@ -650,7 +869,7 @@
                   <span class="post-meta-item-text">字数统计</span>
                 
                 <span title="字数统计">
-                  1.8k
+                  32
                 </span>
               
 
@@ -666,7 +885,7 @@
                   <span class="post-meta-item-text">阅读时长</span>
                 
                 <span title="阅读时长">
-                  8
+                  1
                 </span>
               
             </div>
@@ -686,658 +905,13 @@
 
       
         
-          <blockquote class="blockquote-center"><p>苹果文件系统<a href="https://www.google.co.kr/search?q=APFS&amp;oq=APFS&amp;aqs=chrome..69i57j0l5.5335j0j7&amp;sourceid=chrome&amp;ie=UTF-8" target="_blank" rel="noopener">AFPS</a>允许用户挂载自己的磁盘(Mount disk)，类似<a href="https://www.pcloud.com/zh/" target="_blank" rel="noopener">PCloud</a>；也允许用户通过底层API来监控某个文件夹的变化来做同步，类似<a href="https://www.dropbox.com/" target="_blank" rel="noopener">DropBox</a>，最终目的都是为了实现本地文件与服务端同步来方便人们的工作和生活，博主对于两种方式来同步文件都有一定涉猎，国内外目前针对Mount盘的文献和资料相对较少，博主在工作过程中遇到过很多的坑，共享出来，希望能帮助到有缘人。</p>
-</blockquote>
+          <ul>
+<li>显示隐藏文件：  <div class="note info"><p>显示: <code>defaults write com.apple.finder AppleShowAllFiles -bool true</code><br>隐藏: <code>defaults write com.apple.finder AppleShowAllFiles -bool false</code></p>
+<p><strong>restart your mac</strong></p>
+</div></li></ul>
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/TECH/2017/07/24/osxfuse/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-          
-    </div>
-    
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-categories " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://kobeluo.com/TECH/2017/04/07/Hexo-useage-note/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="KOBE LUO">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/TECH/images/avatar.jpeg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="kobeLuo的技术笔记">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/TECH/2017/04/07/Hexo-useage-note/" itemprop="url">
-                  Hexo使用笔记
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-04-07T21:20:19+08:00">
-                2017-04-07
-              </time>
-            
-
-            
-              <span class="post-meta-divider">|</span>
-            
-
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-check-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">更新于</span>
-              
-              <time title="更新于" itemprop="dateModified" datetime="2018-10-16T08:36:17+08:00">
-                2018-10-16
-              </time>
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/TECH/categories/Hexo/" itemprop="url" rel="index">
-                    <span itemprop="name">Hexo</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/TECH/2017/04/07/Hexo-useage-note/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count disqus-comment-count"
-                        data-disqus-identifier="2017/04/07/Hexo-useage-note/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-             <span id="/TECH/2017/04/07/Hexo-useage-note/" class="leancloud_visitors" data-flag-title="Hexo使用笔记">
-               <span class="post-meta-divider">|</span>
-               <span class="post-meta-item-icon">
-                 <i class="fa fa-eye"></i>
-               </span>
-               
-                 <span class="post-meta-item-text">阅读次数 </span>
-               
-                 <span class="leancloud-visitors-count"></span>
-             </span>
-          
-
-          
-
-          
-            <div class="post-wordcount">
-              
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-file-word-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">字数统计</span>
-                
-                <span title="字数统计">
-                  1.9k
-                </span>
-              
-
-              
-                <span class="post-meta-divider">|</span>
-              
-
-              
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-clock-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">阅读时长</span>
-                
-                <span title="阅读时长">
-                  7
-                </span>
-              
-            </div>
-          
-
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <blockquote class="blockquote-center"><p>博主使用过博客站点有简书、CSDN、博客园、都不同程度的遇到了各种不顺心，MarkDown使用起来也不是特别方便，决定使用GitPages+Hexo来实现编写博客，在完成完成Hexo配置的过程中，踩了不少坑，决定记录下来供大家参考。</p>
-<p>个人博客站点:<a href="https://kobeluo.github.io/TECH/" target="_blank" rel="noopener">KobeLuo的博客</a></p>
-</blockquote>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/TECH/2017/04/07/Hexo-useage-note/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-          
-    </div>
-    
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-categories " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://kobeluo.com/TECH/2017/03/28/dispatch-semaphore/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="KOBE LUO">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/TECH/images/avatar.jpeg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="kobeLuo的技术笔记">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/TECH/2017/03/28/dispatch-semaphore/" itemprop="url">
-                  GCD系列:信号量(dispatch_semaphore)
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-03-28T20:44:35+08:00">
-                2017-03-28
-              </time>
-            
-
-            
-              <span class="post-meta-divider">|</span>
-            
-
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-check-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">更新于</span>
-              
-              <time title="更新于" itemprop="dateModified" datetime="2018-10-15T10:30:19+08:00">
-                2018-10-15
-              </time>
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/TECH/categories/Objective-C/" itemprop="url" rel="index">
-                    <span itemprop="name">Objective-C</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/TECH/2017/03/28/dispatch-semaphore/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count disqus-comment-count"
-                        data-disqus-identifier="2017/03/28/dispatch-semaphore/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-             <span id="/TECH/2017/03/28/dispatch-semaphore/" class="leancloud_visitors" data-flag-title="GCD系列:信号量(dispatch_semaphore)">
-               <span class="post-meta-divider">|</span>
-               <span class="post-meta-item-icon">
-                 <i class="fa fa-eye"></i>
-               </span>
-               
-                 <span class="post-meta-item-text">阅读次数 </span>
-               
-                 <span class="leancloud-visitors-count"></span>
-             </span>
-          
-
-          
-
-          
-            <div class="post-wordcount">
-              
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-file-word-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">字数统计</span>
-                
-                <span title="字数统计">
-                  861
-                </span>
-              
-
-              
-                <span class="post-meta-divider">|</span>
-              
-
-              
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-clock-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">阅读时长</span>
-                
-                <span title="阅读时长">
-                  4
-                </span>
-              
-            </div>
-          
-
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <p>信号量有点像具备N个task并行能力的channel,当channel的并行能力未达到上限时可以任意往里边加task，当达到channel上限时，需要task完成才可以加入新的task.<br></p>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/TECH/2017/03/28/dispatch-semaphore/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-          
-    </div>
-    
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-categories " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://kobeluo.com/TECH/2017/03/27/dispatch-block/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="KOBE LUO">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/TECH/images/avatar.jpeg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="kobeLuo的技术笔记">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/TECH/2017/03/27/dispatch-block/" itemprop="url">
-                  GCD系列:代码块(dispatch_block)
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-03-27T20:25:04+08:00">
-                2017-03-27
-              </time>
-            
-
-            
-              <span class="post-meta-divider">|</span>
-            
-
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-check-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">更新于</span>
-              
-              <time title="更新于" itemprop="dateModified" datetime="2018-10-15T10:30:19+08:00">
-                2018-10-15
-              </time>
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/TECH/categories/Objective-C/" itemprop="url" rel="index">
-                    <span itemprop="name">Objective-C</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/TECH/2017/03/27/dispatch-block/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count disqus-comment-count"
-                        data-disqus-identifier="2017/03/27/dispatch-block/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-             <span id="/TECH/2017/03/27/dispatch-block/" class="leancloud_visitors" data-flag-title="GCD系列:代码块(dispatch_block)">
-               <span class="post-meta-divider">|</span>
-               <span class="post-meta-item-icon">
-                 <i class="fa fa-eye"></i>
-               </span>
-               
-                 <span class="post-meta-item-text">阅读次数 </span>
-               
-                 <span class="leancloud-visitors-count"></span>
-             </span>
-          
-
-          
-
-          
-            <div class="post-wordcount">
-              
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-file-word-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">字数统计</span>
-                
-                <span title="字数统计">
-                  789
-                </span>
-              
-
-              
-                <span class="post-meta-divider">|</span>
-              
-
-              
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-clock-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">阅读时长</span>
-                
-                <span title="阅读时长">
-                  3
-                </span>
-              
-            </div>
-          
-
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <h3 id="dispatch-block"><a href="#dispatch-block" class="headerlink" title="dispatch_block"></a>dispatch_block</h3><p>dispatch_block系列函数可以对一段代码进行准确控制，最显著的功能就是可以取消执行的代码块，在实际项目开发中非常有用。<br></p>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/TECH/2017/03/27/dispatch-block/#more" rel="contents">
+            <a class="btn" href="/TECH/2016/04/06/Mac useage/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -1382,7 +956,7 @@
 
   
   <nav class="pagination">
-    <span class="page-number current">1</span><a class="page-number" href="/TECH/page/2/">2</a><a class="extend next" rel="next" href="/TECH/page/2/"><i class="fa fa-angle-right"></i></a>
+    <a class="extend prev" rel="prev" href="/TECH/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/TECH/">1</a><span class="page-number current">2</span>
   </nav>
 
 
