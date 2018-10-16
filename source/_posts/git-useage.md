@@ -266,12 +266,64 @@ git push -f
 [更多用法](https://git-scm.com/docs/git-push)
 
 
+## git mv 文件移动
+```swift
+git mv file_from file_to
+//将file_from文件更名为file_to
+```
+[更多用法](https://git-scm.com/docs/git-mv)
+
 ## git log
 ```swift
 git log 
 //查看当前分支提交记录,按`q`退出
+
+git log --oneline --decorate
+//查看提交记录，可在头部查看当前HEAD指针指向哪个分支
+
+git log --oneline --decorate --graph --all
+//查看提交记录，并且可以看到当前HEAD指针指向，同时可以看到分支结构图。
 ```
 [更多用法](https://git-scm.com/docs/git-log)
+
+
+## git tag
+```swift
+git tag
+//查看tag列表
+
+git tag -l 
+//查看tag列表,等同于 git tag --list
+
+git tag -l "v1.2*"
+//列出所有tag中包括v1.2前缀的tag列表
+
+git tag -a v1.2 -m "your tag descrption”"
+//以当前分支创建v1.2tag，tag的信息为“your tag descrption”
+
+git show v1.2
+//显示tag v1.2的详细信息
+
+git tag v1.3 -lw
+//轻量级的tag,仅仅是打一个tag名，不支持跟-a -s或-m可选参数
+
+
+git push origin v1.4
+//将v1.4的tag push到远端仓库
+
+git push origin --tags
+//将一对tagspush到服务端
+
+git tag -d v1.4
+//删除v1.4所指的tag
+
+git checkout v1.4
+//将当前working copydetach到HEAD状态，显示v1.4tag所指的内容
+
+git checkout -b v14branch v1.4
+//以v1.4tag为基准创建一个新的分支v14branch，并切换当前working copy到v14branch
+```
+[更多用法](https://git-scm.com/docs/git-tag)
 
 
 ## git reflog
@@ -325,6 +377,31 @@ git reset --hard commitID
 git reset 是具有一定危险性的操作方式，博主希望大家在执行命令前，一定先测试一下命令是否正确，是否能达到你想要的要求，千万不可带着试一试的态度去执行`git reset --hard`命令，很可能会导致你的代码丢失.
 
 
+## git alias
+```swift
+git config --global alias.co checkout
+git co branch 
+//等同于  git checkout branch
+
+git config --global alias. br branch
+git config --global alias.ci commit
+git config --global alias.st status
+
+git config --global alias.unstage 'reset HEAD --'
+git unstage filepath
+//等同于 git reset HEAD -- filepath
+
+git config --global alias.last 'log -1 HEAD'
+git last
+//查看最后一次commit日志
+
+git config --global alias.visual '!gitk'
+//maybe you want to run an external command, rather than a Git subcommand. In that case, 
+//you start the command with a ! character. This is useful if you write your own tools that work with a Git repository.
+
+```
+
+
 ## git version 查看版本信息
 ```swift
 git --version
@@ -338,3 +415,8 @@ git --version
 ```swift
 git ls-files --other --ignored --exclude-standard
 ```
+
+## 友情推荐
+
+- [git学习网站](https://learngitbranching.js.org/?demo)
+

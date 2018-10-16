@@ -10,7 +10,7 @@ tags:
 - git进阶
 ---
 
-在[git使用](http://www.kobeluo.com/TECH/2016/07/15/git-useage)这篇文章中，博主列出了常用的git命令和一些使用方法，可以应付日常的开发工作，熟悉git的朋友应该知道，git是一个非常强大的工具，能使用git的常规命令只能说你掌握了git的基本操作，如果还需要更深入的理解git，理解每一条命令背后执行的操作和含义，则需要更为深刻的理解git的运行机制和设计原理，博主对于git的理解也很浅显，该文在谈及git内涵外，也希望有更多的大神能够相互交流，以此增进对git的理解，比较进步源于分享嘛 ^.^。
+在[git使用](http://www.kobeluo.com/TECH/2016/07/15/git-useage)这篇文章中，博主列出了常用的git命令和一些使用方法，可以应付日常的开发工作，熟悉git的朋友应该知道，git是一个非常强大的工具，能使用git的常规命令只能说你掌握了git的基本操作，如果还需要更深入的理解git，理解每一条命令背后执行的操作和含义，则需要更为深刻的理解git的运行机制和设计原理，博主对于git的理解也很浅显，该文在谈及git内涵外，也希望有更多的大神能够相互交流，以此增进对git的理解，毕竟进步源于分享嘛 ^.^。
 <!-- more -->
 
 ## 官方文档
@@ -76,5 +76,29 @@ git commit -a
 - 未被追踪的文件使用后者无法正常提交到本地working copy；
 - 后者的代码将不被添加到暂存区；
 - 前者是较为安全的提交方式，一旦你执行了`git reset --hard`且未push到远端，那么代码将永久丢失。
+
+## git commit 实现
+假如说当前是一个全新的仓库，并执行以下命令：
+```swift
+git init 
+git add README test.rb LICENSE
+git commit -m :The Initial commit of my project:
+```
+当你运行`git commit`创建commit时，git checksums所有的子目录和git仓库中存储这些文件的`tree object`，同时git创建一个拥有元数据和一个指向`root project tree`的指针的`commit object`, 一个`commit object`其实质上就是一个`snapshot`.
+
+现在，git仓库包含了五个object,分别是三个文件(README test.rb LICENSE),一个包含跟目录下所有内容
+和指定`name<-->file匹配`的列表的`tree`和一个包含所有提交元数据和指向`root true`的指针，
+比较抽象，其实就是三个文件和一个snapshot和一个指向`root commit`的指针，如下图所示：
+![commit-root](commit-root.png)
+
+此时如果你又提交了几次，那么关于snapshot和指针的关系图，如下所示：
+![snap-pointer-relation](snap-pointer-relation.png)
+
+通过上图可以理解到git commit背后运行的规律：
+{% note info %}
+1.git commit并不是存储的变化的文件，而是存储的一些列snapshot和一个带链表结构的指向父指针的指针。
+2.整个分支结构路由是靠链表结构的指针来运作的，所以当你`git branch newbranch`时，其实就是创建了一个新的指针，该指针指向当前的指针加上一个branch name,整个过程非常高效快速。
+3.当通过`git checkout commitId`去切换到以前的某个分支时，其实是通过指针去挨个找寻父指针，并从父指针指向的snapshot中去将变更挨个恢复，因此你可以感觉到chekout越早的分支速度越慢，git需要遍历更多的指针去恢复变更数据。
+{% endnote %}
 
 
