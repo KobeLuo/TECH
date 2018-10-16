@@ -175,6 +175,18 @@ git add . -e
 ```
 [更多用法](https://git-scm.com/docs/git-add)
 
+## git rm 删除文件
+```swift
+git rm filepath
+//删除指定的文件，该文件必须被git标记为tracked的文件
+
+git rm --cached filepath
+//从staged中删除filepath，filepath文件将变更为untracked状态，不会真正将文件删除掉
+
+git rm -f filepath
+//强制将filepath文件删除掉，同时该文件的所有记录也将从git的快照中删除。
+```
+[更多用法](https://git-scm.com/docs/git-rm)
 
 ## git commit 提交代码
 ```swift

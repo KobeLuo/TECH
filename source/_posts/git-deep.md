@@ -55,3 +55,26 @@ In short, tracked files are files that Git knows about.
 ```
 被跟踪的文件的文件状态存储在最后一次快照中。
 ![git文件全状态](file-status-all.png)
+
+## 忽略暂存区提交
+常用的提交流程是：
+```swift
+git add .
+git commit 
+```
+命令`git add .`会将已变更的代码添加到暂存区，然后通过`git commit`命令将暂存区的快照提交到本地仓库。
+
+这儿还有一种方式提交代码：
+```swift
+git commit -a 
+```
+它的意思是绕过暂存区，直接将本地被追踪的变更代码提交到本地仓库。
+*相同点：*
+- 被追踪的代码都可以直接提交到本地working copy。
+
+*不同点：*
+- 未被追踪的文件使用后者无法正常提交到本地working copy；
+- 后者的代码将不被添加到暂存区；
+- 前者是较为安全的提交方式，一旦你执行了`git reset --hard`且未push到远端，那么代码将永久丢失。
+
+
