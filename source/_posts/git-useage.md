@@ -126,6 +126,9 @@ git branch -m theBranch newBranch
 git branch -M theBranch newBranch
 //官方定义，`move/rename a branch, even if target exists`，个人感觉非常不安全的操作方式.
 
+git branch -v
+//打印当前分支最后一次commit的文件列表
+
 git branch --merged
 //仅打印已经合并过的分支列表
 
@@ -234,6 +237,14 @@ git fetch bookmark
 //拉取仓库指定的bookmark指向的远端所有历史
 ```
 [更多用法](https://git-scm.com/docs/git-fetch)
+
+## git rebase
+```swift
+git rebase branch
+//将branch分支的代码rebase到当前分支
+```
+rebase 和 merge 之间的使用，一直是比较有争议的，博主两个都使用，都遇到一些不好处理的地方，这里不做评价，请自行查阅官方文档。
+[更多用法](https://git-scm.com/docs/git-rebase)
 
 ## git merge
 ```swift
