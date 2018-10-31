@@ -29,7 +29,7 @@ comments: false
 ##### 虚拟磁盘(2017-至今)
 * 简短介绍： 一款挂载在Mac OS终端Finder上实现与服务端文件同步的虚拟磁盘
 * 技术要点： 
-	* swift开发，低耦合，框架结构清晰，扩展性高
+	* swift开发，高扩展架构，文件同步算法优化
 	* osx fuse整合,Mac OS底层文件系统模拟操作
 	* socket双向通信，文件碎片处理优化，系统API算法优化
 
@@ -37,7 +37,7 @@ comments: false
 * 简短介绍： 一款Mac终端与服务端同步的App
 * 技术要点： 
 	* 低耦合，高扩展性框架
-	* MacOS底层Api操作，FinderSync
+	* MacOS底层API操作，FinderSync
 	* 多线程灵活运用，性能优化，sideEffect考量
 
 ##### 旅游App(2015-2016年)
