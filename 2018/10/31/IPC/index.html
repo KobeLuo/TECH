@@ -1,0 +1,1217 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/TECH/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/TECH/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/TECH/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="进程,Process Communication,进程间通信,IPC," />
+
+
+
+
+
+  <link rel="alternate" href="/TECH/atom.xml" title="kobeLuo的技术笔记" type="application/atom+xml" />
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/TECH/images/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="进程间通信的基础原语: 消息、端口、已经确保并发安全的信号量和锁。这篇文章主要对于这些原语的底层实现和端口的内部实现做一些探讨。 Mach任务是一个对应于进程的高层次抽象，Mach任务包含了一个指向自己的IPC namespace（命名空间），在命名空间中保存了自己的端口，此外mach任务也可以获得系统范围内的端口，如：主机端口、特权端口和其它端口。">
+<meta name="keywords" content="进程,Process Communication,进程间通信,IPC">
+<meta property="og:type" content="article">
+<meta property="og:title" content="IPC-进程间通信">
+<meta property="og:url" content="http://kobeluo.com/2018/10/31/IPC/index.html">
+<meta property="og:site_name" content="kobeLuo的技术笔记">
+<meta property="og:description" content="进程间通信的基础原语: 消息、端口、已经确保并发安全的信号量和锁。这篇文章主要对于这些原语的底层实现和端口的内部实现做一些探讨。 Mach任务是一个对应于进程的高层次抽象，Mach任务包含了一个指向自己的IPC namespace（命名空间），在命名空间中保存了自己的端口，此外mach任务也可以获得系统范围内的端口，如：主机端口、特权端口和其它端口。">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-10-31T08:59:07.403Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="IPC-进程间通信">
+<meta name="twitter:description" content="进程间通信的基础原语: 消息、端口、已经确保并发安全的信号量和锁。这篇文章主要对于这些原语的底层实现和端口的内部实现做一些探讨。 Mach任务是一个对应于进程的高层次抽象，Mach任务包含了一个指向自己的IPC namespace（命名空间），在命名空间中保存了自己的端口，此外mach任务也可以获得系统范围内的端口，如：主机端口、特权端口和其它端口。">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/TECH/',
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":true,"scrollpercent":true},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://kobeluo.com/2018/10/31/IPC/"/>
+
+
+
+
+
+  <title> IPC-进程间通信 | kobeLuo的技术笔记 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <a href="https://github.com/KobeLuo/TECH"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_green_007200.png" alt="Fork me on GitHub"></a>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/TECH/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">kobeLuo的技术笔记</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">不完美源自对完美的追求</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/TECH/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/TECH/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/TECH/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/TECH/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/TECH/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于作者
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocapitalize="off" autocomplete="off" autocorrect="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-categories " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://kobeluo.com/TECH/2018/10/31/IPC/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="KOBE LUO">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/TECH/images/avatar.jpeg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="kobeLuo的技术笔记">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                IPC-进程间通信
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-10-31T16:06:25+08:00">
+                2018-10-31
+              </time>
+            
+
+            
+              <span class="post-meta-divider">|</span>
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-check-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">更新于</span>
+              
+              <time title="更新于" itemprop="dateModified" datetime="2018-10-31T16:59:07+08:00">
+                2018-10-31
+              </time>
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/TECH/categories/Mac-OS/" itemprop="url" rel="index">
+                    <span itemprop="name">Mac OS</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/TECH/2018/10/31/IPC/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count"
+                        data-disqus-identifier="2018/10/31/IPC/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+             <span id="/TECH/2018/10/31/IPC/" class="leancloud_visitors" data-flag-title="IPC-进程间通信">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数 </span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计</span>
+                
+                <span title="字数统计">
+                  1.1k
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长</span>
+                
+                <span title="阅读时长">
+                  4
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>进程间通信的基础原语: 消息、端口、已经确保并发安全的信号量和锁。这篇文章主要对于这些原语的底层实现和端口的内部实现做一些探讨。</p>
+<p>Mach任务是一个对应于进程的高层次抽象，Mach任务包含了一个指向自己的IPC namespace（命名空间），在命名空间中保存了自己的端口，此外mach任务也可以获得系统范围内的端口，如：主机端口、特权端口和其它端口。</p>
+<a id="more"></a>
+<h3 id="端口"><a href="#端口" class="headerlink" title="端口"></a>端口</h3><hr>
+<p>导出给用户空间的端口对象(mach_port_t)实际上是对”真正”端口对象的一个句柄，后者是<a href="https://opensource.apple.com/source/xnu/xnu-344/osfmk/ipc/ipc_port.h" target="_blank" rel="noopener">ipc_port_t</a>，其数据结构如下:<br><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment"> *  A receive right (port) can be in four states:</span></span><br><span class="line"><span class="comment"> *	1) dead (not active, ip_timestamp has death time)</span></span><br><span class="line"><span class="comment"> *	2) in a space (ip_receiver_name != 0, ip_receiver points</span></span><br><span class="line"><span class="comment"> *	to the space but doesn't hold a ref for it)</span></span><br><span class="line"><span class="comment"> *	3) in transit (ip_receiver_name == 0, ip_destination points</span></span><br><span class="line"><span class="comment"> *	to the destination port and holds a ref for it)</span></span><br><span class="line"><span class="comment"> *	4) in limbo (ip_receiver_name == 0, ip_destination == IP_NULL)</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> *  If the port is active, and ip_receiver points to some space,</span></span><br><span class="line"><span class="comment"> *  then ip_receiver_name != 0, and that space holds receive rights.</span></span><br><span class="line"><span class="comment"> *  If the port is not active, then ip_timestamp contains a timestamp</span></span><br><span class="line"><span class="comment"> *  taken when the port was destroyed.</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">typedef</span> <span class="keyword">unsigned</span> <span class="keyword">int</span> <span class="keyword">ipc_port_timestamp_t</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">typedef</span> <span class="keyword">unsigned</span> <span class="keyword">int</span> <span class="keyword">ipc_port_flags_t</span>;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">ipc_port</span> &#123;</span></span><br><span class="line"></span><br><span class="line">	<span class="comment">/*</span></span><br><span class="line"><span class="comment">	 * Initial sub-structure in common with ipc_pset and rpc_port</span></span><br><span class="line"><span class="comment">	 * First element is an ipc_object</span></span><br><span class="line"><span class="comment">	 */</span></span><br><span class="line">	<span class="class"><span class="keyword">struct</span> <span class="title">ipc_object</span> <span class="title">ip_object</span>;</span> <span class="comment">//ipc对象，初始化子结构跟ipc_pset和rpc_port一致。</span></span><br><span class="line"></span><br><span class="line">	<span class="keyword">union</span> &#123;</span><br><span class="line">		<span class="class"><span class="keyword">struct</span> <span class="title">ipc_space</span> *<span class="title">receiver</span>;</span> <span class="comment">//指向接收者的IPC指针</span></span><br><span class="line">		<span class="class"><span class="keyword">struct</span> <span class="title">ipc_port</span> *<span class="title">destination</span>;</span> <span class="comment">//指向全局端口的指针</span></span><br><span class="line">		<span class="keyword">ipc_port_timestamp_t</span> timestamp;</span><br><span class="line">	&#125; data;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">ipc_kobject_t</span> ip_kobject;</span><br><span class="line">	<span class="keyword">mach_port_mscount_t</span> ip_mscount;</span><br><span class="line">	<span class="keyword">mach_port_rights_t</span> ip_srights;</span><br><span class="line">	<span class="keyword">mach_port_rights_t</span> ip_sorights;</span><br><span class="line"></span><br><span class="line">	<span class="class"><span class="keyword">struct</span> <span class="title">ipc_port</span> *<span class="title">ip_nsrequest</span>;</span></span><br><span class="line">	<span class="class"><span class="keyword">struct</span> <span class="title">ipc_port</span> *<span class="title">ip_pdrequest</span>;</span></span><br><span class="line">	<span class="class"><span class="keyword">struct</span> <span class="title">ipc_port_request</span> *<span class="title">ip_dnrequests</span>;</span></span><br><span class="line"></span><br><span class="line">	<span class="keyword">unsigned</span> <span class="keyword">int</span> ip_pset_count;</span><br><span class="line">	<span class="class"><span class="keyword">struct</span> <span class="title">ipc_mqueue</span> <span class="title">ip_messages</span>;</span> <span class="comment">//消息队列</span></span><br><span class="line">	<span class="class"><span class="keyword">struct</span> <span class="title">ipc_kmsg</span> *<span class="title">ip_premsg</span>;</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">if</span>	NORMA_VM</span></span><br><span class="line">	<span class="comment">/*</span></span><br><span class="line"><span class="comment">	 *	These fields are needed for the use of XMM.</span></span><br><span class="line"><span class="comment">	 *	Few ports need this information; it should</span></span><br><span class="line"><span class="comment">	 *	be kept in XMM instead (TBD).  XXX</span></span><br><span class="line"><span class="comment">	 */</span></span><br><span class="line">	<span class="keyword">long</span>		ip_norma_xmm_object_refs;</span><br><span class="line">	<span class="class"><span class="keyword">struct</span> <span class="title">ipc_port</span>	*<span class="title">ip_norma_xmm_object</span>;</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">endif</span></span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">if</span>	MACH_ASSERT</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span>	IP_NSPARES		10</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span>	IP_CALLSTACK_MAX	10</span></span><br><span class="line">	<span class="keyword">queue_chain_t</span>	ip_port_links;	<span class="comment">/* all allocated ports */</span></span><br><span class="line">	<span class="keyword">natural_t</span>	ip_thread;	<span class="comment">/* who made me?  thread context */</span></span><br><span class="line">	<span class="keyword">unsigned</span> <span class="keyword">long</span>	ip_timetrack;	<span class="comment">/* give an idea of "when" created */</span></span><br><span class="line">	<span class="keyword">natural_t</span>	ip_callstack[IP_CALLSTACK_MAX]; <span class="comment">/* stack trace */</span></span><br><span class="line">	<span class="keyword">unsigned</span> <span class="keyword">long</span>	ip_spares[IP_NSPARES]; <span class="comment">/* for debugging */</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">endif</span>	<span class="comment">/* MACH_ASSERT */</span></span></span><br><span class="line">	<span class="keyword">int</span>		alias;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
+<h3 id="消息传递的实现"><a href="#消息传递的实现" class="headerlink" title="消息传递的实现"></a>消息传递的实现</h3><hr>
+<p>用户态的Mach消息传递使用的函数是<code>mach_msg()</code>函数，这个函数通过内核的Mach trap调用内核函数<code>mach_msg_trap()</code>。然后<code>mach_msg_trap</code>调用<code>mach_msg_overwrite_trap()</code>,<code>mach_msg_overwrite_trap</code>通过测试<code>MACH_SEND_MSG</code>和<code>MACH_RCV_MSG</code>标志位来判断是发送操作还是接收操作。</p>
+<p>下面分析IPC最重要的两个函数<code>mach_msg_send()</code>和<code>mach_msg_receive()</code>的实现</p>
+<h4 id="发送消息"><a href="#发送消息" class="headerlink" title="发送消息"></a>发送消息</h4><p>Mach 消息发送的核心逻辑在内核中有两处实现: <code>mach_msg_overwrite_trap()</code>和<code>mach_msg_send()</code>。后者只用于内核态的消息传递，对用户态不可见。两处实现的逻辑大同小异并遵循以下流程：</p>
+<ul>
+<li>调用<code>current_space()</code>来获取当前的IPC空间。</li>
+<li>调用<code>current_map()</code>来获取当前VM空间(<a href="https://www.freebsd.org/cgi/man.cgi?query=vm_map&amp;sektion=9&amp;apropos=0&amp;manpath=FreeBSD+11-current" target="_blank" rel="noopener">vm_map</a>)</li>
+<li>对消息的大小进行正确性检查。</li>
+<li>计算要分配的消息大小，从send_size参数获得大小再加上硬编码的MAX_TRAILER_SIZE。</li>
+<li>通过ipc_kmsg_alloc分配消息。</li>
+<li>复制消息(复制消息send_size字节的部分)，然后在消息头设置msgh_size。</li>
+<li>复制消息关联的端口权限，然后通过ipc_kmsg_copyin将所有的OOL数据的内存复制到当前的vm_map。 ipc_kmsg_copyin函数调用了ipc_kmsg_copyin_header和ipc_kmsg_copyin_body。</li>
+<li>调用ipc_kmsg_send()发送消息：<ul>
+<li>获得msgh_remote_port引用，并锁定端口。</li>
+<li>如果该端口是一个内核端口（即端口的ip_receiver是内核的IPC空间），那么通过ipc_kobject_server()函数处理消息。该函数会在内核中找到相应的函数来执行消息，还会生成消息的应答。</li>
+<li>不论哪种端口，调用ipc_mqueue_send(),这个函数将消息直接复制到端口的ip_messages队列中并唤醒任何正在等待的线程处理消息。</li>
+</ul>
+</li>
+</ul>
+<h4 id="接收消息"><a href="#接收消息" class="headerlink" title="接收消息"></a>接收消息</h4><p>Mach接收消息的方式个发送类似，也体现在内核的两个地方，<code>mach_msg_overwrite_trap()</code>用用户态接收请求，而内核通过<code>mach_msg_receive()</code>函数接收消息。</p>
+<ul>
+<li>调用current_space()来获取当前的IPC空间</li>
+<li>调用current_map()</li>
+<li>不校对消息大小，因为发送的时候已经校对过了</li>
+<li>通过调用ipc_mqueue_copyin()获取IPC队列</li>
+<li>持有当前线程的一个引用。使用当前线程的引用可使它适合使用Mach的续体模型，续体(continuation)模型可以表面维护完整线程栈的必要性。<code>续体是撒玩意儿博主也弄不明白</code></li>
+<li>调用ipc_mqueue_receive()从队列中取出消息</li>
+<li>调用mach_msg_receive_results()函数，该函数也可以从续体中调用</li>
+</ul>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+          
+          <div>
+    
+        <div style="text-align:center;color: #ccc;font-size:14px;">------ 文章结束 ------</div>
+    
+</div>
+          
+    </div>
+    
+    <div>
+      
+        
+  <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+    <div>坚持原创技术分享，您的支持将鼓励我继续创作！</div>
+    <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+      <span>赏</span>
+    </button>
+    <div id="QR" style="display: none;">
+      
+        <div id="wechat" style="display: inline-block">
+          <img id="wechat_qr" src="https://wx2.sinaimg.cn/mw690/006AZU4wgy1fw6n5xbgnmj30og0zktaf.jpg" alt="KOBE LUO WeChat Pay"/>
+          <p>微信打赏</p>
+        </div>
+      
+      
+        <div id="alipay" style="display: inline-block">
+          <img id="alipay_qr" src="https://wx4.sinaimg.cn/mw690/006AZU4wgy1fw6n5w7j3kj30go0p0wfj.jpg" alt="KOBE LUO Alipay"/>
+          <p>支付宝打赏</p>
+        </div>
+      
+    </div>
+  </div>
+
+
+      
+    </div>
+
+    <div>
+      
+        
+  <ul class="post-copyright">
+    <li class="post-copyright-author">
+      <strong>本文作者：</strong>
+      KOBE LUO
+    </li>
+    <li class="post-copyright-title">
+      <strong>本文标题：</strong>
+      IPC-进程间通信
+    </li>
+    <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="http://www.kobeluo.com/TECH/2018/10/31/IPC/" title="IPC-进程间通信">http://www.kobeluo.com/TECH/2018/10/31/IPC/</a>
+    </li>
+    <li class="post-copyright-license">
+      <strong>版权声明： </strong>
+      本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 3.0</a> 许可协议。转载请注明出处！
+    </li>
+  </ul>
+
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/TECH/tags/进程/" rel="tag"><i class="fa fa-tag"></i>进程</a>
+          
+            <a href="/TECH/tags/Process-Communication/" rel="tag"><i class="fa fa-tag"></i>Process Communication</a>
+          
+            <a href="/TECH/tags/进程间通信/" rel="tag"><i class="fa fa-tag"></i>进程间通信</a>
+          
+            <a href="/TECH/tags/IPC/" rel="tag"><i class="fa fa-tag"></i>IPC</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/TECH/2018/10/31/mach-trap/" rel="next" title="mach_trap (未完结)">
+                <i class="fa fa-chevron-left"></i> mach_trap (未完结)
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/TECH/2018/10/31/mach-synchronization/" rel="prev" title="Mach 同步机制 (未完结)">
+                Mach 同步机制 (未完结) <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/TECH/images/avatar.jpeg"
+               alt="KOBE LUO" />
+          <p class="site-author-name" itemprop="name">KOBE LUO</p>
+           
+              <p class="site-description motion-element" itemprop="description">一个iOS和Mac OS开发的技术渣</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/TECH/archives"> 
+              <!-- <a href="/archives">-->
+                <span class="site-state-item-count">12</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-categories">
+              <a href="/TECH/categories">
+              <!-- <a href="/categories"> -->
+                <span class="site-state-item-count">4</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+              <!-- </a> -->
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/TECH/tags">
+              <!-- <a href="/tags"> -->
+                <span class="site-state-item-count">26</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+              <!-- </a> -->
+            </div>
+          
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/TECH/atom.xml" rel="alternate">
+              <i class="fa fa-rss"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/KobeLuo" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://douban.com" target="_blank" title="豆瓣">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  豆瓣
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://www.zhihu.com" target="_blank" title="知乎">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  知乎
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#端口"><span class="nav-number">1.</span> <span class="nav-text">端口</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#消息传递的实现"><span class="nav-number">2.</span> <span class="nav-text">消息传递的实现</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#发送消息"><span class="nav-number">2.1.</span> <span class="nav-text">发送消息</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#接收消息"><span class="nav-number">2.2.</span> <span class="nav-text">接收消息</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+        <div class="back-to-top">
+          <i class="fa fa-arrow-up"></i>
+          
+            <span id="scrollpercent"><span>0</span>%</span>
+          
+        </div>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2015 - 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">KOBE LUO</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/TECH/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/TECH/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/TECH/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/TECH/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/TECH/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/TECH/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/TECH/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/TECH/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/TECH/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/TECH/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/TECH/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  
+
+    
+      <script id="dsq-count-scr" src="https://.disqus.com/count.js" async></script>
+    
+
+    
+      <script type="text/javascript">
+        var disqus_config = function () {
+          this.page.url = 'http://kobeluo.com/2018/10/31/IPC/';
+          this.page.identifier = '2018/10/31/IPC/';
+          this.page.title = 'IPC-进程间通信';
+        };
+        var d = document, s = d.createElement('script');
+        s.src = 'https://.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', '' + +new Date());
+        (d.head || d.body).appendChild(s);
+      </script>
+    
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length == 0) {
+      search_path = "search.xml";
+    }
+    var path = "/TECH/" + search_path;
+    // monitor main search box;
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.popup').toggle();
+    }
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+      $.ajax({
+        url: path,
+        dataType: "xml",
+        async: true,
+        success: function( xmlResponse ) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = $( "entry", xmlResponse ).map(function() {
+            return {
+              title: $( "title", this ).text(),
+              content: $("content",this).text(),
+              url: $( "url" , this).text()
+            };
+          }).get();
+          var $input = document.getElementById(search_id);
+          var $resultContent = document.getElementById(content_id);
+          $input.addEventListener('input', function(){
+            var matchcounts = 0;
+            var str='<ul class=\"search-result-list\">';
+            var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+            $resultContent.innerHTML = "";
+            if (this.value.trim().length > 1) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var content_index = [];
+                var data_title = data.title.trim().toLowerCase();
+                var data_content = data.content.trim().replace(/<[^>]+>/g,"").toLowerCase();
+                var data_url = decodeURIComponent(data.url);
+                var index_title = -1;
+                var index_content = -1;
+                var first_occur = -1;
+                // only match artiles with not empty titles and contents
+                if(data_title != '') {
+                  keywords.forEach(function(keyword, i) {
+                    index_title = data_title.indexOf(keyword);
+                    index_content = data_content.indexOf(keyword);
+                    if( index_title >= 0 || index_content >= 0 ){
+                      isMatch = true;
+                      if (i == 0) {
+                        first_occur = index_content;
+                      }
+                    }
+
+                  });
+                }
+                // show search results
+                if (isMatch) {
+                  matchcounts += 1;
+                  str += "<li><a href='"+ data_url +"' class='search-result-title'>"+ data_title +"</a>";
+                  var content = data.content.trim().replace(/<[^>]+>/g,"");
+                  if (first_occur >= 0) {
+                    // cut out 100 characters
+                    var start = first_occur - 20;
+                    var end = first_occur + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if(start == 0){
+                      end = 50;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    var match_content = content.substring(start, end);
+                    // highlight all keywords
+                    keywords.forEach(function(keyword){
+                      var regS = new RegExp(keyword, "gi");
+                      match_content = match_content.replace(regS, "<b class=\"search-keyword\">"+keyword+"</b>");
+                    });
+
+                    str += "<p class=\"search-result\">" + match_content +"...</p>"
+                  }
+                  str += "</li>";
+                }
+              })};
+            str += "</ul>";
+            if (matchcounts == 0) { str = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>' }
+            if (keywords == "") { str = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>' }
+            $resultContent.innerHTML = str;
+          });
+          proceedsearch();
+        }
+      });}
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched == false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(function(e){
+      $('.popup').hide();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    });
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+  <script>AV.initialize("cTAOGJvwpiIkJufS2JmsnjMf-gzGzoHsz", "pYWSupIvureEPupAE8VAv3AR");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+
+  
+
+  
+
+  <script type="text/javascript" src="/lib/clipboard/clipboard.js"></script>
+<script type="text/javascript" src="/js/src/copycode.js"></script>
+
+</body>
+</html>
