@@ -1,5 +1,5 @@
 ---
-title: Mach 同步机制 (未完结)
+title: Mach 同步机制
 type: categories
 comments: true
 date: 2018-10-31 16:59:31
@@ -7,8 +7,7 @@ categories: Mac OS
 tags: [Mach同步机制，同步，mutex，自旋锁，信号量]
 ---
 
-消息传递机制是 Mach IPC架构中的一个组件，另一个组件是同步机制(synchronization)，同步机制用于判定多个并发的操纵时，如何访问共享资源的问题。
-同步机制的本质是:
+消息传递机制是 Mach IPC架构中的一个组件，另一个组件是同步机制(synchronization)，同步机制用于判定多个并发的操纵时，如何访问共享资源的问题。同步机制的本质是:
 ``
 排他访问的能力，即：在使用一个资源时，排除其它对象对该资源的访问的能力。
 ``
@@ -242,5 +241,52 @@ kern_return_t semaphore_wait(semaphore_t semaphore)
 
 
 ### 自旋锁对象
+互斥体和信号量都是阻塞等待的对象。如果所被其他线程持有，那么请求将被加入到等待队列，当前线程处于阻塞状态，阻塞线程意味着放弃线程的时间片，把处理器让给调度器认为下一个要执行的线程。当锁可用时，调度器得到通知再根据判断将线程从等待队列中取出并重新调度。然而这种方式可能会严重的影响性能，在大多数情况下，锁对象可能只需要短短几个周期的时间，因为造成两次或更多次的上下文切换带来的开销非常大，在这种case下，如果线程不阻塞而是继续重复尝试访问锁对象所带来的开销可能会小得多，这种方式被称为“忙等(busy-wait)”。
 
-### 锁集对象
+然而上面说的case只是一种假设，按照这种方式自旋等待的线程很可能会陷入无限的循环等待中，这会造成一个非常恐怖的死锁场景，甚至整个系统会因此陷入停滞状态。
+
+基础的自旋锁(spinlock)类型是硬件相关的`hw_lock_t`。其它的自旋锁类型都是实现在它之上： `lck_spin_t`、`simple_lock_t`、`usimple_lock_t`等。
+
+这些自旋锁的的API和其它类型所得API都差不多，详参:
+- [自旋锁API](https://www.kernel.org/doc/Documentation/locking/spinlocks.txt)
+- [simple lock](https://opensource.apple.com/source/xnu/xnu-792.6.76/osfmk/kern/simple_lock.h.auto.html)
+
+
+### [锁集对象](http://web.mit.edu/darwin/src/modules/xnu/osfmk/man/)
+
+任务在用户态可以使用锁集，概念上，锁集对象就是锁的数组，实际上是互斥体的数组，通过给定的ID可以访问锁，锁可在线程之间传递，锁集是lck_mtx_t的封装
+下面是相关的函数：
+```C
+//为task创建一个lock_set,锁的数量是locks个，policy用于指定唤醒锁的策略，主要有
+// SYNC_POLICY_FIFO 先进先出原则
+// SYNC_POLICY_FIXED_PROIRITY 根据指定的优先级原则
+kern_return_t lock_set_create(task_t task, lock_set_t lock_set, int locks, int policy);
+
+//销毁锁集及所包含的锁
+kern_return_t lock_set_destroy(task_t task, lock_set_t lock_set);
+
+//通过lock_id从lock_set中获取指定的锁，该函数可能会永久阻塞如果指定的锁已经被另外的线程控制了。
+kern_return_t lock_acquire(lock_set_t lock_set, int lock_id);
+
+//通过lock_id释放锁集中指定的锁，如果调用的线程不拥有该锁，则会调用失败
+kern_return_t lock_release(lock_set_t lock_set, int lock_id);
+
+//尝试获取锁，如果锁已经被持有了则立即返回KERN_LOCK_OWNED
+kern_return_t lock_try(lock_set_t lock_set, int lock_id);
+
+//该函数清除锁集的不稳定状态，将锁集置于稳定状态。
+kern_return_t lock_make_stable(lock_set_t lock_set,int lock_id);
+
+//将当前线程拥有的锁交出，并传递给匿名的接受线程，如果接受线程没有等待接收该锁，则会造成线程阻塞，知道接收线程接收为止。
+//The lock_handoff function passes lock ownership from the calling thread to an anonymous accepting thread. 
+//The lock must be owned by the calling thread. If the accepting thread is not waiting to receive the lock, 
+//the calling thread will block until the hand-off is accepted.
+kern_return_t lock_handoff(lock_set_t lock_set, int lock_id);
+
+//接收一个匿名线程通过lock_handoff传递的锁，如果发送锁的线程没有等待切换锁，
+//则调用的线程将造成阻塞，知道锁切换完成，任何指定的时间只能有一个线程可能正在接受锁切换
+kern_return_t lock_handoff_accept(lock_set_t lock_set,int lock_id);
+
+```
+锁集的有趣之处在于允许锁在线程之间传递。Mach在调度中也使用了这个概念，允许一个线程放弃处理器并指定由另一个线程来接替运行。
+
