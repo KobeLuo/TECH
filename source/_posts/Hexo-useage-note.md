@@ -82,6 +82,11 @@ IdentityFile		~/.ssh/id_rsa_kobe_new
 更改后的远程地址是https://kobe_new:KobeLuo/Kobeluo.github.io/
 {% endnote %}
 
+最后将你生成的rsa加入到keychain中,有时候push代码时会报Permission Error,如果你rsa配置正常，也需要执行一下命令:
+```
+$ ssh-add -K ~/.ssh/id_rsa_your_name
+```
+
 
 #### 绑定你的独立域名
 Github提供gitpages服务可以生成独立二级域名，如非必要，你大可不必自己购买独立域名，如果你购买了自己的域名，就按照以下步骤做:
