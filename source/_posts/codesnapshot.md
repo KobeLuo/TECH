@@ -11,7 +11,7 @@ tags: [代码共享, 片段代码]
 
 如果你的项目只是一个普通的信息展示，调用的频次不高，对于性能的优化要求可能就相对较低，但如果你的项目是高频次调用这些API，<!--more-->并且对性能的要求极尽所能，可能你就会对每一行代码的执行效率和耗时做严格的审查，为了提供性能，可能需要将OC函数自己实现，分享部分代码，以供参考。
 
-### String Extension
+### String Extension 
 
 #### lastPathComponents
 ```Swift
@@ -129,3 +129,5 @@ public func appendingPathComponent(path: String?, regularly: Bool = false) -> St
 }
 
 ```
+
+[点我下载String+path.swift](String+Path.swift)
