@@ -221,6 +221,12 @@ git checkout -b newBranch
 git checout -B oneBranch
 //创建或重置oneBranch分支并切换到oneBranch分支。
 
+git checkout .
+//将本地所有变更内容reset到当前分支的HEAD状态，即undo本地所有变更内容
+
+git checkout -- path/to/file1 path/to/file2
+//undo部分本地文件变更
+
 ```
 [更多用法](https://git-scm.com/docs/git-checkout)
 
