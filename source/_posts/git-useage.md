@@ -157,6 +157,12 @@ git stash
 git stash pop 
 //将最后一次暂存的代码恢复
 
+git stash -p path/to/file
+//暂存某一个文件的内容，执行命令后要选择'y',暂存成功后，该文件将从本地变更中移出。
+
+git stash -p -- path/to/file1 path/to/file2
+//暂存多个文件内容，执行命令后需要多次选择‘y’,使用git stash pop即可恢复暂存代码
+
 git stash list
 //列出所有stash列表
 
