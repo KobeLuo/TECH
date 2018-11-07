@@ -1,5 +1,5 @@
 ---
-title: Mach 原语 笔记-基础篇
+title: Mach 原语-学习笔记
 type: categories
 comments: true
 date: 2018-10-31 10:21:59
@@ -198,7 +198,7 @@ extern mach_msg_return_t	mach_msg_overwrite(
 Mach消息原本是为真正的微内核框架而设计的，也就是说`mach_msg()`必须在发送者和接收者之间复制消息所在的内存，这种实现方式忠于微内核的范式，但事实证明：频繁的复制内存所带来的性能消耗是无法忍受的。
 因此，XNU通过单一内核方式:所有的内核组件都共享同一个地址空间，这样传递消息的过程中只需要传递消息的指针的就可以了，从而省去了昂贵的内存复制操作。
 
-为了实现消息的发送和接收，`mach_msg()`函数调用了一个Mach trap（[Mach 陷阱](http://www.kobeluo.com/TECH/2018/10/31/mach-trap/)）,在用户态调用`mach_msg_trap()`函数会引发陷阱机制，切换到内核态，而在内核态中，内核实现的`mach_msg()`会完成实际的工作。
+为了实现消息的发送和接收，`mach_msg()`函数调用了一个Mach trap,在用户态调用`mach_msg_trap()`函数会引发陷阱机制，切换到内核态，而在内核态中，内核实现的`mach_msg()`会完成实际的工作。
 
 #### 端口
 端口是一个32位整型的标识符，不能按整数来操作，而是要按照透明的对象来操作。
@@ -226,4 +226,3 @@ Mach通过端口命名服务器注册全局的端口-即系统范围内的端口
 #### Mach 接口生成器(MIG)
 
 Mach没有使用专门的端口映射器(不过launchd(8)处理了一部分端口映射的逻辑）,但是Mach中有一个类似于[rpcgen](https://en.wikipedia.org/wiki/RPCGEN)的组件，即Mach接口生成器(Mach Interface Generator)，简称MIG。rpcgen在经典UNIX中的SUN-RPC中，通过rpcgen编译器从IDL(Interface Definition Language, IDL)生成代码。
-在/usr/include/mach目录下，可以看到一些.defs文件，这些文件包含了各种Mach子系统的IDL定义。
