@@ -92,14 +92,14 @@
 <meta name="description" content="Mach 概述 Mach设计原则Mac OS X采用Mach作为锡系统的内核，其源头可以追溯到乔老爷创立的NeXT。Mach采用了极简主义概念:具有一个简单最小的核心，支持面向对象的模型，使得独立的具有良好定义的组件可以通过消息的方式互相通信。Mach只提供了一个极简的模型，操作系统本身可以在这个模型基础上实现，OS X的XNU是UNIX（FreeBSD 4.4）在Mach上的一个具体实现，Win">
 <meta name="keywords" content="Mach,MAC OS,Mac内核">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Mach 原语 笔记-基础篇">
+<meta property="og:title" content="Mach 原语-学习笔记">
 <meta property="og:url" content="http://kobeluo.com/2018/10/31/Mach/index.html">
 <meta property="og:site_name" content="KobeLuo的技术笔记">
 <meta property="og:description" content="Mach 概述 Mach设计原则Mac OS X采用Mach作为锡系统的内核，其源头可以追溯到乔老爷创立的NeXT。Mach采用了极简主义概念:具有一个简单最小的核心，支持面向对象的模型，使得独立的具有良好定义的组件可以通过消息的方式互相通信。Mach只提供了一个极简的模型，操作系统本身可以在这个模型基础上实现，OS X的XNU是UNIX（FreeBSD 4.4）在Mach上的一个具体实现，Win">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-10-31T07:25:56.030Z">
+<meta property="og:updated_time" content="2018-11-06T03:04:44.638Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Mach 原语 笔记-基础篇">
+<meta name="twitter:title" content="Mach 原语-学习笔记">
 <meta name="twitter:description" content="Mach 概述 Mach设计原则Mac OS X采用Mach作为锡系统的内核，其源头可以追溯到乔老爷创立的NeXT。Mach采用了极简主义概念:具有一个简单最小的核心，支持面向对象的模型，使得独立的具有良好定义的组件可以通过消息的方式互相通信。Mach只提供了一个极简的模型，操作系统本身可以在这个模型基础上实现，OS X的XNU是UNIX（FreeBSD 4.4）在Mach上的一个具体实现，Win">
 
 
@@ -134,7 +134,7 @@
 
 
 
-  <title> Mach 原语 笔记-基础篇 | KobeLuo的技术笔记 </title>
+  <title> Mach 原语-学习笔记 | KobeLuo的技术笔记 </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -330,7 +330,7 @@
             
             
               
-                Mach 原语 笔记-基础篇
+                Mach 原语-学习笔记
               
             
           </h1>
@@ -361,8 +361,8 @@
               
                 <span class="post-meta-item-text">更新于</span>
               
-              <time title="更新于" itemprop="dateModified" datetime="2018-10-31T15:25:56+08:00">
-                2018-10-31
+              <time title="更新于" itemprop="dateModified" datetime="2018-11-06T11:04:44+08:00">
+                2018-11-06
               </time>
             
           </span>
@@ -408,7 +408,7 @@
 
           
           
-             <span id="/TECH/2018/10/31/Mach/" class="leancloud_visitors" data-flag-title="Mach 原语 笔记-基础篇">
+             <span id="/TECH/2018/10/31/Mach/" class="leancloud_visitors" data-flag-title="Mach 原语-学习笔记">
                <span class="post-meta-divider">|</span>
                <span class="post-meta-item-icon">
                  <i class="fa fa-eye"></i>
@@ -614,7 +614,7 @@
 </tbody>
 </table>
 <p>Mach消息原本是为真正的微内核框架而设计的，也就是说<code>mach_msg()</code>必须在发送者和接收者之间复制消息所在的内存，这种实现方式忠于微内核的范式，但事实证明：频繁的复制内存所带来的性能消耗是无法忍受的。<br>因此，XNU通过单一内核方式:所有的内核组件都共享同一个地址空间，这样传递消息的过程中只需要传递消息的指针的就可以了，从而省去了昂贵的内存复制操作。</p>
-<p>为了实现消息的发送和接收，<code>mach_msg()</code>函数调用了一个Mach trap（<a href="http://www.kobeluo.com/TECH/2018/10/31/mach-trap/" target="_blank" rel="noopener">Mach 陷阱</a>）,在用户态调用<code>mach_msg_trap()</code>函数会引发陷阱机制，切换到内核态，而在内核态中，内核实现的<code>mach_msg()</code>会完成实际的工作。</p>
+<p>为了实现消息的发送和接收，<code>mach_msg()</code>函数调用了一个Mach trap,在用户态调用<code>mach_msg_trap()</code>函数会引发陷阱机制，切换到内核态，而在内核态中，内核实现的<code>mach_msg()</code>会完成实际的工作。</p>
 <h4 id="端口"><a href="#端口" class="headerlink" title="端口"></a>端口</h4><p>端口是一个32位整型的标识符，不能按整数来操作，而是要按照透明的对象来操作。<br><code>像一个端口发送消息实际是将消息放在一个队列中，直到消息能被接收者处理。</code><br>所有的Mach原生对象都是通过对应的端口访问的，查找一个对象的句柄(Handle)时，实际上请求的是这个对象端口的句柄，访问端口是通过访问端口权限的方式进行的，Mach端口权限的定义如下:</p>
 <table>
 <thead>
@@ -650,7 +650,7 @@
 <p>&lt;mach/mach_port.h&gt;中的函数可以用于操纵任何端口，甚至可以在任务之外操纵。其中，<code>mach_port_names</code>函数可以导出给定任务的端口空间名称。</p>
 <p>端口和权限也可以从一个实体传递到另一个实体。实际上，通过复杂消息将端口从一个任务传递到另一个任务并不罕见，这是IPC设计中的一个非常强大的特性，有点类似于UNIX中的<code>domain socket</code>允许在进程间传递描述符。<br>Lion允许UNIX文件描述符和Mach端口相互转换。这些对象称为fileport，主要有通知系统使用。</p>
 <p>Mach通过端口命名服务器注册全局的端口-即系统范围内的端口。在XNU中，这个“自举服务器”正是PID为1的launchd(8)，该进程注册自举服务器端口，由于系统的所有进程都是launchd的后代，因此从诞生起都集成了这个端口。</p>
-<h4 id="Mach-接口生成器-MIG"><a href="#Mach-接口生成器-MIG" class="headerlink" title="Mach 接口生成器(MIG)"></a>Mach 接口生成器(MIG)</h4><p>Mach没有使用专门的端口映射器(不过launchd(8)处理了一部分端口映射的逻辑）,但是Mach中有一个类似于<a href="https://en.wikipedia.org/wiki/RPCGEN" target="_blank" rel="noopener">rpcgen</a>的组件，即Mach接口生成器(Mach Interface Generator)，简称MIG。rpcgen在经典UNIX中的SUN-RPC中，通过rpcgen编译器从IDL(Interface Definition Language, IDL)生成代码。<br>在/usr/include/mach目录下，可以看到一些.defs文件，这些文件包含了各种Mach子系统的IDL定义。</p>
+<h4 id="Mach-接口生成器-MIG"><a href="#Mach-接口生成器-MIG" class="headerlink" title="Mach 接口生成器(MIG)"></a>Mach 接口生成器(MIG)</h4><p>Mach没有使用专门的端口映射器(不过launchd(8)处理了一部分端口映射的逻辑）,但是Mach中有一个类似于<a href="https://en.wikipedia.org/wiki/RPCGEN" target="_blank" rel="noopener">rpcgen</a>的组件，即Mach接口生成器(Mach Interface Generator)，简称MIG。rpcgen在经典UNIX中的SUN-RPC中，通过rpcgen编译器从IDL(Interface Definition Language, IDL)生成代码。</p>
 
       
     </div>
@@ -710,11 +710,11 @@
     </li>
     <li class="post-copyright-title">
       <strong>本文标题：</strong>
-      Mach 原语 笔记-基础篇
+      Mach 原语-学习笔记
     </li>
     <li class="post-copyright-link">
       <strong>本文链接：</strong>
-      <a href="http://www.kobeluo.com/TECH/2018/10/31/Mach/" title="Mach 原语 笔记-基础篇">http://www.kobeluo.com/TECH/2018/10/31/Mach/</a>
+      <a href="http://www.kobeluo.com/TECH/2018/10/31/Mach/" title="Mach 原语-学习笔记">http://www.kobeluo.com/TECH/2018/10/31/Mach/</a>
     </li>
     <li class="post-copyright-license">
       <strong>版权声明： </strong>
@@ -757,8 +757,8 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/TECH/2018/10/31/mach-trap/" rel="prev" title="mach_trap (未完结)">
-                mach_trap (未完结) <i class="fa fa-chevron-right"></i>
+              <a href="/TECH/2018/10/31/IPC/" rel="prev" title="IPC-进程间通信">
+                IPC-进程间通信 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -839,7 +839,7 @@
             <div class="site-state-item site-state-posts">
               <a href="/TECH/archives"> 
               <!-- <a href="/archives">-->
-                <span class="site-state-item-count">14</span>
+                <span class="site-state-item-count">13</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -1072,7 +1072,7 @@
         var disqus_config = function () {
           this.page.url = 'http://kobeluo.com/2018/10/31/Mach/';
           this.page.identifier = '2018/10/31/Mach/';
-          this.page.title = 'Mach 原语 笔记-基础篇';
+          this.page.title = 'Mach 原语-学习笔记';
         };
         var d = document, s = d.createElement('script');
         s.src = 'https://.disqus.com/embed.js';
