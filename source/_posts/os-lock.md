@@ -11,6 +11,8 @@ tags: [OS Lock, 锁, locks, osunfairlock,mutex, semaphore, nslock, NSConditionLo
 
 最近一段时间，博主都在做代码性能上的一些优化工作，其中就包括了对Mac OS/iOS锁这一部分的优化，趁此机会，也比较系统的测试了各种用户态的锁分别在单个线程和多个线程中的表现。之所以叫用户态的锁，是因为Mach内核部分其实还有一部分内核态的锁，它并不为用户态所开放，我们一般也使用不到。
 
+对同一个锁对象的加解锁必须保持在同一线程执行，如果尝试在不同线程去加解锁将会引发一个运行时的错误。
+
 #### 用户态可用的锁
 
 用户态的锁大概有以下:
@@ -74,12 +76,18 @@ private func testSemaphore() {
 - 对于单线程的条形图，数据表示每一次加锁和解锁的平均消耗
 - 对于多线程的条形图，数据表示5个线程完成一次加锁和解锁的平均消耗
 
+- 测试发现`OSUnfairLock`、`semaphore`、`mutex`在各种环境下的表现最稳定，性能差距不大，应该作为锁的首选考虑。
+
 本次测试博主尝试了Repeat不同的次数下，各类锁的耗时情况，发现各类锁的耗时大小顺序并不是固定的，并且差异挺大，仅仅只有单线程且去掉上下文的情况下，测试结果相对稳定，博主猜测大概是因为测试时电脑瞬时性能、CPU使用情况和内核调度的情况有关系，具体原因不敢妄下结论。
 
-**因此，测试结果只能从某个方面反映出锁的效率，也许它并不是最准确的结果，它是在特定环境下的真实测试结果。**
+
+#### 测试结果总结
+
+**测试结果只能从某个方面反映出锁的效率，也许它并不是最准确的结果，它是在特定环境下的真实测试结果。**
 
 去掉上下文的测试结果，仅仅只能说明锁本身的实现复杂度和内部的执行效率,它并不能说明锁在实际使用过程中，结合上下文的执行效率，只能作为理论依据。
 
+#### 单线程
 关于多线程的测试，其核心片段代码如下:
 ```Swift
 class func startThreadCompare(_ testTimes: Int) -> Bool {
@@ -114,6 +122,8 @@ class func startThreadCompare(_ testTimes: Int) -> Bool {
 
 同时发现其它的一些大牛写的博文跟这里的结果并不一致，这可能跟测试方式、当前OS系统运行情况等多方面有关系，博主所呈现的是真实的测试数据。
 
+#### 多线程
+
 关于多线程的测试，其核心片段代码如下:
 ```Swift
 class func startMultiThreadCompare(_ testTimes: Int, threadCount: Int, ci: @escaping invokeBlock) {
@@ -139,16 +149,154 @@ class func startMultiThreadCompare(_ testTimes: Int, threadCount: Int, ci: @esca
 }
 ```
 
+测试数据中的多线程的*Average Per time*是指多个线程同时完成一次加减锁所需要的时间。本例是5个线程
+
 ##### 多线程，去掉上下文
 
 ![测试元数据](multiAndContextResign.png)
 ![测试图表](contextResgnMulti.png)
 
-
+通过测试数据可以发现，
+- `OSUnfairLock`在5个线程同时测试锁的性能时，表现最优越，其平均消耗远低于其它锁，信号量`Semaphore`次之，`mutex`紧随其后。
+- 而类似于`NSLock`,`NSConditionLock`等更上层的锁在多线程环境下的综合表现则很一般。单线程的锁更多的是作为一种理论而存在，而多线程的测试数据则重要得多，它可能更接近于我们日常开发的需要。
+- 对比单线程，去掉上下文的数据，多线程的耗时多了很多，除了多个线程同时加减锁所耗费的时间外，更多的消耗则用在了线程之间的来回切换。
 
 ##### 多线程，保留上下文
 
 ![测试元数据](multiAndContextKeep.png)
 ![测试图表](contextKeepMulti.png)
+
+在这组综合测试中，`OSUnfairLock`依然稳居榜首，而`mutex`和`semaphore`则排在稍微靠后的位置上，博主猜测可能是因为频繁的线程切换导致的性能损失。
+
+### 各类锁介绍
+
+Mac OS/iOS系统下，用户态的锁使用方式都相对简单，大部分都进行了封装，像`NSLock`,`NSConditionLock`,`NSRecusiveLock`等等，他们只暴露必要的接口，而降实现细节全部隐藏起来由内部函数去处理，这些锁在ARC系统下不需要管理内存；也有一部分较为底层的锁，像`pthread_mutex`，`OSUnfairLock`等，但他们的使用都非常的方便简单。
+
+#### OSSpinLock 不再安全的自旋锁
+
+POSIX下的自旋锁的设计原理跟Mach内核的自旋锁原理一致。
+
+苹果的工程师已经[证实](https://lists.swift.org/pipermail/swift-dev/Week-of-Mon-20151214/000372.html)了OSSpinLock在多种优先级并存的环境中同时访问自旋锁由于优先级反转问题致使持有自旋锁的低优先级线程无法获取CPU资源，导致高优先级线程产生忙等的问题。具体请看ibireme大神[这篇文章](https://blog.ibireme.com/2016/01/16/spinlock_is_unsafe_in_ios/),
+
+结论是：如果无法确定当前多线程环境的所有线程是同一个优先级，请勿使用OSSpinLock.
+
+Apple在OSX 10.12/iOS 10上使用`OSUnfairLock`替代了`OSSpinLock`,后面将会提及`OSUnfaieLock`相关消息及使用方法。
+
+
+其使用方法如下:
+```Swift
+
+var splinLock = OS_SPINLOCK_INIT
+
+//mark: test locks
+private func testOSSpinlock() {
+    
+    OSSpinLockLock(&splinLock)
+
+        //code block in here...
+
+    OSSpinLockUnlock(&splinLock)
+}
+
+```
+
+#### OSUnfairLock 
+
+`OSUnfairLock`是在Mac OSX 10.12上，Mac给出了替换`OSSpinLock`的方案，它也是一个底层的锁对象，与`OSSpinLock`不同的是，他不再是采用忙等的方式，而是睡眠，知道该锁被unlock时被内核唤醒。官方文档还提到
+{% note info %}
+A lock should be considered opaque and implementation-defined. Locks contain thread ownership information that the system may use to attempt to resolve priority inversions.
+
+//一个锁应该被是不透明的且有实现的定义，锁对象包括的拥有者信息可以用来解决优先级反转问题。
+{% endnote %}
+
+其使用方式如下:
+```Swift
+
+var unfair = os_unfair_lock()
+private func testOSUnfairLock() {
+    
+    for index in 1...repeatTimes {
+        os_unfair_lock_lock(&unfair)
+        //your code block in here.
+        os_unfair_lock_unlock(&unfair)
+    }
+}
+
+```
+
+#### pthread_mutex_t 
+
+`pthread_mutex_t`是 linux系统下的互斥体，属于底层锁，但它跟Mach内核太的互斥体不是一回事，实际上POSIX下的互斥体的底层实现应该是使用了Mach内核的互斥体(`lck_mtx_t`),，POSIX下的互斥体文档中有很多函数实现，以下仅简单说明重要的函数使用。
+```Swift
+//初始化互斥体
+public func pthread_attr_init(_: UnsafeMutablePointer<pthread_attr_t>) -> Int32
+//初始化一个pthread的属性
+public func pthread_attr_init(_: UnsafeMutablePointer<pthread_attr_t>) -> Int32
+//销毁一个曾经初始化的属性
+public func pthread_attr_destroy(_: UnsafeMutablePointer<pthread_attr_t>) -> Int32
+///设置pthread属性的类型,分别是
+/// PTHREAD_MUTEX_NORMAL, PTHREAD_MUTEX_ERRORCHECK
+/// PTHREAD_MUTEX_DEFAULT, PTHREAD_MUTEX_RECURSIVE
+public func pthread_mutexattr_settype(_: UnsafeMutablePointer<pthread_mutexattr_t>, _: Int32) -> Int32
+
+//初始化mutex
+public func pthread_mutex_init(_: UnsafeMutablePointer<pthread_mutex_t>, _: UnsafePointer<pthread_mutexattr_t>?) -> Int32
+//给指定的mutex加锁
+public func pthread_mutex_lock(_: UnsafeMutablePointer<pthread_mutex_t>) -> Int32
+//尝试给指定的mutex加锁，是pthread_mutex_lock的非阻塞版本，返回0则加锁成功，返回其它值以表示当前锁的状态。
+public func pthread_mutex_trylock(_: UnsafeMutablePointer<pthread_mutex_t>) -> Int32
+//给指定的mutex解锁，必须入pthread_mutex_lock或成功执行的pthread_mutex_trylock成对出现
+public func pthread_mutex_unlock(_: UnsafeMutablePointer<pthread_mutex_t>) -> Int32
+
+```
+##### 互斥锁的简单使用
+```Swift
+var mutex = pthread_mutex_t()
+
+//initial mutex
+pthread_mutex_init(&mutex, nil)
+
+private func testPthreadMutex() {
+    
+    for index in 1...repeatTimes {
+        pthread_mutex_lock(&mutex)
+        //your code block in here...
+        pthread_mutex_unlock(&mutex)
+    }
+}
+```
+
+##### 递归互斥锁的简单使用
+```Swift
+var rmutex = pthread_mutex_t()
+
+//initial recusive mutex
+var attr: pthread_mutexattr_t = pthread_mutexattr_t()
+pthread_mutexattr_init(&attr)
+pthread_mutexattr_settype(&attr, PTHREAD_MUTEX_RECURSIVE)
+pthread_mutex_init(&rmutex, &attr)
+pthread_mutexattr_destroy(&attr)
+
+private func testPthreadMutexRecusive() {
+    
+    for index in 1...repeatTimes {
+
+        pthread_mutex_lock(&rmutex)
+        //your code block in here...
+        pthread_mutex_unlock(&rmutex)
+    }
+}
+
+```
+#### Dispatch_semaphore_t
+
+信号量
+
+
+相关链接:
+
+https://blog.ibireme.com/2016/01/16/spinlock_is_unsafe_in_ios/
+
+https://mjtsai.com/blog/2015/12/16/osspinlock-is-unsafe/
 
 
