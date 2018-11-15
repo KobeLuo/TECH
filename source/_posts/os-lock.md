@@ -1,5 +1,5 @@
 ---
-title: 细数Mac OS/iOS 系统下的锁(lock)
+title: 细数Mac OS/iOS 系统下的锁(lock) 未完结。。
 type: categories
 comments: true
 date: 2018-11-13 11:30:49
@@ -215,11 +215,11 @@ A lock should be considered opaque and implementation-defined. Locks contain thr
 var unfair = os_unfair_lock()
 private func testOSUnfairLock() {
     
-    for index in 1...repeatTimes {
-        os_unfair_lock_lock(&unfair)
-        //your code block in here.
-        os_unfair_lock_unlock(&unfair)
-    }
+    os_unfair_lock_lock(&unfair)
+    
+    //your code block in here.
+    
+    os_unfair_lock_unlock(&unfair)
 }
 
 ```
@@ -258,11 +258,11 @@ pthread_mutex_init(&mutex, nil)
 
 private func testPthreadMutex() {
     
-    for index in 1...repeatTimes {
-        pthread_mutex_lock(&mutex)
-        //your code block in here...
-        pthread_mutex_unlock(&mutex)
-    }
+    pthread_mutex_lock(&mutex)
+    
+    //your code block in here...
+    
+    pthread_mutex_unlock(&mutex)
 }
 ```
 
@@ -279,24 +279,101 @@ pthread_mutexattr_destroy(&attr)
 
 private func testPthreadMutexRecusive() {
     
-    for index in 1...repeatTimes {
+    pthread_mutex_lock(&rmutex)
 
-        pthread_mutex_lock(&rmutex)
-        //your code block in here...
-        pthread_mutex_unlock(&rmutex)
-    }
+    //your code block in here...
+    
+    pthread_mutex_unlock(&rmutex)
 }
 
 ```
+
 #### Dispatch_semaphore_t
 
-信号量
+信号量跟其它的锁概念有所不同，OS上的锁其本质上都是通过Mach内核中的互斥锁`lck_mtx_t`根据不同的不同的场景需求而设计的锁，它们大多采用阻塞的方式，少部分使用忙等的方式；而信号量不一致，它是使用信号的方式来控制多线程对于资源的控制，并且信号量可同时释放信号量以保证多个线程同时访问资源，博主曾经写过[这篇博客](http://www.kobeluo.com/TECH/2017/03/28/dispatch-semaphore/)对信号量的用法做了分析。
+
+
+简单使用方式大致如下:
+```swift
+
+let sema: DispatchSemaphore = DispatchSemaphore.init(value: 1)
+
+private func testSemaphore() {
+    
+    sema.wait()
+	
+    // your code block in here...
+    
+    sema.signal()
+}
+```
+#### NSLock / NSRecusiveLock
+
+`NSLock`是OS封装的一个上层锁对象，它可以用来间接的读取全局数据或者保护一个临界区域的代码安全，`NSLock`支持原子操作。
+
+{% note danger %}
+
+NSLock使用 POSIX线程来实现Lock的行为，当发送一个`unlock()`消息到NSLock对象，你必须确保之前在同样的线程已经发送了一个`lock()`消息,
+对于同一个NSLock锁的实例，如果`lock()`和`unlock()`不在同一线程，将引发一个未知的错误（can result in undefined behavior.）。
+
+{% endnote %}
+
+NSLock无法支持对同一个NSLock的实例连续进行两次及以上的`lock()`操作，否则会引发死锁，如果需要递归的调用`lock()`操作，应该是用`NSRecusiveLock`。
+
+`Unlocking a lock that is not locked is considered a programmer error and should be fixed in your code`
+如果你尝试解锁一个未被加锁的NSLock对象，这被认为是程序员的错误，同时输出一个类似的错误在console上。
+
+其简单使用如下:
+```Swift 
+
+let lock = NSLock.init()
+private func testNSLock() {
+        
+    lock.lock()
+    
+    // your code block in here...
+    
+    lock.unlock()
+}
+    
+
+let rlock = NSRecursiveLock.init()
+private func testNSRecusiveLock() {
+        
+    rlock.lock()
+
+    //your code block in here ...
+    
+    rlock.unlock()
+}
+```
+
+#### NSCondition
+#### NSConditionLock
+
+#### @synchronized 
+
+这是Objective-C上面封装的一个上层锁，允许递归使用，其内部处理逻辑相对复杂，因此性能在所有的锁中相对较差，其简单使用方式：
+
+```Swift
+@synchronized(lockedObj) {
+	
+	//code block in here...
+}
+```
+更多关于@synchronized的消息请参考以下链接
+https://reddick-wang.github.io/2017/05/12/iOS%E4%B8%AD%E7%9A%84%E9%82%A3%E4%BA%9B%E9%94%81/
 
 
 相关链接:
 
+OSSpinLock
+https://mjtsai.com/blog/2015/12/16/osspinlock-is-unsafe/
 https://blog.ibireme.com/2016/01/16/spinlock_is_unsafe_in_ios/
 
-https://mjtsai.com/blog/2015/12/16/osspinlock-is-unsafe/
+Synchronized
+https://developer.apple.com/library/archive/documentation/Cocoa/Conceptual/Multithreading/ThreadSafety/ThreadSafety.html#//apple_ref/doc/uid/10000057i-CH8-SW3
+https://reddick-wang.github.io/2017/05/12/iOS%E4%B8%AD%E7%9A%84%E9%82%A3%E4%BA%9B%E9%94%81/
+http://yulingtianxia.com/blog/2015/11/01/More-than-you-want-to-know-about-synchronized/
 
 
