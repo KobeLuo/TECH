@@ -2,7 +2,7 @@
 title: GCD系列:代码块(dispatch_block)
 date: 2017-03-27 20:25:04
 type: "categories"
-categories: Objective-C
+categories: Mac Develop
 tags: [GCD,Dispatch block,dispatch代码块]
 ---
 

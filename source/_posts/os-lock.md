@@ -3,7 +3,7 @@ title: 细数Mac OS/iOS 系统下的锁(lock)
 type: categories
 comments: true
 date: 2018-11-13 11:30:49
-categories: Swift
+categories: Mac Develop
 tags: [OS Lock, 锁, locks, osunfairlock,mutex, semaphore, nslock, NSConditionLock]
 ---
 

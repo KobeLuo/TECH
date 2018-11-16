@@ -2,7 +2,7 @@
 title: mac上建立基于osx fuse的虚拟磁盘
 date: 2017-07-24 20:25:04
 type: "categories"
-categories: Objective-C
+categories: Mac Develop
 tags: [FUSE,Mount Disk,LookbackFS]
 ---
 {% cq %} 

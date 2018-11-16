@@ -2,7 +2,7 @@
 title: GCD系列:队列(dispatch_queue)
 date: 2017-03-20 11:44:22
 type: "categories"
-categories: Objective-C
+categories: Mac Develop
 tags: [GCD,Dispatch queue,队列]
 ---
 

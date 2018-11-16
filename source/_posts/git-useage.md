@@ -3,7 +3,7 @@ title: git使用
 type: categories
 comments: true
 date: 2016-07-15 19:15:50
-categories: tools
+categories: Tools
 
 tags: 
 - git

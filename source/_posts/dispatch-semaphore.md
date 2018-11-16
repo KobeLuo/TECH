@@ -2,7 +2,7 @@
 title: GCD系列:信号量(dispatch_semaphore)
 date: 2017-03-28 20:44:35
 type: "categories"
-categories: Objective-C
+categories: Mac Develop
 tags: [GCD, dispatch_semaphore, 信号量]
 ---
 信号量有点像具备N个task并行能力的channel,当channel的并行能力未达到上限时可以任意往里边加task，当达到channel上限时，需要task完成才可以加入新的task.

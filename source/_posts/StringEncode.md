@@ -3,7 +3,7 @@ title: Unicode Forms
 type: categories
 comments: true
 date: 2018-11-05 11:16:15
-categories: Mac OS
+categories: Tools
 tags: [编码格式, FormC, FormD, unicode Encode]
 ---
 

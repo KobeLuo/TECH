@@ -3,7 +3,7 @@ title: git深入理解
 type: categories
 comments: true
 date: 2018-10-16 09:53:11
-categories: tools
+categories: Tools
 tags: 
 - git理解
 - git 

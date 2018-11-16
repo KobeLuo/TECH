@@ -3,7 +3,7 @@ title: IPC-进程间通信
 type: categories
 comments: true
 date: 2018-10-31 16:06:25
-categories: Mac OS
+categories: OS Kernal
 tags: [进程,Process Communication,进程间通信,IPC]
 ---
 

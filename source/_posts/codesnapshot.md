@@ -3,7 +3,7 @@ title: Swift 桥接OC代码重构
 type: categories
 comments: true
 date: 2018-07-05 10:48:11
-categories: Swift
+categories: Mac Develop
 tags: [代码共享, 片段代码]
 ---
 
@@ -131,3 +131,5 @@ public func appendingPathComponent(path: String?, regularly: Bool = false) -> St
 ```
 
 [点我下载String+path.swift](String+Path.swift)
+
+
