@@ -1,5 +1,5 @@
 ---
-title: 细数Mac OS/iOS 系统下的锁(lock) 未完结。。
+title: 细数Mac OS/iOS 系统下的锁(lock)
 type: categories
 comments: true
 date: 2018-11-13 11:30:49
@@ -349,7 +349,69 @@ private func testNSRecusiveLock() {
 ```
 
 #### NSCondition
+
+{% note info %}
+官方文档:
+A condition object acts as both a lock and a checkpoint in a given thread. The lock protects your code while it tests the condition and performs the task triggered by the condition. The checkpoint behavior requires that the condition be true before the thread proceeds with its task. While the condition is not true, the thread blocks. It remains blocked until another thread signals the condition object.
+{% endnote %}
+
+一个Condition对象被用于指定线程的checkpoint或一个锁。 作为锁，可以在当测试某种条件和执行有条件触发的任务时来保护你的代码。作为checkpoint，其要求在线程执行完之前，condition为true,否则该线程将被一直锁住,直到另一个线程发送一个condition对象的信号。
+
+`NSCondition`官方使用六大步：
+- lock condition对象(`condition.lock()`)
+- 添加一个bool量的判断，用来指示是否需要继续执行下面受保护的内容
+- 如果bool量为false,则调用`wait()`或`wait(until:)`函数，用以锁住当前线程，从这个循环返回后继续回到步骤2，继续测试bool量
+归纳起来就是 `while (boolvalue == false) { condition.wait() }`
+- 如果bool量为true了，则继续向下执行受保护的内容。
+- 可选项，更新条件或发送一个condition信号,如果需要的话。(`conditon.signal()` or `condition.broadcast()`)
+- 当所有工作完成时，调用 `conditon.unlock()`
+
+简单的锁使用方式如下:
+```swift
+
+let condition = NSCondition.init()
+
+private func testNSCondition() {
+	
+    condition.lock()
+    while( booleanvalue == false) {
+
+    	condition.wait()
+    }
+
+    //your code in here...
+
+    condition.unlock()    
+
+
+    //set the booleanvalue to true in a given time.
+}
+
+```
+
+作为上层锁，其内部实现复杂度是要高于底层锁的，因此从性能上开率，除特殊需求外，不建议使用此类锁。
+
+最后再上一段官方的使用心得：
+{% note info %}
+Whenever you use a condition object, the first step is to lock the condition. Locking the condition ensures that your predicate and task code are protected from interference by other threads using the same condition. Once you have completed your task, you can set other predicates or signal other conditions based on the needs of your code. You should always set predicates and signal conditions while holding the condition object’s lock.
+{% endnote %}
 #### NSConditionLock
+使用NSConditionLock对象需要确保线程可以在确定的条件下拿到锁，一旦拿到锁并执行了关键区域的代码(被保护的代码)，该线程可以丢弃该锁或者设置新的相关条件，条件是不固定的，根据你的项目而自定。
+
+其简单使用如下:
+```swift
+let clock = NSConditionLock.init()
+
+private func testNSConditionLock() {
+	
+	clock.lock()
+    ///your code block in here...
+    clock.unlock()
+
+    /// clock.try() 尝试加锁，如果成功获取锁，则返回一个正值，否则返回负值， try()成功，才可以unlock(),否则引发一个未知错误。
+}
+```
+
 
 #### @synchronized 
 
