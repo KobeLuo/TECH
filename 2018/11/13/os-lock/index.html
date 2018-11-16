@@ -92,7 +92,7 @@
 <meta name="description" content="前言最近一段时间，博主都在做代码性能上的一些优化工作，其中就包括了对Mac OS/iOS锁这一部分的优化，趁此机会，也比较系统的测试了各种用户态的锁分别在单个线程和多个线程中的表现。之所以叫用户态的锁，是因为Mach内核部分其实还有一部分内核态的锁，它并不为用户态所开放，我们一般也使用不到。 对同一个锁对象的加解锁必须保持在同一线程执行，如果尝试在不同线程去加解锁将会引发一个运行时的错误。 用户态">
 <meta name="keywords" content="OS Lock,锁,locks,osunfairlock,mutex,semaphore,nslock,NSConditionLock">
 <meta property="og:type" content="article">
-<meta property="og:title" content="细数Mac OS&#x2F;iOS 系统下的锁(lock) 未完结。。">
+<meta property="og:title" content="细数Mac OS&#x2F;iOS 系统下的锁(lock)">
 <meta property="og:url" content="http://kobeluo.com/2018/11/13/os-lock/index.html">
 <meta property="og:site_name" content="KobeLuo的技术笔记">
 <meta property="og:description" content="前言最近一段时间，博主都在做代码性能上的一些优化工作，其中就包括了对Mac OS/iOS锁这一部分的优化，趁此机会，也比较系统的测试了各种用户态的锁分别在单个线程和多个线程中的表现。之所以叫用户态的锁，是因为Mach内核部分其实还有一部分内核态的锁，它并不为用户态所开放，我们一般也使用不到。 对同一个锁对象的加解锁必须保持在同一线程执行，如果尝试在不同线程去加解锁将会引发一个运行时的错误。 用户态">
@@ -105,9 +105,9 @@
 <meta property="og:image" content="http://kobeluo.com/TECH/2018/11/13/os-lock/contextResgnMulti.png">
 <meta property="og:image" content="http://kobeluo.com/TECH/2018/11/13/os-lock/multiAndContextKeep.png">
 <meta property="og:image" content="http://kobeluo.com/TECH/2018/11/13/os-lock/contextKeepMulti.png">
-<meta property="og:updated_time" content="2018-11-15T01:48:35.056Z">
+<meta property="og:updated_time" content="2018-11-16T03:33:06.002Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="细数Mac OS&#x2F;iOS 系统下的锁(lock) 未完结。。">
+<meta name="twitter:title" content="细数Mac OS&#x2F;iOS 系统下的锁(lock)">
 <meta name="twitter:description" content="前言最近一段时间，博主都在做代码性能上的一些优化工作，其中就包括了对Mac OS/iOS锁这一部分的优化，趁此机会，也比较系统的测试了各种用户态的锁分别在单个线程和多个线程中的表现。之所以叫用户态的锁，是因为Mach内核部分其实还有一部分内核态的锁，它并不为用户态所开放，我们一般也使用不到。 对同一个锁对象的加解锁必须保持在同一线程执行，如果尝试在不同线程去加解锁将会引发一个运行时的错误。 用户态">
 <meta name="twitter:image" content="http://kobeluo.com/TECH/2018/11/13/os-lock/singleAndContextResign.png">
 
@@ -143,7 +143,7 @@
 
 
 
-  <title> 细数Mac OS/iOS 系统下的锁(lock) 未完结。。 | KobeLuo的技术笔记 </title>
+  <title> 细数Mac OS/iOS 系统下的锁(lock) | KobeLuo的技术笔记 </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -339,7 +339,7 @@
             
             
               
-                细数Mac OS/iOS 系统下的锁(lock) 未完结。。
+                细数Mac OS/iOS 系统下的锁(lock)
               
             
           </h1>
@@ -370,8 +370,8 @@
               
                 <span class="post-meta-item-text">更新于</span>
               
-              <time title="更新于" itemprop="dateModified" datetime="2018-11-15T09:48:35+08:00">
-                2018-11-15
+              <time title="更新于" itemprop="dateModified" datetime="2018-11-16T11:33:06+08:00">
+                2018-11-16
               </time>
             
           </span>
@@ -417,7 +417,7 @@
 
           
           
-             <span id="/TECH/2018/11/13/os-lock/" class="leancloud_visitors" data-flag-title="细数Mac OS/iOS 系统下的锁(lock) 未完结。。">
+             <span id="/TECH/2018/11/13/os-lock/" class="leancloud_visitors" data-flag-title="细数Mac OS/iOS 系统下的锁(lock)">
                <span class="post-meta-divider">|</span>
                <span class="post-meta-item-icon">
                  <i class="fa fa-eye"></i>
@@ -441,7 +441,7 @@
                   <span class="post-meta-item-text">字数统计</span>
                 
                 <span title="字数统计">
-                  3.4k
+                  4k
                 </span>
               
 
@@ -457,7 +457,7 @@
                   <span class="post-meta-item-text">阅读时长</span>
                 
                 <span title="阅读时长">
-                  13
+                  16
                 </span>
               
             </div>
@@ -559,7 +559,25 @@
 <p>NSLock无法支持对同一个NSLock的实例连续进行两次及以上的<code>lock()</code>操作，否则会引发死锁，如果需要递归的调用<code>lock()</code>操作，应该是用<code>NSRecusiveLock</code>。</p>
 <p><code>Unlocking a lock that is not locked is considered a programmer error and should be fixed in your code</code><br>如果你尝试解锁一个未被加锁的NSLock对象，这被认为是程序员的错误，同时输出一个类似的错误在console上。</p>
 <p>其简单使用如下:<br><figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">let</span> lock = <span class="type">NSLock</span>.<span class="keyword">init</span>()</span><br><span class="line"><span class="keyword">private</span> <span class="function"><span class="keyword">func</span> <span class="title">testNSLock</span><span class="params">()</span></span> &#123;</span><br><span class="line">        </span><br><span class="line">    lock.lock()</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// your code block in here...</span></span><br><span class="line">    </span><br><span class="line">    lock.unlock()</span><br><span class="line">&#125;</span><br><span class="line">    </span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> rlock = <span class="type">NSRecursiveLock</span>.<span class="keyword">init</span>()</span><br><span class="line"><span class="keyword">private</span> <span class="function"><span class="keyword">func</span> <span class="title">testNSRecusiveLock</span><span class="params">()</span></span> &#123;</span><br><span class="line">        </span><br><span class="line">    rlock.lock()</span><br><span class="line"></span><br><span class="line">    <span class="comment">//your code block in here ...</span></span><br><span class="line">    </span><br><span class="line">    rlock.unlock()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<h4 id="NSCondition"><a href="#NSCondition" class="headerlink" title="NSCondition"></a>NSCondition</h4><h4 id="NSConditionLock"><a href="#NSConditionLock" class="headerlink" title="NSConditionLock"></a>NSConditionLock</h4><h4 id="synchronized"><a href="#synchronized" class="headerlink" title="@synchronized"></a>@synchronized</h4><p>这是Objective-C上面封装的一个上层锁，允许递归使用，其内部处理逻辑相对复杂，因此性能在所有的锁中相对较差，其简单使用方式：</p>
+<h4 id="NSCondition"><a href="#NSCondition" class="headerlink" title="NSCondition"></a>NSCondition</h4><div class="note info"><p>官方文档:<br>A condition object acts as both a lock and a checkpoint in a given thread. The lock protects your code while it tests the condition and performs the task triggered by the condition. The checkpoint behavior requires that the condition be true before the thread proceeds with its task. While the condition is not true, the thread blocks. It remains blocked until another thread signals the condition object.</p>
+</div>
+<p>一个Condition对象被用于指定线程的checkpoint或一个锁。 作为锁，可以在当测试某种条件和执行有条件触发的任务时来保护你的代码。作为checkpoint，其要求在线程执行完之前，condition为true,否则该线程将被一直锁住,直到另一个线程发送一个condition对象的信号。</p>
+<p><code>NSCondition</code>官方使用六大步：</p>
+<ul>
+<li>lock condition对象(<code>condition.lock()</code>)</li>
+<li>添加一个bool量的判断，用来指示是否需要继续执行下面受保护的内容</li>
+<li>如果bool量为false,则调用<code>wait()</code>或<code>wait(until:)</code>函数，用以锁住当前线程，从这个循环返回后继续回到步骤2，继续测试bool量<br>归纳起来就是 <code>while (boolvalue == false) { condition.wait() }</code></li>
+<li>如果bool量为true了，则继续向下执行受保护的内容。</li>
+<li>可选项，更新条件或发送一个condition信号,如果需要的话。(<code>conditon.signal()</code> or <code>condition.broadcast()</code>)</li>
+<li>当所有工作完成时，调用 <code>conditon.unlock()</code></li>
+</ul>
+<p>简单的锁使用方式如下:<br><figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">let</span> condition = <span class="type">NSCondition</span>.<span class="keyword">init</span>()</span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span> <span class="function"><span class="keyword">func</span> <span class="title">testNSCondition</span><span class="params">()</span></span> &#123;</span><br><span class="line">	</span><br><span class="line">    condition.lock()</span><br><span class="line">    <span class="keyword">while</span>( booleanvalue == <span class="literal">false</span>) &#123;</span><br><span class="line"></span><br><span class="line">    	condition.wait()</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//your code in here...</span></span><br><span class="line"></span><br><span class="line">    condition.unlock()    </span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="comment">//set the booleanvalue to true in a given time.</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>作为上层锁，其内部实现复杂度是要高于底层锁的，因此从性能上开率，除特殊需求外，不建议使用此类锁。</p>
+<p>最后再上一段官方的使用心得：<br><div class="note info"><p>Whenever you use a condition object, the first step is to lock the condition. Locking the condition ensures that your predicate and task code are protected from interference by other threads using the same condition. Once you have completed your task, you can set other predicates or signal other conditions based on the needs of your code. You should always set predicates and signal conditions while holding the condition object’s lock.</p>
+</div></p>
+<h4 id="NSConditionLock"><a href="#NSConditionLock" class="headerlink" title="NSConditionLock"></a>NSConditionLock</h4><p>使用NSConditionLock对象需要确保线程可以在确定的条件下拿到锁，一旦拿到锁并执行了关键区域的代码(被保护的代码)，该线程可以丢弃该锁或者设置新的相关条件，条件是不固定的，根据你的项目而自定。</p>
+<p>其简单使用如下:<br><figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> clock = <span class="type">NSConditionLock</span>.<span class="keyword">init</span>()</span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span> <span class="function"><span class="keyword">func</span> <span class="title">testNSConditionLock</span><span class="params">()</span></span> &#123;</span><br><span class="line">	</span><br><span class="line">	clock.lock()</span><br><span class="line">    <span class="comment">///your code block in here...</span></span><br><span class="line">    clock.unlock()</span><br><span class="line"></span><br><span class="line">    <span class="comment">/// clock.try() 尝试加锁，如果成功获取锁，则返回一个正值，否则返回负值， try()成功，才可以unlock(),否则引发一个未知错误。</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h4 id="synchronized"><a href="#synchronized" class="headerlink" title="@synchronized"></a>@synchronized</h4><p>这是Objective-C上面封装的一个上层锁，允许递归使用，其内部处理逻辑相对复杂，因此性能在所有的锁中相对较差，其简单使用方式：</p>
 <figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">@synchronized(lockedObj) &#123;</span><br><span class="line">	</span><br><span class="line">	<span class="comment">//code block in here...</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>更多关于@synchronized的消息请参考以下链接<br><a href="https://reddick-wang.github.io/2017/05/12/iOS%E4%B8%AD%E7%9A%84%E9%82%A3%E4%BA%9B%E9%94%81/" target="_blank" rel="noopener">https://reddick-wang.github.io/2017/05/12/iOS%E4%B8%AD%E7%9A%84%E9%82%A3%E4%BA%9B%E9%94%81/</a></p>
 <p>相关链接:</p>
@@ -624,11 +642,11 @@
     </li>
     <li class="post-copyright-title">
       <strong>本文标题：</strong>
-      细数Mac OS/iOS 系统下的锁(lock) 未完结。。
+      细数Mac OS/iOS 系统下的锁(lock)
     </li>
     <li class="post-copyright-link">
       <strong>本文链接：</strong>
-      <a href="http://www.kobeluo.com/TECH/2018/11/13/os-lock/" title="细数Mac OS/iOS 系统下的锁(lock) 未完结。。">http://www.kobeluo.com/TECH/2018/11/13/os-lock/</a>
+      <a href="http://www.kobeluo.com/TECH/2018/11/13/os-lock/" title="细数Mac OS/iOS 系统下的锁(lock)">http://www.kobeluo.com/TECH/2018/11/13/os-lock/</a>
     </li>
     <li class="post-copyright-license">
       <strong>版权声明： </strong>
@@ -992,7 +1010,7 @@
         var disqus_config = function () {
           this.page.url = 'http://kobeluo.com/2018/11/13/os-lock/';
           this.page.identifier = '2018/11/13/os-lock/';
-          this.page.title = '细数Mac OS/iOS 系统下的锁(lock) 未完结。。';
+          this.page.title = '细数Mac OS/iOS 系统下的锁(lock)';
         };
         var d = document, s = d.createElement('script');
         s.src = 'https://.disqus.com/embed.js';
