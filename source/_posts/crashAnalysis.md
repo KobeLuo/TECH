@@ -19,6 +19,8 @@ tags:
 
 一般的崩溃日志都会产生一个线程回溯列表，让你去回溯到指定的crash函数，但是内存警告不会产生线程回溯，官方的解释是低内存发生时不需要线程回溯信息，当发生内存警告时，你必须要重视内存的使用模式并在内存警告发生时的回调函数处理相关的内存泄露。
 
+本文大多数内容来源于Apple的官方文档，[地址在这](https://developer.apple.com/library/archive/technotes/tn2151/_index.html)
+
 这篇博文意在如何收集crash，如何分析crash.
 <!--more-->
 ### crash日志的收集
@@ -96,11 +98,11 @@ loadAddress的后三位通常都是000，如果不是，则可能计算有误。
 6.执行: atos -arch x86_64 -o appNameInDWARF -l loadAddress symbolicateAdress
 ```
 
-#### 分析崩溃报告
+### 分析崩溃报告
 
 这部分内容讨论当你获取到`.crash`文件时，如何分析崩溃信息。
 
-##### Header信息
+#### Header信息
 每一个`.crash`文件的第一部分内容都是一个格式相同的header信息。
 ```
 Incident Identifier: B6FD1E8E-B39F-430B-ADDE-FC3A45ED368C
@@ -162,7 +164,7 @@ Triggered by Thread: 0
 - Terminal Reason: 进程的内部和外部关键组件在进程发送错误时将进程结束时的原因
 - Triggered by Thread: 进程崩溃的线程号
 
-#### 常规异常类型解读
+### 常规异常类型解读
 
 ##### 内存访问错误 (EXC_BAD_ACCESS、 SIGSEGV、SIGBUS)
 进程尝试访问一个无效的内存地址，或者尝试访问没有权限的访问的内存地址都将引发内存访问错误。当内存访问错误发生时，`.crash`文件的`Exception Subtype1`会包含一个`kern_return_t`的描述错误和读取时的错误内存地址。
@@ -176,11 +178,73 @@ Triggered by Thread: 0
 进程异常退出最常见的原因就是一个未被捕获的Objective-C/C++的错误和调用了`abort()`函数
 App的扩展程序也可能产生类似的崩溃信息，如果太多次的被初始化。如果一个扩展程序在launch过程中Hang了，Exception Subtype将报`LAUNCH_HANG`，因为扩展程序并没有`main（）`函数，扩展程序或其独立库的时间花销都在静态构造器和`+load()`函数中
 
+##### 跟踪陷阱 (EXC_BREAKPOINT、 SIGTRAP)
+这种异常为附加调试者一个在进程执行体中的某个指定点中断进程的机会，你可以在代码中的某个位置添加函数`__builtin_trap()`来触发该异常，如果没有调试者被附加，那么进程将结束并生成一个崩溃报告
 
+Apple底层的一些库（如libdispatch）也会使用这种方式在发生致命错误时来捕获进程，附加信息将会在console中体现，也可以[在这查询](https://developer.apple.com/library/archive/technotes/tn2151/_index.html#//apple_ref/doc/uid/DTS40008184-CH1-APPINFO)
 
+Swift也经常用到trap机制来引发异常，比如在运行时状态下:
+- 一个不可选的value被置为nil时
+- 类型强转失败时
 
+##### 非法指令 (EXC_BAD_INSTRUCTION、 SIGILL)
+当进程尝试执行一个非法的或未经定义的指令时，进程可能会尝试通过一个错误的函数指针跳转到一个错误的地址，从而会引发该错误。
+在Inter处理器上面，`ud2`操作码会引发一个`EXC_BAD_INSTRUCTION`异常，但通常也是使用这个trap来达到调试的目的。而Inter处理器上的Swift代码在运行时遇到意外情况将引发该错误
+
+##### 退出Quit （SIGQUIT）
+
+进程结束于另一个有权管理其生命周期的进程，因此`SIGOUT`并不意味这该进程发生了崩溃，但是它也可能以一种可以检测的方式发生异常。
+
+在iOS系统中，如果键盘扩展加载时间过长，主机应用程序将退出键盘扩展。崩溃报告中显示的线程回溯不太可能指向具体的响应代码。而最有可能的情况是，扩展的启动路径上的其他一些代码花了很长时间才完成，但是在时间限制之前已经完成了，并且在退出扩展时将执行代码显示在线程回溯上。您应该对扩展进行概要分析，以便更好地理解启动期间的大部分工作发生在哪里，并将该工作转移到后台线程，或者将其延迟到稍后(在加载扩展之后)。
+
+##### 被杀死 Killed (SIGKILL)
+说明该进程被系统杀死，并且在崩溃信息的Header的`Exception Reason`字段中会包含一个命名空间，后面跟随一个代码
+
+{% note info %}
+The following codes are specific to watchOS:
+
+- The termination code 0xc51bad01 indicates that a watch app was terminated because it used too much CPU time while performing a background task. To address this issue, optimize the code performing the background task to be more CPU efficient, or decrease the amount of work that the app performs while running in the background.
+- The termination code 0xc51bad02 indicates that a watch app was terminated because it failed to complete a background task within the allocated time. To address this issue, decrease the amount of work that the app performs while running in the background.
+- The termination code 0xc51bad03 indicates that a watch app failed to complete a background task within the allocated time, and the system was sufficiently busy overall that the app may not have received much CPU time with which to perform the background task. Although an app may be able to avoid the issue by reducing the amount of work it performs in the background task, 0xc51bad03 does not indicate that the app did anything wrong. More likely, the app wasn’t able to complete its work because of overall system load.
+
+{% endnote %}
+
+##### 违反受保护资源 （EXC_GUARD）
+当访问系统被保留或受保护的资源时，会引发一个`EXC_GUARD`错误，这些被保留的资源只允许在系统级的私有API才能访问。
+在较新版本的iOS系统中，当违反了被保留的资源时，会在`Exception Subtype`和`Exception Message`字段中以更友好的方式提示给开发者，但是在Mac OS和早起的iOS系统中，该错误信息只会在`Exception Code`中体现，具体分解如下:
+{% note info %}
+as a bitfield which breaks down as follows:
+
+[63:61] - Guard Type: The type of the guarded resource. A value of 0x2 indicates the resource is a file descriptor.
+[60:32] - Flavor: The conditions under which the violation was triggered.
+- If the first (1 << 0) bit is set, the process attempted to invoke close() on a guarded file descriptor.
+- If the second (1 << 1) bit is set, the process attempted to invoke dup(), dup2(), or fcntl() with the F_DUPFD or F_DUPFD_CLOEXEC commands on a guarded file descriptor.
+- If the third (1 << 2) bit is set, the process attempted to send a guarded file descriptor via a socket.
+- If the fifth (1 << 4) bit is set, the process attempted to write to a guarded file descriptor.
+
+[31:0] - File Descriptor: The guarded file descriptor that the process attempted to modify.
+
+{% endnote %}
+
+##### 超出资源限制 Resource Limit （EXC_RESOURCE）
+
+该进程超出了资源消耗限制。这是来自操作系统的一个通知，进程使用了太多的资源。在`Exception Subtype`字段中列出了准确的信息。如果`Exception Note`字段包含`NON FATAL`,`CONDITION`，那么即使生成了崩溃报告，进程也不会被终止。
+
+- 如果`Exception Subtype`为`MEMORY`代表该进程已经超越了系统准予的内存限制，这可能是终止超量内存使用的前兆。
+- 如果`Exception Subtype`为`WAKEUPS`代表该进程中的线程在每秒中被过于频繁的唤醒，这将会强制CPU频繁唤醒，进而影响到电池的使用寿命。
+
+通常情况下，发生这种情况的原因是线程与线程之间的通信(比如使用`performSelector:onThread:`或`dispatch_async`)，它们的通信频率远远超出了它们应该有的通信频率，当发生类似情况时，有很多个后台线程都有相同的线程回溯，都指向了调用源。
+
+##### 其他异常类型
+有一些崩溃报告中，会出现一个未命名的`Exception Type`,这类型异常会以一个十六进制的值表示，对于类似情况，直接可以从`Exception Code`中读取该值
+- 0xbaaaaaad 该code不是崩溃信息，它表示该log为整个系统的堆栈快照
+- 0xbad22222 表示该进程是一个VoIP进程，因为过于频繁的resume而发生异常崩溃
+- 0x8badf00d 表示iOS进程因为看门狗超时而崩溃，可能是应用在launch、terminate或响应系统事件时消耗了太多时间而发生的超时，最常见的错误就是在主线程去同步做网络任务而导致的崩溃。
+- 0xc00010ff indicates the app was killed by the operating system in response to a thermal event. This may be due to an issue with the particular device that this crash occurred on, or the environment it was operated in. For tips on making your app run more efficiently, see [WWDC session](https://developer.apple.com/videos/wwdc/2011/?id=312)
+- 0xdead10cc 表示死锁，锁被占用着，一直没有放弃锁导致其他线程无法拥有锁，总结起来就是死锁。
+- 0x2bad45ec 表示进程因违反私密信息而被终止
 
 相关连接：
-- [理解和分析应用崩溃报告](https://developer.apple.com/library/archive/technotes/tn2151/_index.html#//apple_ref/doc/uid/DTS40008184-CH1-SYMBOLICATIONTROUBLESHOOTING)
+- [理解和分析应用崩溃报告](https://developer.apple.com/library/archive/technotes/tn2151/_index.html)
 
 - [dSYM For Fabric](https://docs.fabric.io/apple/crashlytics/missing-dsyms.html)
