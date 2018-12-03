@@ -1,0 +1,1261 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/TECH/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/TECH/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/TECH/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="崩溃日志,崩溃解析,crash analysis,.dSYM .crash," />
+
+
+
+
+
+  <link rel="alternate" href="/TECH/atom.xml" title="KobeLuo的技术笔记" type="application/atom+xml" />
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/TECH/images/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="就普通的开发而言，普通需求的实现，对于大多数有经验的开发者只是时间问题，其实并没有太大的难度，需求的实现过程则相对轻松； 比较恶心的是发布产品后，遇到的各式奇葩的crash，如果你早有准备，在发布的时候打包了符号文件，那么恭喜你，你还可以通过符号文件来查找崩溃代码，否则，可能就是让bug出现者不停的复现crash，费事费力，可能最终还找不到问题。 符号文件可以通过一定规则将内存地址转换为可读的函数">
+<meta name="keywords" content="崩溃日志,崩溃解析,crash analysis,.dSYM .crash">
+<meta property="og:type" content="article">
+<meta property="og:title" content="iOS&#x2F;Mac OS下的 Crash 崩溃分析">
+<meta property="og:url" content="http://kobeluo.com/2017/11/16/crashAnalysis/index.html">
+<meta property="og:site_name" content="KobeLuo的技术笔记">
+<meta property="og:description" content="就普通的开发而言，普通需求的实现，对于大多数有经验的开发者只是时间问题，其实并没有太大的难度，需求的实现过程则相对轻松； 比较恶心的是发布产品后，遇到的各式奇葩的crash，如果你早有准备，在发布的时候打包了符号文件，那么恭喜你，你还可以通过符号文件来查找崩溃代码，否则，可能就是让bug出现者不停的复现crash，费事费力，可能最终还找不到问题。 符号文件可以通过一定规则将内存地址转换为可读的函数">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://developer.apple.com/library/archive/technotes/tn2151/Art/tn2151_crash_flow.png">
+<meta property="og:image" content="http://kobeluo.com/TECH/2017/11/16/crashAnalysis/orgnizerArchived.png">
+<meta property="og:image" content="http://kobeluo.com/TECH/2017/11/16/crashAnalysis/finderShowPackage.png">
+<meta property="og:image" content="http://kobeluo.com/TECH/2017/11/16/crashAnalysis/dsYM.png">
+<meta property="og:image" content="https://developer.apple.com/library/archive/technotes/tn2151/Art/tn2151_symbolication_levels.png">
+<meta property="og:image" content="https://developer.apple.com/library/archive/technotes/tn2151/Art/tn2151_atos_info.png">
+<meta property="og:updated_time" content="2018-12-03T09:51:44.660Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="iOS&#x2F;Mac OS下的 Crash 崩溃分析">
+<meta name="twitter:description" content="就普通的开发而言，普通需求的实现，对于大多数有经验的开发者只是时间问题，其实并没有太大的难度，需求的实现过程则相对轻松； 比较恶心的是发布产品后，遇到的各式奇葩的crash，如果你早有准备，在发布的时候打包了符号文件，那么恭喜你，你还可以通过符号文件来查找崩溃代码，否则，可能就是让bug出现者不停的复现crash，费事费力，可能最终还找不到问题。 符号文件可以通过一定规则将内存地址转换为可读的函数">
+<meta name="twitter:image" content="https://developer.apple.com/library/archive/technotes/tn2151/Art/tn2151_crash_flow.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/TECH/',
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":true,"scrollpercent":true},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://kobeluo.com/2017/11/16/crashAnalysis/"/>
+
+
+
+
+
+  <title> iOS/Mac OS下的 Crash 崩溃分析 | KobeLuo的技术笔记 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <a href="https://github.com/KobeLuo/TECH"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_green_007200.png" alt="Fork me on GitHub"></a>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/TECH/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">KobeLuo的技术笔记</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">不完美源自对完美的追求</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/TECH/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/TECH/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/TECH/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/TECH/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/TECH/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于作者
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocapitalize="off" autocomplete="off" autocorrect="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-categories " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://kobeluo.com/TECH/2017/11/16/crashAnalysis/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="KOBE LUO">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/TECH/images/avatar.jpeg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="KobeLuo的技术笔记">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                iOS/Mac OS下的 Crash 崩溃分析
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-11-16T13:35:48+08:00">
+                2017-11-16
+              </time>
+            
+
+            
+              <span class="post-meta-divider">|</span>
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-check-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">更新于</span>
+              
+              <time title="更新于" itemprop="dateModified" datetime="2018-12-03T17:51:44+08:00">
+                2018-12-03
+              </time>
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/TECH/categories/Mac-Develop/" itemprop="url" rel="index">
+                    <span itemprop="name">Mac Develop</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/TECH/2017/11/16/crashAnalysis/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count"
+                        data-disqus-identifier="2017/11/16/crashAnalysis/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+             <span id="/TECH/2017/11/16/crashAnalysis/" class="leancloud_visitors" data-flag-title="iOS/Mac OS下的 Crash 崩溃分析">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数 </span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计</span>
+                
+                <span title="字数统计">
+                  2.5k
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长</span>
+                
+                <span title="阅读时长">
+                  9
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>就普通的开发而言，普通需求的实现，对于大多数有经验的开发者只是时间问题，其实并没有太大的难度，需求的实现过程则相对轻松；</p>
+<p>比较恶心的是发布产品后，遇到的各式奇葩的crash，如果你早有准备，在发布的时候打包了符号文件，那么恭喜你，你还可以通过符号文件来查找崩溃代码，否则，可能就是让bug出现者不停的复现crash，费事费力，可能最终还找不到问题。</p>
+<p>符号文件可以通过一定规则将内存地址转换为可读的函数名和一些代码的行号，当你通过Xcode窗口产生的crash时，通常在console中看到的结果是已经被符号化的结果。</p>
+<p>一般的崩溃日志都会产生一个线程回溯列表，让你去回溯到指定的crash函数，但是内存警告不会产生线程回溯，官方的解释是低内存发生时不需要线程回溯信息，当发生内存警告时，你必须要重视内存的使用模式并在内存警告发生时的回调函数处理相关的内存泄露。</p>
+<p>这篇博文意在如何收集crash，如何分析crash.<br><a id="more"></a></p>
+<h3 id="crash日志的收集"><a href="#crash日志的收集" class="headerlink" title="crash日志的收集"></a>crash日志的收集</h3><h4 id="常规发布和崩溃信息收集流程"><a href="#常规发布和崩溃信息收集流程" class="headerlink" title="常规发布和崩溃信息收集流程"></a>常规发布和崩溃信息收集流程</h4><p>先看苹果官方的一张流程图如下：</p>
+<p><img src="https://developer.apple.com/library/archive/technotes/tn2151/Art/tn2151_crash_flow.png" alt="crash connect"></p>
+<p>1.编译器将源码转化成机器码，并生成调试符号文件，用于将机器码回溯成源代码的行号和函数名，关于dsYM的设置可以在<code>BuildSettings</code>搜索<em>DEBUG_INFORMATION_FORMAT</em>设置，这些调试符号存储在二进制文件中或者.dsYM文件中，debug包的应用存储编译后的二进制文件中，而release包的的符号文件则伴随在<em>.dsYM</em>文件中，以便节省包的大小。</p>
+<p>调试符号文件和产品二进制包被捆包在一个基于每次编译的一个UUID, 每次编译都会产生一个新的UUID,即使没有任何内容更改。</p>
+<p>2.一旦你使用Archive了一个发布包，Xcode会生成一个带有.dsYM的二进制包到Xcode的oranizer下的Archived组。<br><img src="/TECH/2017/11/16/crashAnalysis/orgnizerArchived.png" alt="archived"></p>
+<p>3.当你上传准备好的二进制包到iTunesConnect时，有一个可选项是让你选择二进制包是否包含.dSYM文件<em>Include app symbols for your application…</em>,为了后续分析问题方便，建议勾选。</p>
+<p>4.产品发布后，关于你的产品的任何崩溃都将在用户的手机中创建并存储崩溃信息。</p>
+<p>5.用户可以从设备中通过<a href="https://developer.apple.com/library/archive/qa/qa1747/_index.html" target="_blank" rel="noopener">调试发布的产品</a>中直接取到crash报告。如果你的包是“AdHoc”或”Enterprise”企业版发布，那么这种方式将是苹果提供的唯一一种读取崩溃报告的方式。</p>
+<p>6.通过Xcode将你取到的.crash文件通过.dSYM文件反解析成崩溃的响应行号和函数名。</p>
+<p>7.如果发送崩溃的用户愿意分享崩溃报告的数据，该crash文件将上传至App Store，你可以直接从App Store下载响应的崩溃文件。</p>
+<p>8.Apple Store符号化崩溃报告，并将类似的崩溃报告组合在一起，形成一个相似的崩溃报告，这被称为崩溃点。</p>
+<p>9.crash崩溃报告也可以在“Organizer的Crash组”中看到。 </p>
+<h4 id="dsYM文件的获取方式"><a href="#dsYM文件的获取方式" class="headerlink" title=".dsYM文件的获取方式"></a>.dsYM文件的获取方式</h4><ul>
+<li><p>通过“Organizer的Archived”找到你发布的相应包，然后右键“ShowInFinder”去找<br><img src="/TECH/2017/11/16/crashAnalysis/finderShowPackage.png" alt="finder"><br><img src="/TECH/2017/11/16/crashAnalysis/dsYM.png" alt="dSYM"></p>
+</li>
+<li><p>通过iTunes Connect查找。<br>具体方法是登录iTunesConnect,点击某个APP详情页，从所有的编译版本中找到需要的版本，然后点击下载相应的dSYM文件。</p>
+</li>
+</ul>
+<h4 id="识别崩溃报告是否被符号化"><a href="#识别崩溃报告是否被符号化" class="headerlink" title="识别崩溃报告是否被符号化"></a>识别崩溃报告是否被符号化</h4><p>一个崩溃报告的符号化状态有三种:“未符号化”、”部分符号化”和”完全符号化”，下面是官方给的符号化示意图:<br><img src="https://developer.apple.com/library/archive/technotes/tn2151/Art/tn2151_symbolication_levels.png" alt=""></p>
+<h4 id="符号化的方式"><a href="#符号化的方式" class="headerlink" title="符号化的方式"></a>符号化的方式</h4><h5 id="使用Xcode来符号化崩溃报告"><a href="#使用Xcode来符号化崩溃报告" class="headerlink" title="使用Xcode来符号化崩溃报告"></a>使用Xcode来符号化崩溃报告</h5><p>对于可直接获取设备的崩溃可以采用以下方式</p>
+<blockquote>
+<p>1.Connect an iOS device to your Mac<br>2.Choose “Devices” from the “Window” menu<br>3.Under the “DEVICES” section in the left column, choose a device<br>4.Click the “View Device Logs” button under the “Device Information” section on the right hand panel<br>5.Drag your crash report onto the left column of the presented panel<br>6.Xcode will automatically symbolicate the crash report and display the results</p>
+</blockquote>
+<h5 id="使用atos来符号化崩溃报告"><a href="#使用atos来符号化崩溃报告" class="headerlink" title="使用atos来符号化崩溃报告"></a>使用atos来符号化崩溃报告</h5><p>atos命令可以将地址转化成可读的行号和函数名，它可以符号化线程回溯中的一个独立的地址，换言之，他可以做部分符号化，<br>其命令如下:<br><img src="https://developer.apple.com/library/archive/technotes/tn2151/Art/tn2151_atos_info.png" alt=""><br><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">atos -arch &lt;Binary Architecture&gt; -o &lt;Path to dSYM file&gt;/Contents/Resources/DWARF/&lt;binary image name&gt; -l &lt;load address&gt; &lt;address to symbolicate&gt;</span><br></pre></td></tr></table></figure></p>
+<p>其中 Binary Architecture指的是崩溃设备的架构，在.crash文件顶部的Code Type,mac上一般是x86-64的架构。</p>
+<p>简单的使用方法总结如下:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">1.找到crash文件相应版本号下的dSYM文件</span><br><span class="line">2.下载相应.crash文件，并打开。</span><br><span class="line">3.找到.crash文件顶部信息中的CodeType并记录,它包含ARM-64, ARM, x86-64, or x86.</span><br><span class="line">4.在.crash文件中搜索Binary Images:,并记下你的包对应的 loadAddress</span><br><span class="line">loadAddress也可以通过计算得到，等于（symbolicateAddress转10进制 - 偏移量）再转16进制，</span><br><span class="line">loadAddress的后三位通常都是000，如果不是，则可能计算有误。</span><br><span class="line"></span><br><span class="line">5.终端cd到 dSYM文件package contents下的DWARF目录</span><br><span class="line">6.执行: atos -arch x86_64 -o appNameInDWARF -l loadAddress symbolicateAdress</span><br></pre></td></tr></table></figure></p>
+<h4 id="分析崩溃报告"><a href="#分析崩溃报告" class="headerlink" title="分析崩溃报告"></a>分析崩溃报告</h4><p>这部分内容讨论当你获取到<code>.crash</code>文件时，如何分析崩溃信息。</p>
+<h5 id="Header信息"><a href="#Header信息" class="headerlink" title="Header信息"></a>Header信息</h5><p>每一个<code>.crash</code>文件的第一部分内容都是一个格式相同的header信息。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">Incident Identifier: B6FD1E8E-B39F-430B-ADDE-FC3A45ED368C</span><br><span class="line">CrashReporter Key: f04e68ec62d3c66057628c9ba9839e30d55937dc</span><br><span class="line">Hardware Model: iPad6,8</span><br><span class="line">Process: TheElements [303]</span><br><span class="line">Path: /private/var/containers/Bundle/Application/888C1FA2-3666-4AE2-9E8E-62E2F787DEC1/TheElements.app/TheElements</span><br><span class="line">Identifier: com.example.apple-samplecode.TheElements</span><br><span class="line">Version: 1.12</span><br><span class="line">Code Type: ARM-64 (Native)</span><br><span class="line">Role: Foreground</span><br><span class="line">Parent Process: launchd [1]</span><br><span class="line">Coalition: com.example.apple-samplecode.TheElements [402]</span><br><span class="line"> </span><br><span class="line">Date/Time: 2016-08-22 10:43:07.5806 -0700</span><br><span class="line">Launch Time: 2016-08-22 10:43:01.0293 -0700</span><br><span class="line">OS Version: iPhone OS 10.0 (14A5345a)</span><br><span class="line">Report Version: 104</span><br></pre></td></tr></table></figure></p>
+<p>相关字段解释如下：</p>
+<ul>
+<li>Incident Identifier: 每一份<code>.crash</code>文件的唯一标志，不同的崩溃文件的唯一标志不重复</li>
+<li>CrashReporter Key: 匿名的设备标志，只要来自该设备的崩溃信息的crashReporterKey都是一样的</li>
+<li>Process: 崩溃进程的可执行名称，匹配项目<code>info.plist</code>文件中的<code>CFBundleExecutable</code> key</li>
+<li>Version: 崩溃进程的版本号，匹配项目<code>info.plist</code>文件中的<code>CFBundleVersion</code>和<code>CFBundleVersionString</code> key</li>
+<li>Code Type: 崩溃进程所在机器的架构模式，目前的架构模式有<code>ARM-64, ARM, x86-64, x86</code></li>
+<li>OS Version: OS系统版本号</li>
+<li>Role: 在进程crash时分配给进程的<a href="http://opensource.apple.com/source/xnu/xnu-3248.60.10/osfmk/mach/task_policy.h" target="_blank" rel="noopener">task role</a></li>
+</ul>
+<p>通过以上Header信息的分析，可以获取到崩溃报告的环境内容，通过符号化可以将符号文件符号到的代码行，这样基本上可以获取到崩溃的大致情况。</p>
+<h4 id="Mach-异常信息解析"><a href="#Mach-异常信息解析" class="headerlink" title="Mach 异常信息解析"></a>Mach 异常信息解析</h4><h5 id="Mach信息解读"><a href="#Mach信息解读" class="headerlink" title="Mach信息解读"></a>Mach信息解读</h5><p>这里所说的Mach 异常信息解析跟Objective-C/C++的异常信息不同，它表示在内核态的崩溃信息，当然并不是所有的崩溃都来自内核态，但当进程崩溃时，内核态会有一个信息表示在<code>.crash</code>文件中，以供参考</p>
+<p>比如以下崩溃信息来自一段未被捕获的OC代码崩溃时的内核态信息<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Exception Type: EXC_CRASH (SIGABRT)</span><br><span class="line">Exception Codes: 0x0000000000000000, 0x0000000000000000</span><br><span class="line">Exception Note: EXC_CORPSE_NOTIFY</span><br><span class="line">Triggered by Thread: 0</span><br></pre></td></tr></table></figure></p>
+<p>而以下是来自一个NULL指针的取消引用引发的崩溃是内核态信息<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">Exception Type: EXC_BAD_ACCESS (SIGSEGV)</span><br><span class="line">Exception Subtype: KERN_INVALID_ADDRESS at 0x0000000000000000</span><br><span class="line">Termination Signal: Segmentation fault: 11</span><br><span class="line">Termination Reason: Namespace SIGNAL, Code 0xb</span><br><span class="line">Terminating Process: exc handler [0]</span><br><span class="line">Triggered by Thread: 0</span><br></pre></td></tr></table></figure></p>
+<p>相关字段解释如下:</p>
+<ul>
+<li>Exception Code: 当进程崩溃时，崩溃信息被编码成一个或多个64位的十六进制号码，一般情况下这个字段不会展示因为都以更友好的方式展示到了其它字段</li>
+<li>Exception Subtype: 对<code>Exception Code</code>的可视化解释</li>
+<li>Exception Message: 对<code>Exception Code</code>的附加解释和说明</li>
+<li>Exception Note: 对崩溃信息的另一种附加说明，如果该字段包括<code>SIMULATED</code>则说明进程并不是真正的产生了崩溃，而是因为系统要求而被Kill掉，典型的例子:<a href="https://en.wikipedia.org/wiki/Watchdog_timer" target="_blank" rel="noopener">看门狗</a></li>
+<li>Terminal Reason: 进程的内部和外部关键组件在进程发送错误时将进程结束时的原因</li>
+<li>Triggered by Thread: 进程崩溃的线程号</li>
+</ul>
+<h4 id="常规异常类型解读"><a href="#常规异常类型解读" class="headerlink" title="常规异常类型解读"></a>常规异常类型解读</h4><h5 id="内存访问错误-EXC-BAD-ACCESS、-SIGSEGV、SIGBUS"><a href="#内存访问错误-EXC-BAD-ACCESS、-SIGSEGV、SIGBUS" class="headerlink" title="内存访问错误 (EXC_BAD_ACCESS、 SIGSEGV、SIGBUS)"></a>内存访问错误 (EXC_BAD_ACCESS、 SIGSEGV、SIGBUS)</h5><p>进程尝试访问一个无效的内存地址，或者尝试访问没有权限的访问的内存地址都将引发内存访问错误。当内存访问错误发生时，<code>.crash</code>文件的<code>Exception Subtype1</code>会包含一个<code>kern_return_t</code>的描述错误和读取时的错误内存地址。</p>
+<p>以下是调试内存访问错误的提示:</p>
+<ul>
+<li>如果<code>objc_msgSend</code>或<code>objc_release</code>接近线程回溯的顶部，那么该进程可能尝试访问一个已经被销毁的内存地址。使用Instrument的<code>Zombies</code>对于定位crash可能是更好的方式</li>
+<li>如果<code>gpus_ReturnNotPermittedKillClient</code>接近线程回溯的顶部，那么该进程可能是在后台尝试是用OpenGL或Metal来处理渲染工作，该问题的讨论地址<a href="https://developer.apple.com/library/archive/qa/qa1766/_index.html" target="_blank" rel="noopener">在这</a></li>
+<li>在项目的Secheme中开启<code>Address Sanitizer</code>，当发送内存崩溃时，Xcode会自动提醒</li>
+</ul>
+<h5 id="异常退出-EXC-CRASH、-SIGABRT"><a href="#异常退出-EXC-CRASH、-SIGABRT" class="headerlink" title="异常退出 (EXC_CRASH、 SIGABRT)"></a>异常退出 (EXC_CRASH、 SIGABRT)</h5><p>进程异常退出最常见的原因就是一个未被捕获的Objective-C/C++的错误和调用了<code>abort()</code>函数<br>App的扩展程序也可能产生类似的崩溃信息，如果太多次的被初始化。如果一个扩展程序在launch过程中Hang了，Exception Subtype将报<code>LAUNCH_HANG</code>，因为扩展程序并没有<code>main（）</code>函数，扩展程序或其独立库的时间花销都在静态构造器和<code>+load()</code>函数中</p>
+<p>相关连接：</p>
+<ul>
+<li><p><a href="https://developer.apple.com/library/archive/technotes/tn2151/_index.html#//apple_ref/doc/uid/DTS40008184-CH1-SYMBOLICATIONTROUBLESHOOTING" target="_blank" rel="noopener">理解和分析应用崩溃报告</a></p>
+</li>
+<li><p><a href="https://docs.fabric.io/apple/crashlytics/missing-dsyms.html" target="_blank" rel="noopener">dSYM For Fabric</a></p>
+</li>
+</ul>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+          
+          <div>
+    
+        <div style="text-align:center;color: #ccc;font-size:14px;">------ 文章结束 ------</div>
+    
+</div>
+          
+    </div>
+    
+    <div>
+      
+        
+  <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+    <div>坚持原创技术分享，您的支持将鼓励我继续创作！</div>
+    <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+      <span>赏</span>
+    </button>
+    <div id="QR" style="display: none;">
+      
+        <div id="wechat" style="display: inline-block">
+          <img id="wechat_qr" src="https://wx2.sinaimg.cn/mw690/006AZU4wgy1fw6n5xbgnmj30og0zktaf.jpg" alt="KOBE LUO WeChat Pay"/>
+          <p>微信打赏</p>
+        </div>
+      
+      
+        <div id="alipay" style="display: inline-block">
+          <img id="alipay_qr" src="https://wx4.sinaimg.cn/mw690/006AZU4wgy1fw6n5w7j3kj30go0p0wfj.jpg" alt="KOBE LUO Alipay"/>
+          <p>支付宝打赏</p>
+        </div>
+      
+    </div>
+  </div>
+
+
+      
+    </div>
+
+    <div>
+      
+        
+  <ul class="post-copyright">
+    <li class="post-copyright-author">
+      <strong>本文作者：</strong>
+      KOBE LUO
+    </li>
+    <li class="post-copyright-title">
+      <strong>本文标题：</strong>
+      iOS/Mac OS下的 Crash 崩溃分析
+    </li>
+    <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="http://www.kobeluo.com/TECH/2017/11/16/crashAnalysis/" title="iOS/Mac OS下的 Crash 崩溃分析">http://www.kobeluo.com/TECH/2017/11/16/crashAnalysis/</a>
+    </li>
+    <li class="post-copyright-license">
+      <strong>版权声明： </strong>
+      本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 3.0</a> 许可协议。转载请注明出处！
+    </li>
+  </ul>
+
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/TECH/tags/崩溃日志/" rel="tag"><i class="fa fa-tag"></i>崩溃日志</a>
+          
+            <a href="/TECH/tags/崩溃解析/" rel="tag"><i class="fa fa-tag"></i>崩溃解析</a>
+          
+            <a href="/TECH/tags/crash-analysis/" rel="tag"><i class="fa fa-tag"></i>crash analysis</a>
+          
+            <a href="/TECH/tags/dSYM-crash/" rel="tag"><i class="fa fa-tag"></i>.dSYM .crash</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/TECH/2017/07/24/osxfuse/" rel="next" title="mac上建立基于osx fuse的虚拟磁盘">
+                <i class="fa fa-chevron-left"></i> mac上建立基于osx fuse的虚拟磁盘
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/TECH/2018/07/05/codesnapshot/" rel="prev" title="Swift 桥接OC代码重构">
+                Swift 桥接OC代码重构 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/TECH/images/avatar.jpeg"
+               alt="KOBE LUO" />
+          <p class="site-author-name" itemprop="name">KOBE LUO</p>
+           
+              <p class="site-description motion-element" itemprop="description">一个iOS和Mac OS开发的技术渣</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/TECH/archives"> 
+              <!-- <a href="/archives">-->
+                <span class="site-state-item-count">16</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-categories">
+              <a href="/TECH/categories">
+              <!-- <a href="/categories"> -->
+                <span class="site-state-item-count">4</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+              <!-- </a> -->
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/TECH/tags">
+              <!-- <a href="/tags"> -->
+                <span class="site-state-item-count">41</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+              <!-- </a> -->
+            </div>
+          
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/TECH/atom.xml" rel="alternate">
+              <i class="fa fa-rss"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/KobeLuo" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://douban.com" target="_blank" title="豆瓣">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  豆瓣
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://www.zhihu.com" target="_blank" title="知乎">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  知乎
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#crash日志的收集"><span class="nav-number">1.</span> <span class="nav-text">crash日志的收集</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#常规发布和崩溃信息收集流程"><span class="nav-number">1.1.</span> <span class="nav-text">常规发布和崩溃信息收集流程</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#dsYM文件的获取方式"><span class="nav-number">1.2.</span> <span class="nav-text">.dsYM文件的获取方式</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#识别崩溃报告是否被符号化"><span class="nav-number">1.3.</span> <span class="nav-text">识别崩溃报告是否被符号化</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#符号化的方式"><span class="nav-number">1.4.</span> <span class="nav-text">符号化的方式</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#使用Xcode来符号化崩溃报告"><span class="nav-number">1.4.1.</span> <span class="nav-text">使用Xcode来符号化崩溃报告</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#使用atos来符号化崩溃报告"><span class="nav-number">1.4.2.</span> <span class="nav-text">使用atos来符号化崩溃报告</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#分析崩溃报告"><span class="nav-number">1.5.</span> <span class="nav-text">分析崩溃报告</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#Header信息"><span class="nav-number">1.5.1.</span> <span class="nav-text">Header信息</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Mach-异常信息解析"><span class="nav-number">1.6.</span> <span class="nav-text">Mach 异常信息解析</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#Mach信息解读"><span class="nav-number">1.6.1.</span> <span class="nav-text">Mach信息解读</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#常规异常类型解读"><span class="nav-number">1.7.</span> <span class="nav-text">常规异常类型解读</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#内存访问错误-EXC-BAD-ACCESS、-SIGSEGV、SIGBUS"><span class="nav-number">1.7.1.</span> <span class="nav-text">内存访问错误 (EXC_BAD_ACCESS、 SIGSEGV、SIGBUS)</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#异常退出-EXC-CRASH、-SIGABRT"><span class="nav-number">1.7.2.</span> <span class="nav-text">异常退出 (EXC_CRASH、 SIGABRT)</span></a></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+        <div class="back-to-top">
+          <i class="fa fa-arrow-up"></i>
+          
+            <span id="scrollpercent"><span>0</span>%</span>
+          
+        </div>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2015 - 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">KOBE LUO</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/TECH/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/TECH/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/TECH/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/TECH/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/TECH/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/TECH/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/TECH/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/TECH/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/TECH/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/TECH/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/TECH/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  
+
+    
+      <script id="dsq-count-scr" src="https://.disqus.com/count.js" async></script>
+    
+
+    
+      <script type="text/javascript">
+        var disqus_config = function () {
+          this.page.url = 'http://kobeluo.com/2017/11/16/crashAnalysis/';
+          this.page.identifier = '2017/11/16/crashAnalysis/';
+          this.page.title = 'iOS/Mac OS下的 Crash 崩溃分析';
+        };
+        var d = document, s = d.createElement('script');
+        s.src = 'https://.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', '' + +new Date());
+        (d.head || d.body).appendChild(s);
+      </script>
+    
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length == 0) {
+      search_path = "search.xml";
+    }
+    var path = "/TECH/" + search_path;
+    // monitor main search box;
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.popup').toggle();
+    }
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+      $.ajax({
+        url: path,
+        dataType: "xml",
+        async: true,
+        success: function( xmlResponse ) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = $( "entry", xmlResponse ).map(function() {
+            return {
+              title: $( "title", this ).text(),
+              content: $("content",this).text(),
+              url: $( "url" , this).text()
+            };
+          }).get();
+          var $input = document.getElementById(search_id);
+          var $resultContent = document.getElementById(content_id);
+          $input.addEventListener('input', function(){
+            var matchcounts = 0;
+            var str='<ul class=\"search-result-list\">';
+            var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+            $resultContent.innerHTML = "";
+            if (this.value.trim().length > 1) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var content_index = [];
+                var data_title = data.title.trim().toLowerCase();
+                var data_content = data.content.trim().replace(/<[^>]+>/g,"").toLowerCase();
+                var data_url = decodeURIComponent(data.url);
+                var index_title = -1;
+                var index_content = -1;
+                var first_occur = -1;
+                // only match artiles with not empty titles and contents
+                if(data_title != '') {
+                  keywords.forEach(function(keyword, i) {
+                    index_title = data_title.indexOf(keyword);
+                    index_content = data_content.indexOf(keyword);
+                    if( index_title >= 0 || index_content >= 0 ){
+                      isMatch = true;
+                      if (i == 0) {
+                        first_occur = index_content;
+                      }
+                    }
+
+                  });
+                }
+                // show search results
+                if (isMatch) {
+                  matchcounts += 1;
+                  str += "<li><a href='"+ data_url +"' class='search-result-title'>"+ data_title +"</a>";
+                  var content = data.content.trim().replace(/<[^>]+>/g,"");
+                  if (first_occur >= 0) {
+                    // cut out 100 characters
+                    var start = first_occur - 20;
+                    var end = first_occur + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if(start == 0){
+                      end = 50;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    var match_content = content.substring(start, end);
+                    // highlight all keywords
+                    keywords.forEach(function(keyword){
+                      var regS = new RegExp(keyword, "gi");
+                      match_content = match_content.replace(regS, "<b class=\"search-keyword\">"+keyword+"</b>");
+                    });
+
+                    str += "<p class=\"search-result\">" + match_content +"...</p>"
+                  }
+                  str += "</li>";
+                }
+              })};
+            str += "</ul>";
+            if (matchcounts == 0) { str = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>' }
+            if (keywords == "") { str = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>' }
+            $resultContent.innerHTML = str;
+          });
+          proceedsearch();
+        }
+      });}
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched == false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(function(e){
+      $('.popup').hide();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    });
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+  <script>AV.initialize("cTAOGJvwpiIkJufS2JmsnjMf-gzGzoHsz", "pYWSupIvureEPupAE8VAv3AR");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+
+  
+
+  
+
+  <script type="text/javascript" src="/lib/clipboard/clipboard.js"></script>
+<script type="text/javascript" src="/js/src/copycode.js"></script>
+
+</body>
+</html>
