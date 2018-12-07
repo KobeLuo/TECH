@@ -82,7 +82,7 @@ IdentityFile		~/.ssh/id_rsa_kobe_new
 更改后的远程地址是https://kobe_new:KobeLuo/Kobeluo.github.io/
 {% endnote %}
 
-最后将你生成的rsa加入到keychain中,有时候push代码时会报Permission Error,如果你rsa配置正常，也需要执行一下命令:
+最后使用`ssh-add`命令将你生成的rsa加入到keychain中,有时候push代码时会报Permission Error,如果你rsa配置正常，也需要执行一下命令:
 ```
 $ ssh-add -K ~/.ssh/id_rsa_your_name
 ```

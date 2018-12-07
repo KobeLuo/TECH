@@ -23,3 +23,6 @@ tags: [常用命令]
 {% cq %} xxxx xxxx xxxx {% endcq %}
 
 
+- [Class-dump](https://github.com/KobeLuo/class-dump)
+通过可执行文件反解析头文件
+class-dump -H [.app文件的路径] -o [输出文件夹路径]
