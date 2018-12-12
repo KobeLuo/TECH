@@ -76,7 +76,7 @@ comments: false
 
 - <font color="#5bc0de">基础扎实、头脑清晰</font>，遇到的开发难题能用多种方式解决
 - 学习和自主性OK，熟练阅读英文文档，环境适应能力较强
-- <font color="#5bc0de">协调性</font>较好，多个plan同事进行时，遇事轻重缓急分明
+- <font color="#5bc0de">协调性</font>较好，多个Task同时进行时，遇事轻重缓急分明
 - <font color="#5bc0de">沟通能力强</font>，各种复杂的问题能说到点上，对方可以很快理解意思
 - 抗压力OK，保质完成过多个紧急的项目
 - <font color="#5bc0de">架构能力OK</font>，4年以上项目架构经验
