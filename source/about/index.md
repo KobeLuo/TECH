@@ -9,7 +9,7 @@ comments: false
 - 罗刚(29岁) 成都理工大学测控技术与仪器(08-12) 本科
 - 主iOS和Mac应用开发，目前居住在成都
 </br>
-- 2016.06至今，就职于[<font color="#5bc0de">__NAVER China__</font>](http://www.navercorp.cn/)成都分公司，从事虚拟磁盘、企业网盘主程(主Mac)
+- 2016.06至今，就职于[<font color="#5bc0de">__NAVER China__</font>](http://www.navercorp.cn/)成都分公司，从事虚拟磁盘、企业网盘项目架构和技术预研(主Mac)
 - 2015.10-2016.06，就职于[<font color="#5bc0de">__iTrip__</font>](https://www.itrip.com)，从事iOS端App开发工作(iOS+HTML5)
 - 2013.12-2015.09，就职于[<font color="#5bc0de">__重庆时报社__</font>](https://baike.baidu.com/link?url=wBQpDcAFiI5UCUYntVoXnxYEFkV3g3YxvMrgscU5Znn04bjY7sIWruI5feQRQPmpvMfDDWm86JyOZyuqoLY-QEVmGgNENAMaWJCwre28z4n2m4BUCyc21RxfhOow7ZNO)，从事iOS端主程及iOS主管
 - 2012.03-2013.11，就职于北京[<font color="#5bc0de">__立方网__</font>](https://baike.baidu.com/link?url=bOVcoRYbZ5mIgne14h4llCuMnu7k75f5MkH8WYWyG6O6TNvw_5vxisNBVSuG79wzovazgPH-R4djPgOSerQ0DB9U-r4UlvQjE478l8ynzjpj8sG4o5_wsbJliTE9Jnwx)，从事公司一系列基于LBS的iOS产品迭代工作
