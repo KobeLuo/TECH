@@ -7,7 +7,7 @@ title: KobeLuo的技术笔记
 subtitle: 不完美源自对完美的追求
 description: 一个iOS和Mac OS开发的技术渣
 author: KOBE LUO
-language: zh-Hans
+language: zh-CN
 timezone: Asia/Shanghai
 
 # URL
@@ -74,7 +74,8 @@ pagination_dir: page
 # Extensions
 ## Plugins: https://hexo.io/plugins/
 ## Themes: https://hexo.io/themes/
-theme: hexo-theme-next
+# theme: hexo-theme-next
+theme: next-reloaded
 
 feed:
         type: atom
@@ -86,6 +87,10 @@ search:
   field: post
   format: html
   limit: 10000
+
+# Extensions
+## Plugins: http://hexo.io/plugins/
+plugins: hexo-generate-feed
 
 # Deployment
 ## Docs: https://hexo.io/docs/deployment.html
