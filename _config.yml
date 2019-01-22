@@ -60,7 +60,7 @@ category_map: categories
 tag_map: tags
 
 # Date / Time format
-## Hexo uses Moment.js to parse and display date
+## Hexo uses Moment.js to parse and display date_format
 ## You can customize the date format as defined in
 ## http://momentjs.com/docs/#/displaying/format/
 date_format: YYYY-MM-DD
@@ -106,3 +106,4 @@ deploy:
   type: git
   repo: git@github.com:KobeLuo/tech.git
   branch: gh-pages
+  type: baidu_url_submitter
