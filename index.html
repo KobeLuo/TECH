@@ -1,4 +1,13 @@
-<!doctype html>
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
 
 
 
@@ -8,31 +17,35 @@
 <html class="theme-next mist use-motion" lang="zh-Hans">
 <head>
   <meta charset="UTF-8"/>
-<meta http-equiv="X-UA-Compatible" content="IE=edge" />
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
-
-
-
-<meta http-equiv="Cache-Control" content="no-transform" />
-<meta http-equiv="Cache-Control" content="no-siteapp" />
-
-
-
-
-
-
-
-
-
-
-
+<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2"/>
+<meta name="theme-color" content="#222"/>
 
 
 
 
   
   
-  <link href="/TECH/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+    
+    
+  <script src="/TECH/lib/pace/pace.min.js?v=1.0.2"></script>
+  <link rel="stylesheet" href="/TECH/lib/pace/pace-theme-flash.min.css?v=1.0.2"/>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -58,7 +71,7 @@
   
     
     
-    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext"/>
   
 
 
@@ -66,30 +79,57 @@
 
 
 
-<link href="/TECH/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+<link rel="stylesheet" href="/TECH/lib/font-awesome/css/font-awesome.min.css?v=4.6.2"/>
 
-<link href="/TECH/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
-
-
-  <meta name="keywords" content="Hexo, NexT" />
+<link rel="stylesheet" href="/TECH/css/main.css?v=6.7.0"/>
 
 
+  <link rel="apple-touch-icon" sizes="180x180" href="/TECH/images/favicon.ico?v=6.7.0">
 
 
-
-  <link rel="alternate" href="/TECH/atom.xml" title="KobeLuo的技术笔记" type="application/atom+xml" />
-
+  <link rel="icon" type="image/png" sizes="32x32" href="/TECH/images/favicon.ico?v=6.7.0">
 
 
+  <link rel="icon" type="image/png" sizes="16x16" href="/TECH/images/favicon.ico?v=6.7.0">
 
-  <link rel="shortcut icon" type="image/x-icon" href="/TECH/images/favicon.ico?v=5.1.0" />
+
+  <link rel="mask-icon" href="/TECH/images/favicon.ico?v=6.7.0" color="#222">
 
 
 
 
 
 
-<meta name="description" content="一个iOS和Mac OS开发的技术渣">
+
+<script id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/TECH/',
+    scheme: 'Mist',
+    version: '6.7.0',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":true,"scrollpercent":true,"onmobile":true},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="一个iOS和Mac OS开发的技术渣">
 <meta property="og:type" content="website">
 <meta property="og:title" content="KobeLuo的技术笔记">
 <meta property="og:url" content="http://kobeluo.com/index.html">
@@ -102,27 +142,8 @@
 
 
 
-<script type="text/javascript" id="hexo.configurations">
-  var NexT = window.NexT || {};
-  var CONFIG = {
-    root: '/TECH/',
-    scheme: 'Mist',
-    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":true,"scrollpercent":true},
-    fancybox: true,
-    motion: true,
-    duoshuo: {
-      userId: '0',
-      author: '博主'
-    },
-    algolia: {
-      applicationID: '',
-      apiKey: '',
-      indexName: '',
-      hits: {"per_page":10},
-      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
-    }
-  };
-</script>
+  <link rel="alternate" href="/TECH/atom.xml" title="KobeLuo的技术笔记" type="application/atom+xml"/>
+
 
 
 
@@ -130,13 +151,13 @@
 
 
 
+<script id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
 
-
-  <title> KobeLuo的技术笔记 </title>
-</head>
-
-<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
-
+  <title>KobeLuo的技术笔记</title>
   
 
 
@@ -150,7 +171,34 @@
 
 
 
+  <noscript>
+  <style>
+  .use-motion .motion-element,
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-title { opacity: initial; }
 
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
 
   
   
@@ -158,31 +206,31 @@
   
 
   <div class="container sidebar-position-left 
-   page-home 
- ">
+  page-home">
     <div class="headband"></div>
-
-    <a href="https://github.com/KobeLuo/TECH"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_green_007200.png" alt="Fork me on GitHub"></a>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
       <div class="header-inner"><div class="site-brand-wrapper">
-  <div class="site-meta ">
+  <div class="site-meta">
     
 
     <div class="custom-logo-site-title">
-      <a href="/TECH/"  class="brand" rel="start">
+      <a href="/TECH/" class="brand" rel="start">
         <span class="logo-line-before"><i></i></span>
         <span class="site-title">KobeLuo的技术笔记</span>
         <span class="logo-line-after"><i></i></span>
       </a>
     </div>
+    
       
         <p class="site-subtitle">不完美源自对完美的追求</p>
       
+    
+    
   </div>
 
   <div class="site-nav-toggle">
-    <button>
+    <button aria-label="Toggle navigation bar">
       <span class="btn-bar"></span>
       <span class="btn-bar"></span>
       <span class="btn-bar"></span>
@@ -190,112 +238,137 @@
   </div>
 </div>
 
-<nav class="site-nav">
-  
 
+
+<nav class="site-nav">
   
     <ul id="menu" class="menu">
       
         
-        <li class="menu-item menu-item-home">
-          <a href="/TECH/" rel="section">
-            
-              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
-            
-            首页
-          </a>
-        </li>
-      
         
-        <li class="menu-item menu-item-archives">
-          <a href="/TECH/archives" rel="section">
-            
-              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
-            
-            归档
-          </a>
-        </li>
-      
         
-        <li class="menu-item menu-item-categories">
-          <a href="/TECH/categories" rel="section">
-            
-              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
-            
-            分类
-          </a>
-        </li>
+          
+          <li class="menu-item menu-item-home">
+
+    
+    
+    
       
+    
+
+    
+      
+    
+
+    <a href="/TECH/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br/>Home</a>
+
+  </li>
         
-        <li class="menu-item menu-item-tags">
-          <a href="/TECH/tags" rel="section">
-            
-              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
-            
-            标签
-          </a>
-        </li>
-      
         
-        <li class="menu-item menu-item-about">
-          <a href="/TECH/about" rel="section">
-            
-              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
-            
-            关于作者
-          </a>
-        </li>
+        
+          
+          <li class="menu-item menu-item-archives">
+
+    
+    
+    
       
+    
+
+    
+      
+    
+
+    <a href="/TECH/archives" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br/>Archives<span class="badge">18</span></a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+
+    
+    
+    
+      
+    
+
+    
+      
+    
+
+    <a href="/TECH/categories" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br/>Categories<span class="badge">4</span></a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tags">
+
+    
+    
+    
+      
+    
+
+    
+      
+    
+
+    <a href="/TECH/tags" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br/>Tags<span class="badge">52</span></a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-about">
+
+    
+    
+    
+      
+    
+
+    
+      
+    
+
+    <a href="/TECH/about" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br/>About</a>
+
+  </li>
 
       
-        <li class="menu-item menu-item-search">
-          
-            <a href="javascript:;" class="popup-trigger">
-          
-            
-              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
-            
-            搜索
-          </a>
-        </li>
       
     </ul>
   
 
   
-    <div class="site-search">
-      
-  <div class="popup search-popup local-search-popup">
-  <div class="local-search-header clearfix">
-    <span class="search-icon">
-      <i class="fa fa-search"></i>
-    </span>
-    <span class="popup-btn-close">
-      <i class="fa fa-times-circle"></i>
-    </span>
-    <div class="local-search-input-wrapper">
-      <input autocapitalize="off" autocomplete="off" autocorrect="off"
-             placeholder="搜索..." spellcheck="false"
-             type="text" id="local-search-input">
-    </div>
-  </div>
-  <div id="local-search-result"></div>
-</div>
+    
 
+  
 
-
-    </div>
   
 </nav>
 
 
 
- </div>
+  
+
+
+
+</div>
     </header>
+
+    
+
 
     <main id="main" class="main">
       <div class="main-inner">
         <div class="content-wrap">
+          
           <div id="content" class="content">
             
   <section id="posts" class="posts-expand">
@@ -308,17 +381,23 @@
   
   
 
-  <article class="post post-type-categories " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://kobeluo.com/TECH/2019/01/15/monitorFSOnOSX/">
+  
+
+  <article class="post post-type-categories" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://kobeluo.com/TECH/2019/01/15/monitorFSOnOSX/"/>
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="KOBE LUO">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/TECH/images/avatar.jpeg">
+      <meta itemprop="name" content="KOBE LUO"/>
+      <meta itemprop="description" content="一个iOS和Mac OS开发的技术渣"/>
+      <meta itemprop="image" content="/TECH/images/avatar.jpeg"/>
     </span>
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="KobeLuo的技术笔记">
+      <meta itemprop="name" content="KobeLuo的技术笔记"/>
     </span>
 
     
@@ -327,13 +406,9 @@
         
         
           <h1 class="post-title" itemprop="name headline">
-            
-            
-              
                 
-                <a class="post-title-link" href="/TECH/2019/01/15/monitorFSOnOSX/" itemprop="url">
-                  Monitor Filesystem on Mac OS X
-                </a>
+                
+                <a href="/TECH/2019/01/15/monitorFSOnOSX/" class="post-title-link" itemprop="url">Monitor Filesystem on Mac OS X</a>
               
             
           </h1>
@@ -341,37 +416,47 @@
 
         <div class="post-meta">
           <span class="post-time">
+
+            
+            
+            
+
             
               <span class="post-meta-item-icon">
                 <i class="fa fa-calendar-o"></i>
               </span>
               
-                <span class="post-meta-item-text">发表于</span>
+                <span class="post-meta-item-text">Posted on</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-01-15T18:02:18+08:00">
-                2019-01-15
-              </time>
+
+              
+                
+              
+
+              <time title="Created: 2019-01-15 18:02:18" itemprop="dateCreated datePublished" datetime="2019-01-15T18:02:18+08:00">2019-01-15</time>
             
 
             
-              <span class="post-meta-divider">|</span>
-            
+              
 
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-check-o"></i>
-              </span>
               
-                <span class="post-meta-item-text">更新于</span>
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">Edited on</span>
+                
+                <time title="Modified: 2019-01-21 16:09:32" itemprop="dateModified" datetime="2019-01-21T16:09:32+08:00">2019-01-21</time>
               
-              <time title="更新于" itemprop="dateModified" datetime="2019-01-21T16:09:32+08:00">
-                2019-01-21
-              </time>
             
           </span>
 
           
-            <span class="post-category" >
+            <span class="post-category">
             
               <span class="post-meta-divider">|</span>
             
@@ -379,14 +464,10 @@
                 <i class="fa fa-folder-o"></i>
               </span>
               
-                <span class="post-meta-item-text">分类于</span>
+                <span class="post-meta-item-text">In</span>
               
               
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/TECH/categories/Mac-Develop/" itemprop="url" rel="index">
-                    <span itemprop="name">Mac Develop</span>
-                  </a>
-                </span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/TECH/categories/Mac-Develop/" itemprop="url" rel="index"><span itemprop="name">Mac Develop</span></a></span>
 
                 
                 
@@ -396,14 +477,16 @@
 
           
             
+            
+              
               <span class="post-comments-count">
                 <span class="post-meta-divider">|</span>
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
+            
                 <a href="/TECH/2019/01/15/monitorFSOnOSX/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count disqus-comment-count"
-                        data-disqus-identifier="2019/01/15/monitorFSOnOSX/" itemprop="commentCount"></span>
+                  <span class="post-meta-item-text">Comments: </span> <span class="post-comments-count valine-comment-count" data-xid="/TECH/2019/01/15/monitorFSOnOSX/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -411,50 +494,9 @@
 
           
           
-             <span id="/TECH/2019/01/15/monitorFSOnOSX/" class="leancloud_visitors" data-flag-title="Monitor Filesystem on Mac OS X">
-               <span class="post-meta-divider">|</span>
-               <span class="post-meta-item-icon">
-                 <i class="fa fa-eye"></i>
-               </span>
-               
-                 <span class="post-meta-item-text">阅读次数 </span>
-               
-                 <span class="leancloud-visitors-count"></span>
-             </span>
-          
 
           
 
-          
-            <div class="post-wordcount">
-              
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-file-word-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">字数统计</span>
-                
-                <span title="字数统计">
-                  1.5k
-                </span>
-              
-
-              
-                <span class="post-meta-divider">|</span>
-              
-
-              
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-clock-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">阅读时长</span>
-                
-                <span title="阅读时长">
-                  6
-                </span>
-              
-            </div>
           
 
           
@@ -463,7 +505,9 @@
       </header>
     
 
-
+    
+    
+    
     <div class="post-body" itemprop="articleBody">
 
       
@@ -474,31 +518,32 @@
           <h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><p>最近各大网络磁盘厂商都推出了使用才下载的文件同步功能，类似<strong>Dropbox</strong>的<a href="https://www.dropbox.com/smartsync" target="_blank" rel="noopener">SmartSync</a>, <strong>oneDrive</strong>的<a href="https://www.theverge.com/2018/9/24/17896018/microsoft-onedrive-files-on-demand-macos-mac-feature" target="_blank" rel="noopener">Store aways</a>等，他们都是实现了远端文件在本地的可视化，但仅仅对部分需要修改或查看的文件提供下载的功能，这样就大大降低了同步过程消耗的时间和流量，仅仅只是下载需要下载的几个文件，这是个非常先进的设计思路，该功能真正体现了云盘的优势和价值。</p>
 <p>博主的工作也刚好是云盘相关的业务，因此对于其背后的原理进行了一些探索，得到了一些有用的信息，其中就包括对于文件系统监控的部分知识。</p>
           <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/TECH/2019/01/15/monitorFSOnOSX/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
+          
+            <div class="post-button text-center">
+              <a class="btn" href="/TECH/2019/01/15/monitorFSOnOSX/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+          
           <!--/noindex-->
         
       
     </div>
 
-    <div>
-      
-    </div>
-
-    <div>
-          
-    </div>
     
-    <div>
-      
-    </div>
 
-    <div>
+    
+    
+    
+
+    
+
+    
       
-    </div>
+    
+    
+
+    
 
     <footer class="post-footer">
       
@@ -512,6 +557,10 @@
         <div class="post-eof"></div>
       
     </footer>
+  </div>
+  
+  
+  
   </article>
 
 
@@ -524,17 +573,23 @@
   
   
 
-  <article class="post post-type-categories " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://kobeluo.com/TECH/2018/11/13/os-lock/">
+  
+
+  <article class="post post-type-categories" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://kobeluo.com/TECH/2018/11/13/os-lock/"/>
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="KOBE LUO">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/TECH/images/avatar.jpeg">
+      <meta itemprop="name" content="KOBE LUO"/>
+      <meta itemprop="description" content="一个iOS和Mac OS开发的技术渣"/>
+      <meta itemprop="image" content="/TECH/images/avatar.jpeg"/>
     </span>
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="KobeLuo的技术笔记">
+      <meta itemprop="name" content="KobeLuo的技术笔记"/>
     </span>
 
     
@@ -543,13 +598,9 @@
         
         
           <h1 class="post-title" itemprop="name headline">
-            
-            
-              
                 
-                <a class="post-title-link" href="/TECH/2018/11/13/os-lock/" itemprop="url">
-                  细数Mac OS/iOS 系统下的锁(lock)
-                </a>
+                
+                <a href="/TECH/2018/11/13/os-lock/" class="post-title-link" itemprop="url">细数Mac OS/iOS 系统下的锁(lock)</a>
               
             
           </h1>
@@ -557,37 +608,47 @@
 
         <div class="post-meta">
           <span class="post-time">
+
+            
+            
+            
+
             
               <span class="post-meta-item-icon">
                 <i class="fa fa-calendar-o"></i>
               </span>
               
-                <span class="post-meta-item-text">发表于</span>
+                <span class="post-meta-item-text">Posted on</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-11-13T11:30:49+08:00">
-                2018-11-13
-              </time>
+
+              
+                
+              
+
+              <time title="Created: 2018-11-13 11:30:49" itemprop="dateCreated datePublished" datetime="2018-11-13T11:30:49+08:00">2018-11-13</time>
             
 
             
-              <span class="post-meta-divider">|</span>
-            
+              
 
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-check-o"></i>
-              </span>
               
-                <span class="post-meta-item-text">更新于</span>
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">Edited on</span>
+                
+                <time title="Modified: 2018-11-16 13:42:50" itemprop="dateModified" datetime="2018-11-16T13:42:50+08:00">2018-11-16</time>
               
-              <time title="更新于" itemprop="dateModified" datetime="2018-11-16T13:42:50+08:00">
-                2018-11-16
-              </time>
             
           </span>
 
           
-            <span class="post-category" >
+            <span class="post-category">
             
               <span class="post-meta-divider">|</span>
             
@@ -595,14 +656,10 @@
                 <i class="fa fa-folder-o"></i>
               </span>
               
-                <span class="post-meta-item-text">分类于</span>
+                <span class="post-meta-item-text">In</span>
               
               
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/TECH/categories/Mac-Develop/" itemprop="url" rel="index">
-                    <span itemprop="name">Mac Develop</span>
-                  </a>
-                </span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/TECH/categories/Mac-Develop/" itemprop="url" rel="index"><span itemprop="name">Mac Develop</span></a></span>
 
                 
                 
@@ -612,14 +669,16 @@
 
           
             
+            
+              
               <span class="post-comments-count">
                 <span class="post-meta-divider">|</span>
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
+            
                 <a href="/TECH/2018/11/13/os-lock/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count disqus-comment-count"
-                        data-disqus-identifier="2018/11/13/os-lock/" itemprop="commentCount"></span>
+                  <span class="post-meta-item-text">Comments: </span> <span class="post-comments-count valine-comment-count" data-xid="/TECH/2018/11/13/os-lock/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -627,50 +686,9 @@
 
           
           
-             <span id="/TECH/2018/11/13/os-lock/" class="leancloud_visitors" data-flag-title="细数Mac OS/iOS 系统下的锁(lock)">
-               <span class="post-meta-divider">|</span>
-               <span class="post-meta-item-icon">
-                 <i class="fa fa-eye"></i>
-               </span>
-               
-                 <span class="post-meta-item-text">阅读次数 </span>
-               
-                 <span class="leancloud-visitors-count"></span>
-             </span>
-          
 
           
 
-          
-            <div class="post-wordcount">
-              
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-file-word-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">字数统计</span>
-                
-                <span title="字数统计">
-                  4k
-                </span>
-              
-
-              
-                <span class="post-meta-divider">|</span>
-              
-
-              
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-clock-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">阅读时长</span>
-                
-                <span title="阅读时长">
-                  16
-                </span>
-              
-            </div>
           
 
           
@@ -679,7 +697,9 @@
       </header>
     
 
-
+    
+    
+    
     <div class="post-body" itemprop="articleBody">
 
       
@@ -703,31 +723,32 @@
 <li>@synchronized</li>
 </ul>
           <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/TECH/2018/11/13/os-lock/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
+          
+            <div class="post-button text-center">
+              <a class="btn" href="/TECH/2018/11/13/os-lock/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+          
           <!--/noindex-->
         
       
     </div>
 
-    <div>
-      
-    </div>
-
-    <div>
-          
-    </div>
     
-    <div>
-      
-    </div>
 
-    <div>
+    
+    
+    
+
+    
+
+    
       
-    </div>
+    
+    
+
+    
 
     <footer class="post-footer">
       
@@ -741,6 +762,10 @@
         <div class="post-eof"></div>
       
     </footer>
+  </div>
+  
+  
+  
   </article>
 
 
@@ -753,17 +778,23 @@
   
   
 
-  <article class="post post-type-categories " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://kobeluo.com/TECH/2018/11/05/StringEncode/">
+  
+
+  <article class="post post-type-categories" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://kobeluo.com/TECH/2018/11/05/StringEncode/"/>
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="KOBE LUO">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/TECH/images/avatar.jpeg">
+      <meta itemprop="name" content="KOBE LUO"/>
+      <meta itemprop="description" content="一个iOS和Mac OS开发的技术渣"/>
+      <meta itemprop="image" content="/TECH/images/avatar.jpeg"/>
     </span>
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="KobeLuo的技术笔记">
+      <meta itemprop="name" content="KobeLuo的技术笔记"/>
     </span>
 
     
@@ -772,13 +803,9 @@
         
         
           <h1 class="post-title" itemprop="name headline">
-            
-            
-              
                 
-                <a class="post-title-link" href="/TECH/2018/11/05/StringEncode/" itemprop="url">
-                  Unicode Forms
-                </a>
+                
+                <a href="/TECH/2018/11/05/StringEncode/" class="post-title-link" itemprop="url">Unicode Forms</a>
               
             
           </h1>
@@ -786,37 +813,47 @@
 
         <div class="post-meta">
           <span class="post-time">
+
+            
+            
+            
+
             
               <span class="post-meta-item-icon">
                 <i class="fa fa-calendar-o"></i>
               </span>
               
-                <span class="post-meta-item-text">发表于</span>
+                <span class="post-meta-item-text">Posted on</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-11-05T11:16:15+08:00">
-                2018-11-05
-              </time>
+
+              
+                
+              
+
+              <time title="Created: 2018-11-05 11:16:15" itemprop="dateCreated datePublished" datetime="2018-11-05T11:16:15+08:00">2018-11-05</time>
             
 
             
-              <span class="post-meta-divider">|</span>
-            
+              
 
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-check-o"></i>
-              </span>
               
-                <span class="post-meta-item-text">更新于</span>
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">Edited on</span>
+                
+                <time title="Modified: 2018-11-16 13:42:57" itemprop="dateModified" datetime="2018-11-16T13:42:57+08:00">2018-11-16</time>
               
-              <time title="更新于" itemprop="dateModified" datetime="2018-11-16T13:42:57+08:00">
-                2018-11-16
-              </time>
             
           </span>
 
           
-            <span class="post-category" >
+            <span class="post-category">
             
               <span class="post-meta-divider">|</span>
             
@@ -824,14 +861,10 @@
                 <i class="fa fa-folder-o"></i>
               </span>
               
-                <span class="post-meta-item-text">分类于</span>
+                <span class="post-meta-item-text">In</span>
               
               
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/TECH/categories/Tools/" itemprop="url" rel="index">
-                    <span itemprop="name">Tools</span>
-                  </a>
-                </span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/TECH/categories/Tools/" itemprop="url" rel="index"><span itemprop="name">Tools</span></a></span>
 
                 
                 
@@ -841,14 +874,16 @@
 
           
             
+            
+              
               <span class="post-comments-count">
                 <span class="post-meta-divider">|</span>
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
+            
                 <a href="/TECH/2018/11/05/StringEncode/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count disqus-comment-count"
-                        data-disqus-identifier="2018/11/05/StringEncode/" itemprop="commentCount"></span>
+                  <span class="post-meta-item-text">Comments: </span> <span class="post-comments-count valine-comment-count" data-xid="/TECH/2018/11/05/StringEncode/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -856,50 +891,9 @@
 
           
           
-             <span id="/TECH/2018/11/05/StringEncode/" class="leancloud_visitors" data-flag-title="Unicode Forms">
-               <span class="post-meta-divider">|</span>
-               <span class="post-meta-item-icon">
-                 <i class="fa fa-eye"></i>
-               </span>
-               
-                 <span class="post-meta-item-text">阅读次数 </span>
-               
-                 <span class="leancloud-visitors-count"></span>
-             </span>
-          
 
           
 
-          
-            <div class="post-wordcount">
-              
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-file-word-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">字数统计</span>
-                
-                <span title="字数统计">
-                  1.6k
-                </span>
-              
-
-              
-                <span class="post-meta-divider">|</span>
-              
-
-              
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-clock-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">阅读时长</span>
-                
-                <span title="阅读时长">
-                  6
-                </span>
-              
-            </div>
           
 
           
@@ -908,7 +902,9 @@
       </header>
     
 
-
+    
+    
+    
     <div class="post-body" itemprop="articleBody">
 
       
@@ -918,31 +914,32 @@
         
           <h3 id="Unicode"><a href="#Unicode" class="headerlink" title="Unicode"></a><a href="https://zh.wikipedia.org/wiki/Unicode" target="_blank" rel="noopener">Unicode</a></h3><p>Unicode是计算机领域的一项业界标准，主要为了解决世界上大部分的文字系统的统一编码问题而存在，因此它记录了差不多世界上全部主流的语言的编码集合。Unicode伴随着通用字符集的标准而发展，同时也以书本的形式[1]对外发表。Unicode至今仍在不断增修，每个新版本都加入更多新的字符。目前最新的版本为2018年6月5日公布的11.0.0[2]，已经收录超过13万个字符（第十万个字符在2005年获采纳）。Unicode涵盖的数据除了视觉上的字形、编码方法、标准的字符编码外，还包含了字符特性，如大小写字母。</p>
           <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/TECH/2018/11/05/StringEncode/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
+          
+            <div class="post-button text-center">
+              <a class="btn" href="/TECH/2018/11/05/StringEncode/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+          
           <!--/noindex-->
         
       
     </div>
 
-    <div>
-      
-    </div>
-
-    <div>
-          
-    </div>
     
-    <div>
-      
-    </div>
 
-    <div>
+    
+    
+    
+
+    
+
+    
       
-    </div>
+    
+    
+
+    
 
     <footer class="post-footer">
       
@@ -956,6 +953,10 @@
         <div class="post-eof"></div>
       
     </footer>
+  </div>
+  
+  
+  
   </article>
 
 
@@ -968,17 +969,23 @@
   
   
 
-  <article class="post post-type-categories " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://kobeluo.com/TECH/2018/10/31/mach-synchronization/">
+  
+
+  <article class="post post-type-categories" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://kobeluo.com/TECH/2018/10/31/mach-synchronization/"/>
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="KOBE LUO">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/TECH/images/avatar.jpeg">
+      <meta itemprop="name" content="KOBE LUO"/>
+      <meta itemprop="description" content="一个iOS和Mac OS开发的技术渣"/>
+      <meta itemprop="image" content="/TECH/images/avatar.jpeg"/>
     </span>
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="KobeLuo的技术笔记">
+      <meta itemprop="name" content="KobeLuo的技术笔记"/>
     </span>
 
     
@@ -987,13 +994,9 @@
         
         
           <h1 class="post-title" itemprop="name headline">
-            
-            
-              
                 
-                <a class="post-title-link" href="/TECH/2018/10/31/mach-synchronization/" itemprop="url">
-                  Mach 同步机制-学习笔记
-                </a>
+                
+                <a href="/TECH/2018/10/31/mach-synchronization/" class="post-title-link" itemprop="url">Mach 同步机制-学习笔记</a>
               
             
           </h1>
@@ -1001,37 +1004,47 @@
 
         <div class="post-meta">
           <span class="post-time">
+
+            
+            
+            
+
             
               <span class="post-meta-item-icon">
                 <i class="fa fa-calendar-o"></i>
               </span>
               
-                <span class="post-meta-item-text">发表于</span>
+                <span class="post-meta-item-text">Posted on</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-10-31T16:59:31+08:00">
-                2018-10-31
-              </time>
+
+              
+                
+              
+
+              <time title="Created: 2018-10-31 16:59:31" itemprop="dateCreated datePublished" datetime="2018-10-31T16:59:31+08:00">2018-10-31</time>
             
 
             
-              <span class="post-meta-divider">|</span>
-            
+              
 
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-check-o"></i>
-              </span>
               
-                <span class="post-meta-item-text">更新于</span>
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">Edited on</span>
+                
+                <time title="Modified: 2018-11-16 13:43:36" itemprop="dateModified" datetime="2018-11-16T13:43:36+08:00">2018-11-16</time>
               
-              <time title="更新于" itemprop="dateModified" datetime="2018-11-16T13:43:36+08:00">
-                2018-11-16
-              </time>
             
           </span>
 
           
-            <span class="post-category" >
+            <span class="post-category">
             
               <span class="post-meta-divider">|</span>
             
@@ -1039,14 +1052,10 @@
                 <i class="fa fa-folder-o"></i>
               </span>
               
-                <span class="post-meta-item-text">分类于</span>
+                <span class="post-meta-item-text">In</span>
               
               
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/TECH/categories/OS-Kernal/" itemprop="url" rel="index">
-                    <span itemprop="name">OS Kernal</span>
-                  </a>
-                </span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/TECH/categories/OS-Kernal/" itemprop="url" rel="index"><span itemprop="name">OS Kernal</span></a></span>
 
                 
                 
@@ -1056,14 +1065,16 @@
 
           
             
+            
+              
               <span class="post-comments-count">
                 <span class="post-meta-divider">|</span>
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
+            
                 <a href="/TECH/2018/10/31/mach-synchronization/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count disqus-comment-count"
-                        data-disqus-identifier="2018/10/31/mach-synchronization/" itemprop="commentCount"></span>
+                  <span class="post-meta-item-text">Comments: </span> <span class="post-comments-count valine-comment-count" data-xid="/TECH/2018/10/31/mach-synchronization/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -1071,50 +1082,9 @@
 
           
           
-             <span id="/TECH/2018/10/31/mach-synchronization/" class="leancloud_visitors" data-flag-title="Mach 同步机制-学习笔记">
-               <span class="post-meta-divider">|</span>
-               <span class="post-meta-item-icon">
-                 <i class="fa fa-eye"></i>
-               </span>
-               
-                 <span class="post-meta-item-text">阅读次数 </span>
-               
-                 <span class="leancloud-visitors-count"></span>
-             </span>
-          
 
           
 
-          
-            <div class="post-wordcount">
-              
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-file-word-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">字数统计</span>
-                
-                <span title="字数统计">
-                  2.8k
-                </span>
-              
-
-              
-                <span class="post-meta-divider">|</span>
-              
-
-              
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-clock-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">阅读时长</span>
-                
-                <span title="阅读时长">
-                  11
-                </span>
-              
-            </div>
           
 
           
@@ -1123,7 +1093,9 @@
       </header>
     
 
-
+    
+    
+    
     <div class="post-body" itemprop="articleBody">
 
       
@@ -1133,31 +1105,32 @@
         
           <p>消息传递机制是 Mach IPC架构中的一个组件，另一个组件是同步机制(synchronization)，同步机制用于判定多个并发的操纵时，如何访问共享资源的问题。同步机制的本质是:<br><code>排他访问的能力，即：在使用一个资源时，排除其它对象对该资源的访问的能力。</code><br>最基本的同步原语是互斥(mutual exclusion)对象，也叫互斥体(mutex)。互斥体只不过是内核内存中的普通变量，硬件必须对这些变量进行原子(atomic)操作。意思是对互斥体的操作决不允许被打断，即使硬件中断也不能打断，在SMP系统上，互斥体还有一个要求就是要求硬件实现某种屏障(fence或barrier)。</p>
           <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/TECH/2018/10/31/mach-synchronization/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
+          
+            <div class="post-button text-center">
+              <a class="btn" href="/TECH/2018/10/31/mach-synchronization/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+          
           <!--/noindex-->
         
       
     </div>
 
-    <div>
-      
-    </div>
-
-    <div>
-          
-    </div>
     
-    <div>
-      
-    </div>
 
-    <div>
+    
+    
+    
+
+    
+
+    
       
-    </div>
+    
+    
+
+    
 
     <footer class="post-footer">
       
@@ -1171,6 +1144,10 @@
         <div class="post-eof"></div>
       
     </footer>
+  </div>
+  
+  
+  
   </article>
 
 
@@ -1183,17 +1160,23 @@
   
   
 
-  <article class="post post-type-categories " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://kobeluo.com/TECH/2018/10/31/IPC/">
+  
+
+  <article class="post post-type-categories" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://kobeluo.com/TECH/2018/10/31/IPC/"/>
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="KOBE LUO">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/TECH/images/avatar.jpeg">
+      <meta itemprop="name" content="KOBE LUO"/>
+      <meta itemprop="description" content="一个iOS和Mac OS开发的技术渣"/>
+      <meta itemprop="image" content="/TECH/images/avatar.jpeg"/>
     </span>
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="KobeLuo的技术笔记">
+      <meta itemprop="name" content="KobeLuo的技术笔记"/>
     </span>
 
     
@@ -1202,13 +1185,9 @@
         
         
           <h1 class="post-title" itemprop="name headline">
-            
-            
-              
                 
-                <a class="post-title-link" href="/TECH/2018/10/31/IPC/" itemprop="url">
-                  IPC-进程间通信
-                </a>
+                
+                <a href="/TECH/2018/10/31/IPC/" class="post-title-link" itemprop="url">IPC-进程间通信</a>
               
             
           </h1>
@@ -1216,37 +1195,47 @@
 
         <div class="post-meta">
           <span class="post-time">
+
+            
+            
+            
+
             
               <span class="post-meta-item-icon">
                 <i class="fa fa-calendar-o"></i>
               </span>
               
-                <span class="post-meta-item-text">发表于</span>
+                <span class="post-meta-item-text">Posted on</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-10-31T16:06:25+08:00">
-                2018-10-31
-              </time>
+
+              
+                
+              
+
+              <time title="Created: 2018-10-31 16:06:25" itemprop="dateCreated datePublished" datetime="2018-10-31T16:06:25+08:00">2018-10-31</time>
             
 
             
-              <span class="post-meta-divider">|</span>
-            
+              
 
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-check-o"></i>
-              </span>
               
-                <span class="post-meta-item-text">更新于</span>
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">Edited on</span>
+                
+                <time title="Modified: 2018-11-16 13:43:47" itemprop="dateModified" datetime="2018-11-16T13:43:47+08:00">2018-11-16</time>
               
-              <time title="更新于" itemprop="dateModified" datetime="2018-11-16T13:43:47+08:00">
-                2018-11-16
-              </time>
             
           </span>
 
           
-            <span class="post-category" >
+            <span class="post-category">
             
               <span class="post-meta-divider">|</span>
             
@@ -1254,14 +1243,10 @@
                 <i class="fa fa-folder-o"></i>
               </span>
               
-                <span class="post-meta-item-text">分类于</span>
+                <span class="post-meta-item-text">In</span>
               
               
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/TECH/categories/OS-Kernal/" itemprop="url" rel="index">
-                    <span itemprop="name">OS Kernal</span>
-                  </a>
-                </span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/TECH/categories/OS-Kernal/" itemprop="url" rel="index"><span itemprop="name">OS Kernal</span></a></span>
 
                 
                 
@@ -1271,14 +1256,16 @@
 
           
             
+            
+              
               <span class="post-comments-count">
                 <span class="post-meta-divider">|</span>
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
+            
                 <a href="/TECH/2018/10/31/IPC/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count disqus-comment-count"
-                        data-disqus-identifier="2018/10/31/IPC/" itemprop="commentCount"></span>
+                  <span class="post-meta-item-text">Comments: </span> <span class="post-comments-count valine-comment-count" data-xid="/TECH/2018/10/31/IPC/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -1286,50 +1273,9 @@
 
           
           
-             <span id="/TECH/2018/10/31/IPC/" class="leancloud_visitors" data-flag-title="IPC-进程间通信">
-               <span class="post-meta-divider">|</span>
-               <span class="post-meta-item-icon">
-                 <i class="fa fa-eye"></i>
-               </span>
-               
-                 <span class="post-meta-item-text">阅读次数 </span>
-               
-                 <span class="leancloud-visitors-count"></span>
-             </span>
-          
 
           
 
-          
-            <div class="post-wordcount">
-              
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-file-word-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">字数统计</span>
-                
-                <span title="字数统计">
-                  1.1k
-                </span>
-              
-
-              
-                <span class="post-meta-divider">|</span>
-              
-
-              
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-clock-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">阅读时长</span>
-                
-                <span title="阅读时长">
-                  4
-                </span>
-              
-            </div>
           
 
           
@@ -1338,7 +1284,9 @@
       </header>
     
 
-
+    
+    
+    
     <div class="post-body" itemprop="articleBody">
 
       
@@ -1349,31 +1297,32 @@
           <p>进程间通信的基础原语: 消息、端口、已经确保并发安全的信号量和锁。这篇文章主要对于这些原语的底层实现和端口的内部实现做一些探讨。</p>
 <p>Mach任务是一个对应于进程的高层次抽象，Mach任务包含了一个指向自己的IPC namespace（命名空间），在命名空间中保存了自己的端口，此外mach任务也可以获得系统范围内的端口，如：主机端口、特权端口和其它端口。</p>
           <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/TECH/2018/10/31/IPC/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
+          
+            <div class="post-button text-center">
+              <a class="btn" href="/TECH/2018/10/31/IPC/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+          
           <!--/noindex-->
         
       
     </div>
 
-    <div>
-      
-    </div>
-
-    <div>
-          
-    </div>
     
-    <div>
-      
-    </div>
 
-    <div>
+    
+    
+    
+
+    
+
+    
       
-    </div>
+    
+    
+
+    
 
     <footer class="post-footer">
       
@@ -1387,6 +1336,10 @@
         <div class="post-eof"></div>
       
     </footer>
+  </div>
+  
+  
+  
   </article>
 
 
@@ -1399,17 +1352,23 @@
   
   
 
-  <article class="post post-type-categories " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://kobeluo.com/TECH/2018/10/31/Mach/">
+  
+
+  <article class="post post-type-categories" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://kobeluo.com/TECH/2018/10/31/Mach/"/>
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="KOBE LUO">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/TECH/images/avatar.jpeg">
+      <meta itemprop="name" content="KOBE LUO"/>
+      <meta itemprop="description" content="一个iOS和Mac OS开发的技术渣"/>
+      <meta itemprop="image" content="/TECH/images/avatar.jpeg"/>
     </span>
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="KobeLuo的技术笔记">
+      <meta itemprop="name" content="KobeLuo的技术笔记"/>
     </span>
 
     
@@ -1418,13 +1377,9 @@
         
         
           <h1 class="post-title" itemprop="name headline">
-            
-            
-              
                 
-                <a class="post-title-link" href="/TECH/2018/10/31/Mach/" itemprop="url">
-                  Mach 原语-学习笔记
-                </a>
+                
+                <a href="/TECH/2018/10/31/Mach/" class="post-title-link" itemprop="url">Mach 原语-学习笔记</a>
               
             
           </h1>
@@ -1432,37 +1387,47 @@
 
         <div class="post-meta">
           <span class="post-time">
+
+            
+            
+            
+
             
               <span class="post-meta-item-icon">
                 <i class="fa fa-calendar-o"></i>
               </span>
               
-                <span class="post-meta-item-text">发表于</span>
+                <span class="post-meta-item-text">Posted on</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-10-31T10:21:59+08:00">
-                2018-10-31
-              </time>
+
+              
+                
+              
+
+              <time title="Created: 2018-10-31 10:21:59" itemprop="dateCreated datePublished" datetime="2018-10-31T10:21:59+08:00">2018-10-31</time>
             
 
             
-              <span class="post-meta-divider">|</span>
-            
+              
 
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-check-o"></i>
-              </span>
               
-                <span class="post-meta-item-text">更新于</span>
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">Edited on</span>
+                
+                <time title="Modified: 2018-11-16 13:43:28" itemprop="dateModified" datetime="2018-11-16T13:43:28+08:00">2018-11-16</time>
               
-              <time title="更新于" itemprop="dateModified" datetime="2018-11-16T13:43:28+08:00">
-                2018-11-16
-              </time>
             
           </span>
 
           
-            <span class="post-category" >
+            <span class="post-category">
             
               <span class="post-meta-divider">|</span>
             
@@ -1470,14 +1435,10 @@
                 <i class="fa fa-folder-o"></i>
               </span>
               
-                <span class="post-meta-item-text">分类于</span>
+                <span class="post-meta-item-text">In</span>
               
               
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/TECH/categories/OS-Kernal/" itemprop="url" rel="index">
-                    <span itemprop="name">OS Kernal</span>
-                  </a>
-                </span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/TECH/categories/OS-Kernal/" itemprop="url" rel="index"><span itemprop="name">OS Kernal</span></a></span>
 
                 
                 
@@ -1487,14 +1448,16 @@
 
           
             
+            
+              
               <span class="post-comments-count">
                 <span class="post-meta-divider">|</span>
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
+            
                 <a href="/TECH/2018/10/31/Mach/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count disqus-comment-count"
-                        data-disqus-identifier="2018/10/31/Mach/" itemprop="commentCount"></span>
+                  <span class="post-meta-item-text">Comments: </span> <span class="post-comments-count valine-comment-count" data-xid="/TECH/2018/10/31/Mach/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -1502,50 +1465,9 @@
 
           
           
-             <span id="/TECH/2018/10/31/Mach/" class="leancloud_visitors" data-flag-title="Mach 原语-学习笔记">
-               <span class="post-meta-divider">|</span>
-               <span class="post-meta-item-icon">
-                 <i class="fa fa-eye"></i>
-               </span>
-               
-                 <span class="post-meta-item-text">阅读次数 </span>
-               
-                 <span class="leancloud-visitors-count"></span>
-             </span>
-          
 
           
 
-          
-            <div class="post-wordcount">
-              
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-file-word-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">字数统计</span>
-                
-                <span title="字数统计">
-                  3k
-                </span>
-              
-
-              
-                <span class="post-meta-divider">|</span>
-              
-
-              
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-clock-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">阅读时长</span>
-                
-                <span title="阅读时长">
-                  11
-                </span>
-              
-            </div>
           
 
           
@@ -1554,7 +1476,9 @@
       </header>
     
 
-
+    
+    
+    
     <div class="post-body" itemprop="articleBody">
 
       
@@ -1566,31 +1490,32 @@
 <h4 id="Mach设计原则"><a href="#Mach设计原则" class="headerlink" title="Mach设计原则"></a>Mach设计原则</h4><p>Mac OS X采用Mach作为锡系统的内核，其源头可以追溯到乔老爷创立的NeXT。Mach采用了极简主义概念:<br><code>具有一个简单最小的核心，支持面向对象的模型，使得独立的具有良好定义的组件可以通过消息的方式互相通信。</code><br>Mach只提供了一个极简的模型，操作系统本身可以在这个模型基础上实现，OS X的<a href="https://en.wikipedia.org/wiki/XNU" target="_blank" rel="noopener">XNU</a>是UNIX（<a href="https://zh.wikipedia.org/zh-hans/FreeBSD" target="_blank" rel="noopener">FreeBSD</a> 4.4）在Mach上的一个具体实现，Windows也采用了一些Mach的原则，不过其实现方式与Mac OS则完全不同。</p>
 <p>Mach内核成为了一个底层的基础，它只关心驱动操作系统的最少需求，其余的功能则需要由上层来实现，尽管Mach对用户态也是可见的，使用Mach都是实现了深层次的核心功能，在这个基础上可以实现更大的内核，而Mach则是内核中的内核，<code>XNU的官方API是BSD的POSIX API,Apple保持了Mach绝对的极简，基于Mach外层则有丰富的Cocoa API来支撑，因此Mach是Mac OS X操作系统中最关键最基础的部分</code></p>
           <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/TECH/2018/10/31/Mach/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
+          
+            <div class="post-button text-center">
+              <a class="btn" href="/TECH/2018/10/31/Mach/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+          
           <!--/noindex-->
         
       
     </div>
 
-    <div>
-      
-    </div>
-
-    <div>
-          
-    </div>
     
-    <div>
-      
-    </div>
 
-    <div>
+    
+    
+    
+
+    
+
+    
       
-    </div>
+    
+    
+
+    
 
     <footer class="post-footer">
       
@@ -1604,6 +1529,10 @@
         <div class="post-eof"></div>
       
     </footer>
+  </div>
+  
+  
+  
   </article>
 
 
@@ -1616,17 +1545,23 @@
   
   
 
-  <article class="post post-type-categories " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://kobeluo.com/TECH/2018/10/16/git-deep/">
+  
+
+  <article class="post post-type-categories" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://kobeluo.com/TECH/2018/10/16/git-deep/"/>
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="KOBE LUO">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/TECH/images/avatar.jpeg">
+      <meta itemprop="name" content="KOBE LUO"/>
+      <meta itemprop="description" content="一个iOS和Mac OS开发的技术渣"/>
+      <meta itemprop="image" content="/TECH/images/avatar.jpeg"/>
     </span>
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="KobeLuo的技术笔记">
+      <meta itemprop="name" content="KobeLuo的技术笔记"/>
     </span>
 
     
@@ -1635,13 +1570,9 @@
         
         
           <h1 class="post-title" itemprop="name headline">
-            
-            
-              
                 
-                <a class="post-title-link" href="/TECH/2018/10/16/git-deep/" itemprop="url">
-                  git深入理解
-                </a>
+                
+                <a href="/TECH/2018/10/16/git-deep/" class="post-title-link" itemprop="url">git深入理解</a>
               
             
           </h1>
@@ -1649,37 +1580,47 @@
 
         <div class="post-meta">
           <span class="post-time">
+
+            
+            
+            
+
             
               <span class="post-meta-item-icon">
                 <i class="fa fa-calendar-o"></i>
               </span>
               
-                <span class="post-meta-item-text">发表于</span>
+                <span class="post-meta-item-text">Posted on</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-10-16T09:53:11+08:00">
-                2018-10-16
-              </time>
+
+              
+                
+              
+
+              <time title="Created: 2018-10-16 09:53:11" itemprop="dateCreated datePublished" datetime="2018-10-16T09:53:11+08:00">2018-10-16</time>
             
 
             
-              <span class="post-meta-divider">|</span>
-            
+              
 
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-check-o"></i>
-              </span>
               
-                <span class="post-meta-item-text">更新于</span>
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">Edited on</span>
+                
+                <time title="Modified: 2018-11-16 13:41:19" itemprop="dateModified" datetime="2018-11-16T13:41:19+08:00">2018-11-16</time>
               
-              <time title="更新于" itemprop="dateModified" datetime="2018-11-16T13:41:19+08:00">
-                2018-11-16
-              </time>
             
           </span>
 
           
-            <span class="post-category" >
+            <span class="post-category">
             
               <span class="post-meta-divider">|</span>
             
@@ -1687,14 +1628,10 @@
                 <i class="fa fa-folder-o"></i>
               </span>
               
-                <span class="post-meta-item-text">分类于</span>
+                <span class="post-meta-item-text">In</span>
               
               
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/TECH/categories/Tools/" itemprop="url" rel="index">
-                    <span itemprop="name">Tools</span>
-                  </a>
-                </span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/TECH/categories/Tools/" itemprop="url" rel="index"><span itemprop="name">Tools</span></a></span>
 
                 
                 
@@ -1704,14 +1641,16 @@
 
           
             
+            
+              
               <span class="post-comments-count">
                 <span class="post-meta-divider">|</span>
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
+            
                 <a href="/TECH/2018/10/16/git-deep/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count disqus-comment-count"
-                        data-disqus-identifier="2018/10/16/git-deep/" itemprop="commentCount"></span>
+                  <span class="post-meta-item-text">Comments: </span> <span class="post-comments-count valine-comment-count" data-xid="/TECH/2018/10/16/git-deep/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -1719,50 +1658,9 @@
 
           
           
-             <span id="/TECH/2018/10/16/git-deep/" class="leancloud_visitors" data-flag-title="git深入理解">
-               <span class="post-meta-divider">|</span>
-               <span class="post-meta-item-icon">
-                 <i class="fa fa-eye"></i>
-               </span>
-               
-                 <span class="post-meta-item-text">阅读次数 </span>
-               
-                 <span class="leancloud-visitors-count"></span>
-             </span>
-          
 
           
 
-          
-            <div class="post-wordcount">
-              
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-file-word-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">字数统计</span>
-                
-                <span title="字数统计">
-                  1.5k
-                </span>
-              
-
-              
-                <span class="post-meta-divider">|</span>
-              
-
-              
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-clock-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">阅读时长</span>
-                
-                <span title="阅读时长">
-                  5
-                </span>
-              
-            </div>
           
 
           
@@ -1771,7 +1669,9 @@
       </header>
     
 
-
+    
+    
+    
     <div class="post-body" itemprop="articleBody">
 
       
@@ -1781,31 +1681,32 @@
         
           <p>在<a href="http://www.kobeluo.com/TECH/2016/07/15/git-useage" target="_blank" rel="noopener">git使用</a>这篇文章中，博主列出了常用的git命令和一些使用方法，可以应付日常的开发工作，熟悉git的朋友应该知道，git是一个非常强大的工具，能使用git的常规命令只能说你掌握了git的基本操作，如果还需要更深入的理解git，理解每一条命令背后执行的操作和含义，则需要更为深刻的理解git的运行机制和设计原理，博主对于git的理解也很浅显，该文在谈及git内涵外，也希望有更多的大神能够相互交流，以此增进对git的理解，毕竟进步源于分享嘛 ^.^。<br></p>
           <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/TECH/2018/10/16/git-deep/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
+          
+            <div class="post-button text-center">
+              <a class="btn" href="/TECH/2018/10/16/git-deep/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+          
           <!--/noindex-->
         
       
     </div>
 
-    <div>
-      
-    </div>
-
-    <div>
-          
-    </div>
     
-    <div>
-      
-    </div>
 
-    <div>
+    
+    
+    
+
+    
+
+    
       
-    </div>
+    
+    
+
+    
 
     <footer class="post-footer">
       
@@ -1819,6 +1720,10 @@
         <div class="post-eof"></div>
       
     </footer>
+  </div>
+  
+  
+  
   </article>
 
 
@@ -1831,17 +1736,23 @@
   
   
 
-  <article class="post post-type-categories " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://kobeluo.com/TECH/2018/07/05/codesnapshot/">
+  
+
+  <article class="post post-type-categories" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://kobeluo.com/TECH/2018/07/05/codesnapshot/"/>
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="KOBE LUO">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/TECH/images/avatar.jpeg">
+      <meta itemprop="name" content="KOBE LUO"/>
+      <meta itemprop="description" content="一个iOS和Mac OS开发的技术渣"/>
+      <meta itemprop="image" content="/TECH/images/avatar.jpeg"/>
     </span>
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="KobeLuo的技术笔记">
+      <meta itemprop="name" content="KobeLuo的技术笔记"/>
     </span>
 
     
@@ -1850,13 +1761,9 @@
         
         
           <h1 class="post-title" itemprop="name headline">
-            
-            
-              
                 
-                <a class="post-title-link" href="/TECH/2018/07/05/codesnapshot/" itemprop="url">
-                  Swift 桥接OC代码重构
-                </a>
+                
+                <a href="/TECH/2018/07/05/codesnapshot/" class="post-title-link" itemprop="url">Swift 桥接OC代码重构</a>
               
             
           </h1>
@@ -1864,37 +1771,47 @@
 
         <div class="post-meta">
           <span class="post-time">
+
+            
+            
+            
+
             
               <span class="post-meta-item-icon">
                 <i class="fa fa-calendar-o"></i>
               </span>
               
-                <span class="post-meta-item-text">发表于</span>
+                <span class="post-meta-item-text">Posted on</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-07-05T10:48:11+08:00">
-                2018-07-05
-              </time>
+
+              
+                
+              
+
+              <time title="Created: 2018-07-05 10:48:11" itemprop="dateCreated datePublished" datetime="2018-07-05T10:48:11+08:00">2018-07-05</time>
             
 
             
-              <span class="post-meta-divider">|</span>
-            
+              
 
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-check-o"></i>
-              </span>
               
-                <span class="post-meta-item-text">更新于</span>
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">Edited on</span>
+                
+                <time title="Modified: 2018-11-16 13:44:39" itemprop="dateModified" datetime="2018-11-16T13:44:39+08:00">2018-11-16</time>
               
-              <time title="更新于" itemprop="dateModified" datetime="2018-11-16T13:44:39+08:00">
-                2018-11-16
-              </time>
             
           </span>
 
           
-            <span class="post-category" >
+            <span class="post-category">
             
               <span class="post-meta-divider">|</span>
             
@@ -1902,14 +1819,10 @@
                 <i class="fa fa-folder-o"></i>
               </span>
               
-                <span class="post-meta-item-text">分类于</span>
+                <span class="post-meta-item-text">In</span>
               
               
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/TECH/categories/Mac-Develop/" itemprop="url" rel="index">
-                    <span itemprop="name">Mac Develop</span>
-                  </a>
-                </span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/TECH/categories/Mac-Develop/" itemprop="url" rel="index"><span itemprop="name">Mac Develop</span></a></span>
 
                 
                 
@@ -1919,14 +1832,16 @@
 
           
             
+            
+              
               <span class="post-comments-count">
                 <span class="post-meta-divider">|</span>
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
+            
                 <a href="/TECH/2018/07/05/codesnapshot/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count disqus-comment-count"
-                        data-disqus-identifier="2018/07/05/codesnapshot/" itemprop="commentCount"></span>
+                  <span class="post-meta-item-text">Comments: </span> <span class="post-comments-count valine-comment-count" data-xid="/TECH/2018/07/05/codesnapshot/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -1934,50 +1849,9 @@
 
           
           
-             <span id="/TECH/2018/07/05/codesnapshot/" class="leancloud_visitors" data-flag-title="Swift 桥接OC代码重构">
-               <span class="post-meta-divider">|</span>
-               <span class="post-meta-item-icon">
-                 <i class="fa fa-eye"></i>
-               </span>
-               
-                 <span class="post-meta-item-text">阅读次数 </span>
-               
-                 <span class="leancloud-visitors-count"></span>
-             </span>
-          
 
           
 
-          
-            <div class="post-wordcount">
-              
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-file-word-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">字数统计</span>
-                
-                <span title="字数统计">
-                  570
-                </span>
-              
-
-              
-                <span class="post-meta-divider">|</span>
-              
-
-              
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-clock-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">阅读时长</span>
-                
-                <span title="阅读时长">
-                  2
-                </span>
-              
-            </div>
           
 
           
@@ -1986,7 +1860,9 @@
       </header>
     
 
-
+    
+    
+    
     <div class="post-body" itemprop="articleBody">
 
       
@@ -1997,31 +1873,32 @@
           <p>博主目前从事NAVER旗下公司的一个虚拟云盘工作开发，开发语言选择了Swift，但是Objective-C中有一些非常方便的API函数在Swift中并没有提供，早起博主直接使用了官方提供的<a href="https://stackoverflow.com/questions/24002369/how-to-call-objective-c-code-from-swift" target="_blank" rel="noopener">bridge</a>方案来桥接OC部分代码，这样可以方便的使用OC的API，但是这也带来一个性能问题，每次桥接的过程会有一定的耗时；</p>
 <p>如果你的项目只是一个普通的信息展示，调用的频次不高，对于性能的优化要求可能就相对较低，但如果你的项目是高频次调用这些API，</p>
           <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/TECH/2018/07/05/codesnapshot/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
+          
+            <div class="post-button text-center">
+              <a class="btn" href="/TECH/2018/07/05/codesnapshot/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+          
           <!--/noindex-->
         
       
     </div>
 
-    <div>
-      
-    </div>
-
-    <div>
-          
-    </div>
     
-    <div>
-      
-    </div>
 
-    <div>
+    
+    
+    
+
+    
+
+    
       
-    </div>
+    
+    
+
+    
 
     <footer class="post-footer">
       
@@ -2035,6 +1912,10 @@
         <div class="post-eof"></div>
       
     </footer>
+  </div>
+  
+  
+  
   </article>
 
 
@@ -2047,17 +1928,23 @@
   
   
 
-  <article class="post post-type-categories " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://kobeluo.com/TECH/2018/01/15/FinderSync/">
+  
+
+  <article class="post post-type-categories" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://kobeluo.com/TECH/2018/01/15/FinderSync/"/>
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="KOBE LUO">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/TECH/images/avatar.jpeg">
+      <meta itemprop="name" content="KOBE LUO"/>
+      <meta itemprop="description" content="一个iOS和Mac OS开发的技术渣"/>
+      <meta itemprop="image" content="/TECH/images/avatar.jpeg"/>
     </span>
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="KobeLuo的技术笔记">
+      <meta itemprop="name" content="KobeLuo的技术笔记"/>
     </span>
 
     
@@ -2066,13 +1953,9 @@
         
         
           <h1 class="post-title" itemprop="name headline">
-            
-            
-              
                 
-                <a class="post-title-link" href="/TECH/2018/01/15/FinderSync/" itemprop="url">
-                  FinderSync插件的使用及调试
-                </a>
+                
+                <a href="/TECH/2018/01/15/FinderSync/" class="post-title-link" itemprop="url">FinderSync插件的使用及调试</a>
               
             
           </h1>
@@ -2080,37 +1963,47 @@
 
         <div class="post-meta">
           <span class="post-time">
+
+            
+            
+            
+
             
               <span class="post-meta-item-icon">
                 <i class="fa fa-calendar-o"></i>
               </span>
               
-                <span class="post-meta-item-text">发表于</span>
+                <span class="post-meta-item-text">Posted on</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-01-15T18:01:23+08:00">
-                2018-01-15
-              </time>
+
+              
+                
+              
+
+              <time title="Created: 2018-01-15 18:01:23" itemprop="dateCreated datePublished" datetime="2018-01-15T18:01:23+08:00">2018-01-15</time>
             
 
             
-              <span class="post-meta-divider">|</span>
-            
+              
 
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-check-o"></i>
-              </span>
               
-                <span class="post-meta-item-text">更新于</span>
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">Edited on</span>
+                
+                <time title="Modified: 2019-01-21 13:44:48" itemprop="dateModified" datetime="2019-01-21T13:44:48+08:00">2019-01-21</time>
               
-              <time title="更新于" itemprop="dateModified" datetime="2019-01-21T13:44:48+08:00">
-                2019-01-21
-              </time>
             
           </span>
 
           
-            <span class="post-category" >
+            <span class="post-category">
             
               <span class="post-meta-divider">|</span>
             
@@ -2118,14 +2011,10 @@
                 <i class="fa fa-folder-o"></i>
               </span>
               
-                <span class="post-meta-item-text">分类于</span>
+                <span class="post-meta-item-text">In</span>
               
               
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/TECH/categories/Mac-Develop/" itemprop="url" rel="index">
-                    <span itemprop="name">Mac Develop</span>
-                  </a>
-                </span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/TECH/categories/Mac-Develop/" itemprop="url" rel="index"><span itemprop="name">Mac Develop</span></a></span>
 
                 
                 
@@ -2135,14 +2024,16 @@
 
           
             
+            
+              
               <span class="post-comments-count">
                 <span class="post-meta-divider">|</span>
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
+            
                 <a href="/TECH/2018/01/15/FinderSync/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count disqus-comment-count"
-                        data-disqus-identifier="2018/01/15/FinderSync/" itemprop="commentCount"></span>
+                  <span class="post-meta-item-text">Comments: </span> <span class="post-comments-count valine-comment-count" data-xid="/TECH/2018/01/15/FinderSync/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -2150,50 +2041,9 @@
 
           
           
-             <span id="/TECH/2018/01/15/FinderSync/" class="leancloud_visitors" data-flag-title="FinderSync插件的使用及调试">
-               <span class="post-meta-divider">|</span>
-               <span class="post-meta-item-icon">
-                 <i class="fa fa-eye"></i>
-               </span>
-               
-                 <span class="post-meta-item-text">阅读次数 </span>
-               
-                 <span class="leancloud-visitors-count"></span>
-             </span>
-          
 
           
 
-          
-            <div class="post-wordcount">
-              
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-file-word-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">字数统计</span>
-                
-                <span title="字数统计">
-                  765
-                </span>
-              
-
-              
-                <span class="post-meta-divider">|</span>
-              
-
-              
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-clock-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">阅读时长</span>
-                
-                <span title="阅读时长">
-                  2
-                </span>
-              
-            </div>
           
 
           
@@ -2202,7 +2052,9 @@
       </header>
     
 
-
+    
+    
+    
     <div class="post-body" itemprop="articleBody">
 
       
@@ -2214,31 +2066,32 @@
 <ul>
 <li><strong>在Finder上创建一个自定义的右键菜单按钮以及点击后的事件回调</strong></li></ul>
           <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/TECH/2018/01/15/FinderSync/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
+          
+            <div class="post-button text-center">
+              <a class="btn" href="/TECH/2018/01/15/FinderSync/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+          
           <!--/noindex-->
         
       
     </div>
 
-    <div>
-      
-    </div>
-
-    <div>
-          
-    </div>
     
-    <div>
-      
-    </div>
 
-    <div>
+    
+    
+    
+
+    
+
+    
       
-    </div>
+    
+    
+
+    
 
     <footer class="post-footer">
       
@@ -2252,6 +2105,10 @@
         <div class="post-eof"></div>
       
     </footer>
+  </div>
+  
+  
+  
   </article>
 
 
@@ -2264,17 +2121,23 @@
   
   
 
-  <article class="post post-type-categories " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://kobeluo.com/TECH/2017/11/16/crashAnalysis/">
+  
+
+  <article class="post post-type-categories" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://kobeluo.com/TECH/2017/11/16/crashAnalysis/"/>
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="KOBE LUO">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/TECH/images/avatar.jpeg">
+      <meta itemprop="name" content="KOBE LUO"/>
+      <meta itemprop="description" content="一个iOS和Mac OS开发的技术渣"/>
+      <meta itemprop="image" content="/TECH/images/avatar.jpeg"/>
     </span>
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="KobeLuo的技术笔记">
+      <meta itemprop="name" content="KobeLuo的技术笔记"/>
     </span>
 
     
@@ -2283,13 +2146,9 @@
         
         
           <h1 class="post-title" itemprop="name headline">
-            
-            
-              
                 
-                <a class="post-title-link" href="/TECH/2017/11/16/crashAnalysis/" itemprop="url">
-                  iOS/Mac OS下的 Crash 崩溃分析
-                </a>
+                
+                <a href="/TECH/2017/11/16/crashAnalysis/" class="post-title-link" itemprop="url">iOS/Mac OS下的 Crash 崩溃分析</a>
               
             
           </h1>
@@ -2297,37 +2156,47 @@
 
         <div class="post-meta">
           <span class="post-time">
+
+            
+            
+            
+
             
               <span class="post-meta-item-icon">
                 <i class="fa fa-calendar-o"></i>
               </span>
               
-                <span class="post-meta-item-text">发表于</span>
+                <span class="post-meta-item-text">Posted on</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-11-16T13:35:48+08:00">
-                2017-11-16
-              </time>
+
+              
+                
+              
+
+              <time title="Created: 2017-11-16 13:35:48" itemprop="dateCreated datePublished" datetime="2017-11-16T13:35:48+08:00">2017-11-16</time>
             
 
             
-              <span class="post-meta-divider">|</span>
-            
+              
 
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-check-o"></i>
-              </span>
               
-                <span class="post-meta-item-text">更新于</span>
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">Edited on</span>
+                
+                <time title="Modified: 2018-12-07 13:23:19" itemprop="dateModified" datetime="2018-12-07T13:23:19+08:00">2018-12-07</time>
               
-              <time title="更新于" itemprop="dateModified" datetime="2018-12-07T13:23:19+08:00">
-                2018-12-07
-              </time>
             
           </span>
 
           
-            <span class="post-category" >
+            <span class="post-category">
             
               <span class="post-meta-divider">|</span>
             
@@ -2335,14 +2204,10 @@
                 <i class="fa fa-folder-o"></i>
               </span>
               
-                <span class="post-meta-item-text">分类于</span>
+                <span class="post-meta-item-text">In</span>
               
               
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/TECH/categories/Mac-Develop/" itemprop="url" rel="index">
-                    <span itemprop="name">Mac Develop</span>
-                  </a>
-                </span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/TECH/categories/Mac-Develop/" itemprop="url" rel="index"><span itemprop="name">Mac Develop</span></a></span>
 
                 
                 
@@ -2352,14 +2217,16 @@
 
           
             
+            
+              
               <span class="post-comments-count">
                 <span class="post-meta-divider">|</span>
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
+            
                 <a href="/TECH/2017/11/16/crashAnalysis/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count disqus-comment-count"
-                        data-disqus-identifier="2017/11/16/crashAnalysis/" itemprop="commentCount"></span>
+                  <span class="post-meta-item-text">Comments: </span> <span class="post-comments-count valine-comment-count" data-xid="/TECH/2017/11/16/crashAnalysis/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -2367,50 +2234,9 @@
 
           
           
-             <span id="/TECH/2017/11/16/crashAnalysis/" class="leancloud_visitors" data-flag-title="iOS/Mac OS下的 Crash 崩溃分析">
-               <span class="post-meta-divider">|</span>
-               <span class="post-meta-item-icon">
-                 <i class="fa fa-eye"></i>
-               </span>
-               
-                 <span class="post-meta-item-text">阅读次数 </span>
-               
-                 <span class="leancloud-visitors-count"></span>
-             </span>
-          
 
           
 
-          
-            <div class="post-wordcount">
-              
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-file-word-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">字数统计</span>
-                
-                <span title="字数统计">
-                  4.1k
-                </span>
-              
-
-              
-                <span class="post-meta-divider">|</span>
-              
-
-              
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-clock-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">阅读时长</span>
-                
-                <span title="阅读时长">
-                  16
-                </span>
-              
-            </div>
           
 
           
@@ -2419,7 +2245,9 @@
       </header>
     
 
-
+    
+    
+    
     <div class="post-body" itemprop="articleBody">
 
       
@@ -2434,31 +2262,32 @@
 <p>本文大多数内容来源于Apple的官方文档，<a href="https://developer.apple.com/library/archive/technotes/tn2151/_index.html" target="_blank" rel="noopener">地址在这</a></p>
 <p>这篇博文意在如何收集crash，如何分析crash.<br></p>
           <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/TECH/2017/11/16/crashAnalysis/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
+          
+            <div class="post-button text-center">
+              <a class="btn" href="/TECH/2017/11/16/crashAnalysis/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+          
           <!--/noindex-->
         
       
     </div>
 
-    <div>
-      
-    </div>
-
-    <div>
-          
-    </div>
     
-    <div>
-      
-    </div>
 
-    <div>
+    
+    
+    
+
+    
+
+    
       
-    </div>
+    
+    
+
+    
 
     <footer class="post-footer">
       
@@ -2472,6 +2301,10 @@
         <div class="post-eof"></div>
       
     </footer>
+  </div>
+  
+  
+  
   </article>
 
 
@@ -2480,15 +2313,12 @@
 
   
   <nav class="pagination">
-    <span class="page-number current">1</span><a class="page-number" href="/TECH/page/2/">2</a><a class="extend next" rel="next" href="/TECH/page/2/"><i class="fa fa-angle-right"></i></a>
+    <span class="page-number current">1</span><a class="page-number" href="/TECH/page/2/">2</a><a class="extend next" rel="next" href="/TECH/page/2/"><i class="fa fa-angle-right" aria-label="Next page"></i></a>
   </nav>
 
 
 
           </div>
-          
-
-
           
 
         </div>
@@ -2504,109 +2334,240 @@
   </div>
 
   <aside id="sidebar" class="sidebar">
+    
+      <div id="sidebar-dimmer"></div>
+    
     <div class="sidebar-inner">
 
       
 
       
 
-      <section class="site-overview sidebar-panel sidebar-panel-active">
-        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
-          <img class="site-author-image" itemprop="image"
-               src="/TECH/images/avatar.jpeg"
-               alt="KOBE LUO" />
-          <p class="site-author-name" itemprop="name">KOBE LUO</p>
-           
+      <div class="site-overview-wrap sidebar-panel sidebar-panel-active">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/TECH/images/avatar.jpeg"
+                alt="KOBE LUO"/>
+            
+              <p class="site-author-name" itemprop="name">KOBE LUO</p>
               <p class="site-description motion-element" itemprop="description">一个iOS和Mac OS开发的技术渣</p>
-          
-        </div>
-        <nav class="site-state motion-element">
-
-          
-            <div class="site-state-item site-state-posts">
-              <a href="/TECH/archives"> 
-              <!-- <a href="/archives">-->
-                <span class="site-state-item-count">18</span>
-                <span class="site-state-item-name">日志</span>
-              </a>
-            </div>
-          
-
-          
-            <div class="site-state-item site-state-categories">
-              <a href="/TECH/categories">
-              <!-- <a href="/categories"> -->
-                <span class="site-state-item-count">4</span>
-                <span class="site-state-item-name">分类</span>
-              </a>
-              <!-- </a> -->
-            </div>
-          
-
-          
-            <div class="site-state-item site-state-tags">
-              <a href="/TECH/tags">
-              <!-- <a href="/tags"> -->
-                <span class="site-state-item-count">52</span>
-                <span class="site-state-item-name">标签</span>
-              </a>
-              <!-- </a> -->
-            </div>
-          
-        </nav>
-
-        
-          <div class="feed-link motion-element">
-            <a href="/TECH/atom.xml" rel="alternate">
-              <i class="fa fa-rss"></i>
-              RSS
-            </a>
           </div>
-        
 
-        <div class="links-of-author motion-element">
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/TECH/archives">
+                
+                    <span class="site-state-item-count">18</span>
+                    <span class="site-state-item-name">posts</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  <a href="/TECH/categories/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">4</span>
+                    <span class="site-state-item-name">categories</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  <a href="/TECH/tags/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">52</span>
+                    <span class="site-state-item-name">tags</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+            <div class="feed-link motion-element">
+              <a href="/TECH/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="https://github.com/KobeLuo" title="GitHub &rarr; https://github.com/KobeLuo" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="http://douban.com" title="豆瓣 &rarr; http://douban.com" rel="noopener" target="_blank"><i class="fa fa-fw fa-zhihu"></i>豆瓣</a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="http://www.zhihu.com" title="知乎 &rarr; http://www.zhihu.com" rel="noopener" target="_blank"><i class="fa fa-fw fa-weibo"></i>知乎</a>
+                </span>
+              
+            </div>
+          
+
+          
+
+          
+          
+
           
             
-              <span class="links-of-author-item">
-                <a href="https://github.com/KobeLuo" target="_blank" title="GitHub">
-                  
-                    <i class="fa fa-fw fa-github"></i>
-                  
-                  GitHub
-                </a>
-              </span>
-            
-              <span class="links-of-author-item">
-                <a href="http://douban.com" target="_blank" title="豆瓣">
-                  
-                    <i class="fa fa-fw fa-globe"></i>
-                  
-                  豆瓣
-                </a>
-              </span>
-            
-              <span class="links-of-author-item">
-                <a href="http://www.zhihu.com" target="_blank" title="知乎">
-                  
-                    <i class="fa fa-fw fa-globe"></i>
-                  
-                  知乎
-                </a>
-              </span>
-            
           
+          
+
         </div>
-
-        
-        
-
-        
-        
-
-        
-
-
-      </section>
+      </div>
 
       
 
@@ -2629,30 +2590,39 @@
 
     <footer id="footer" class="footer">
       <div class="footer-inner">
-        <div class="copyright" >
-  
-  &copy;  2015 - 
-  <span itemprop="copyrightYear">2019</span>
-  <span class="with-love">
-    <i class="fa fa-heart"></i>
+        <div class="copyright">&copy; 2015 – <span itemprop="copyrightYear">2019</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
   </span>
-  <span class="author" itemprop="copyrightHolder">KOBE LUO</span>
+  <span class="author" itemprop="copyrightHolder">true</span>
+
+  
+
+  
 </div>
 
 
-<div class="powered-by">
-  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 驱动
-</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> v3.7.1</div>
 
-<div class="theme-info">
-  主题 -
-  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
-    NexT.Mist
-  </a>
-</div>
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a> v6.7.0</div>
+
+
 
 
         
+
+
+
+
+
+
+
 
         
       </div>
@@ -2660,11 +2630,16 @@
 
     
 
+    
+
+    
+
+    
   </div>
 
   
 
-<script type="text/javascript">
+<script>
   if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
     window.Promise = null;
   }
@@ -2678,88 +2653,17 @@
 
 
 
-  
 
 
 
 
 
 
-  
-  <script type="text/javascript" src="/TECH/lib/jquery/index.js?v=2.1.3"></script>
-
-  
-  <script type="text/javascript" src="/TECH/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
-
-  
-  <script type="text/javascript" src="/TECH/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
-
-  
-  <script type="text/javascript" src="/TECH/lib/velocity/velocity.min.js?v=1.2.1"></script>
-
-  
-  <script type="text/javascript" src="/TECH/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
-
-  
-  <script type="text/javascript" src="/TECH/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
-
-
-  
-
-
-  <script type="text/javascript" src="/TECH/js/src/utils.js?v=5.1.0"></script>
-
-  <script type="text/javascript" src="/TECH/js/src/motion.js?v=5.1.0"></script>
-
-
-
-  
-  
-
-  
-
-  
-
-
-  <script type="text/javascript" src="/TECH/js/src/bootstrap.js?v=5.1.0"></script>
-
-
-
-  
-
-
-  
-
-    
-      <script id="dsq-count-scr" src="https://.disqus.com/count.js" async></script>
-    
-
-    
-
-  
-
-
-
-
-	
 
 
 
 
 
-  
-
-
-
-
-
-  
-
-
-
-
-
-  
 
 
 
@@ -2767,133 +2671,29 @@
 
 
   
+  <script src="/TECH/lib/jquery/index.js?v=2.1.3"></script>
 
-  <script type="text/javascript">
-    // Popup Window;
-    var isfetched = false;
-    // Search DB path;
-    var search_path = "search.xml";
-    if (search_path.length == 0) {
-      search_path = "search.xml";
-    }
-    var path = "/TECH/" + search_path;
-    // monitor main search box;
+  
+  <script src="/TECH/lib/velocity/velocity.min.js?v=1.2.1"></script>
 
-    function proceedsearch() {
-      $("body")
-        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
-        .css('overflow', 'hidden');
-      $('.popup').toggle();
-    }
-    // search function;
-    var searchFunc = function(path, search_id, content_id) {
-      'use strict';
-      $.ajax({
-        url: path,
-        dataType: "xml",
-        async: true,
-        success: function( xmlResponse ) {
-          // get the contents from search data
-          isfetched = true;
-          $('.popup').detach().appendTo('.header-inner');
-          var datas = $( "entry", xmlResponse ).map(function() {
-            return {
-              title: $( "title", this ).text(),
-              content: $("content",this).text(),
-              url: $( "url" , this).text()
-            };
-          }).get();
-          var $input = document.getElementById(search_id);
-          var $resultContent = document.getElementById(content_id);
-          $input.addEventListener('input', function(){
-            var matchcounts = 0;
-            var str='<ul class=\"search-result-list\">';
-            var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
-            $resultContent.innerHTML = "";
-            if (this.value.trim().length > 1) {
-              // perform local searching
-              datas.forEach(function(data) {
-                var isMatch = false;
-                var content_index = [];
-                var data_title = data.title.trim().toLowerCase();
-                var data_content = data.content.trim().replace(/<[^>]+>/g,"").toLowerCase();
-                var data_url = decodeURIComponent(data.url);
-                var index_title = -1;
-                var index_content = -1;
-                var first_occur = -1;
-                // only match artiles with not empty titles and contents
-                if(data_title != '') {
-                  keywords.forEach(function(keyword, i) {
-                    index_title = data_title.indexOf(keyword);
-                    index_content = data_content.indexOf(keyword);
-                    if( index_title >= 0 || index_content >= 0 ){
-                      isMatch = true;
-                      if (i == 0) {
-                        first_occur = index_content;
-                      }
-                    }
+  
+  <script src="/TECH/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
 
-                  });
-                }
-                // show search results
-                if (isMatch) {
-                  matchcounts += 1;
-                  str += "<li><a href='"+ data_url +"' class='search-result-title'>"+ data_title +"</a>";
-                  var content = data.content.trim().replace(/<[^>]+>/g,"");
-                  if (first_occur >= 0) {
-                    // cut out 100 characters
-                    var start = first_occur - 20;
-                    var end = first_occur + 80;
-                    if(start < 0){
-                      start = 0;
-                    }
-                    if(start == 0){
-                      end = 50;
-                    }
-                    if(end > content.length){
-                      end = content.length;
-                    }
-                    var match_content = content.substring(start, end);
-                    // highlight all keywords
-                    keywords.forEach(function(keyword){
-                      var regS = new RegExp(keyword, "gi");
-                      match_content = match_content.replace(regS, "<b class=\"search-keyword\">"+keyword+"</b>");
-                    });
 
-                    str += "<p class=\"search-result\">" + match_content +"...</p>"
-                  }
-                  str += "</li>";
-                }
-              })};
-            str += "</ul>";
-            if (matchcounts == 0) { str = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>' }
-            if (keywords == "") { str = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>' }
-            $resultContent.innerHTML = str;
-          });
-          proceedsearch();
-        }
-      });}
+  
 
-    // handle and trigger popup window;
-    $('.popup-trigger').click(function(e) {
-      e.stopPropagation();
-      if (isfetched == false) {
-        searchFunc(path, 'local-search-input', 'local-search-result');
-      } else {
-        proceedsearch();
-      };
-    });
 
-    $('.popup-btn-close').click(function(e){
-      $('.popup').hide();
-      $(".local-search-pop-overlay").remove();
-      $('body').css('overflow', '');
-    });
-    $('.popup').click(function(e){
-      e.stopPropagation();
-    });
-  </script>
+  <script src="/TECH/js/src/utils.js?v=6.7.0"></script>
 
+  <script src="/TECH/js/src/motion.js?v=6.7.0"></script>
+
+
+
+  
+  
+
+
+  <script src="/TECH/js/src/schemes/muse.js?v=6.7.0"></script>
 
 
 
@@ -2901,109 +2701,48 @@
   
 
   
-  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
-  <script>AV.initialize("cTAOGJvwpiIkJufS2JmsnjMf-gzGzoHsz", "pYWSupIvureEPupAE8VAv3AR");</script>
-  <script>
-    function showTime(Counter) {
-      var query = new AV.Query(Counter);
-      var entries = [];
-      var $visitors = $(".leancloud_visitors");
 
-      $visitors.each(function () {
-        entries.push( $(this).attr("id").trim() );
-      });
 
-      query.containedIn('url', entries);
-      query.find()
-        .done(function (results) {
-          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+  <script src="/TECH/js/src/bootstrap.js?v=6.7.0"></script>
 
-          if (results.length === 0) {
-            $visitors.find(COUNT_CONTAINER_REF).text(0);
-            return;
-          }
 
-          for (var i = 0; i < results.length; i++) {
-            var item = results[i];
-            var url = item.get('url');
-            var time = item.get('time');
-            var element = document.getElementById(url);
 
-            $(element).find(COUNT_CONTAINER_REF).text(time);
-          }
-          for(var i = 0; i < entries.length; i++) {
-            var url = entries[i];
-            var element = document.getElementById(url);
-            var countSpan = $(element).find(COUNT_CONTAINER_REF);
-            if( countSpan.text() == '') {
-              countSpan.text(0);
-            }
-          }
-        })
-        .fail(function (object, error) {
-          console.log("Error: " + error.code + " " + error.message);
-        });
-    }
+  
+  
 
-    function addCount(Counter) {
-      var $visitors = $(".leancloud_visitors");
-      var url = $visitors.attr('id').trim();
-      var title = $visitors.attr('data-flag-title').trim();
-      var query = new AV.Query(Counter);
+<script src="//cdn1.lncld.net/static/js/3.11.1/av-min.js"></script>
 
-      query.equalTo("url", url);
-      query.find({
-        success: function(results) {
-          if (results.length > 0) {
-            var counter = results[0];
-            counter.fetchWhenSave(true);
-            counter.increment("time");
-            counter.save(null, {
-              success: function(counter) {
-                var $element = $(document.getElementById(url));
-                $element.find('.leancloud-visitors-count').text(counter.get('time'));
-              },
-              error: function(counter, error) {
-                console.log('Failed to save Visitor num, with error message: ' + error.message);
-              }
-            });
-          } else {
-            var newcounter = new Counter();
-            /* Set ACL */
-            var acl = new AV.ACL();
-            acl.setPublicReadAccess(true);
-            acl.setPublicWriteAccess(true);
-            newcounter.setACL(acl);
-            /* End Set ACL */
-            newcounter.set("title", title);
-            newcounter.set("url", url);
-            newcounter.set("time", 1);
-            newcounter.save(null, {
-              success: function(newcounter) {
-                var $element = $(document.getElementById(url));
-                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
-              },
-              error: function(newcounter, error) {
-                console.log('Failed to create');
-              }
-            });
-          }
-        },
-        error: function(error) {
-          console.log('Error:' + error.code + " " + error.message);
-        }
-      });
-    }
 
-    $(function() {
-      var Counter = AV.Object.extend("Counter");
-      if ($('.leancloud_visitors').length == 1) {
-        addCount(Counter);
-      } else if ($('.post-title-link').length > 1) {
-        showTime(Counter);
-      }
-    });
-  </script>
+
+<script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+
+<script>
+  var GUEST = ['nick', 'mail', 'link'];
+  var guest = 'nick,mail,link';
+  guest = guest.split(',').filter(function(item) {
+    return GUEST.indexOf(item) > -1;
+  });
+  new Valine({
+    el: '#comments',
+    verify: false,
+    notify: false,
+    appId: 'GzQbCxnzte3uEVbJ0bMTc2Kl-gzGzoHsz',
+    appKey: 'kycA8uL7d93nmuj2NP1bJ4yf',
+    placeholder: 'ヾﾉ≧∀≦)o 给博主留个言呗~',
+    avatar: 'mm',
+    meta: guest,
+    pageSize: '10' || 10,
+    visitor: false
+  });
+</script>
+
+
+
+
+
+  
+
+
 
 
 
@@ -3013,8 +2752,28 @@
 
   
 
-  <script type="text/javascript" src="/lib/clipboard/clipboard.js"></script>
-<script type="text/javascript" src="/js/src/copycode.js"></script>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+  <script src="/TECH/js/src/js.cookie.js?v=6.7.0"></script>
+  <script src="/TECH/js/src/scroll-cookie.js?v=6.7.0"></script>
+
+
+  
+
+  
+
+  
+
+  
 
 </body>
 </html>

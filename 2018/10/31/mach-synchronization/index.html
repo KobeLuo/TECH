@@ -1,4 +1,13 @@
-<!doctype html>
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
 
 
 
@@ -8,31 +17,35 @@
 <html class="theme-next mist use-motion" lang="zh-Hans">
 <head>
   <meta charset="UTF-8"/>
-<meta http-equiv="X-UA-Compatible" content="IE=edge" />
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
-
-
-
-<meta http-equiv="Cache-Control" content="no-transform" />
-<meta http-equiv="Cache-Control" content="no-siteapp" />
-
-
-
-
-
-
-
-
-
-
-
+<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2"/>
+<meta name="theme-color" content="#222"/>
 
 
 
 
   
   
-  <link href="/TECH/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+    
+    
+  <script src="/TECH/lib/pace/pace.min.js?v=1.0.2"></script>
+  <link rel="stylesheet" href="/TECH/lib/pace/pace-theme-flash.min.css?v=1.0.2"/>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -58,7 +71,7 @@
   
     
     
-    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext"/>
   
 
 
@@ -66,30 +79,57 @@
 
 
 
-<link href="/TECH/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+<link rel="stylesheet" href="/TECH/lib/font-awesome/css/font-awesome.min.css?v=4.6.2"/>
 
-<link href="/TECH/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
-
-
-  <meta name="keywords" content="Mach同步机制，同步，mutex，自旋锁，信号量," />
+<link rel="stylesheet" href="/TECH/css/main.css?v=6.7.0"/>
 
 
+  <link rel="apple-touch-icon" sizes="180x180" href="/TECH/images/favicon.ico?v=6.7.0">
 
 
-
-  <link rel="alternate" href="/TECH/atom.xml" title="KobeLuo的技术笔记" type="application/atom+xml" />
-
+  <link rel="icon" type="image/png" sizes="32x32" href="/TECH/images/favicon.ico?v=6.7.0">
 
 
+  <link rel="icon" type="image/png" sizes="16x16" href="/TECH/images/favicon.ico?v=6.7.0">
 
-  <link rel="shortcut icon" type="image/x-icon" href="/TECH/images/favicon.ico?v=5.1.0" />
+
+  <link rel="mask-icon" href="/TECH/images/favicon.ico?v=6.7.0" color="#222">
 
 
 
 
 
 
-<meta name="description" content="消息传递机制是 Mach IPC架构中的一个组件，另一个组件是同步机制(synchronization)，同步机制用于判定多个并发的操纵时，如何访问共享资源的问题。同步机制的本质是:排他访问的能力，即：在使用一个资源时，排除其它对象对该资源的访问的能力。最基本的同步原语是互斥(mutual exclusion)对象，也叫互斥体(mutex)。互斥体只不过是内核内存中的普通变量，硬件必须对这些变量进">
+
+<script id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/TECH/',
+    scheme: 'Mist',
+    version: '6.7.0',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":true,"scrollpercent":true,"onmobile":true},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="消息传递机制是 Mach IPC架构中的一个组件，另一个组件是同步机制(synchronization)，同步机制用于判定多个并发的操纵时，如何访问共享资源的问题。同步机制的本质是:排他访问的能力，即：在使用一个资源时，排除其它对象对该资源的访问的能力。最基本的同步原语是互斥(mutual exclusion)对象，也叫互斥体(mutex)。互斥体只不过是内核内存中的普通变量，硬件必须对这些变量进">
 <meta name="keywords" content="Mach同步机制，同步，mutex，自旋锁，信号量">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Mach 同步机制-学习笔记">
@@ -104,27 +144,8 @@
 
 
 
-<script type="text/javascript" id="hexo.configurations">
-  var NexT = window.NexT || {};
-  var CONFIG = {
-    root: '/TECH/',
-    scheme: 'Mist',
-    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":true,"scrollpercent":true},
-    fancybox: true,
-    motion: true,
-    duoshuo: {
-      userId: '0',
-      author: '博主'
-    },
-    algolia: {
-      applicationID: '',
-      apiKey: '',
-      indexName: '',
-      hits: {"per_page":10},
-      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
-    }
-  };
-</script>
+  <link rel="alternate" href="/TECH/atom.xml" title="KobeLuo的技术笔记" type="application/atom+xml"/>
+
 
 
 
@@ -132,57 +153,85 @@
 
 
 
+<script id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>Mach 同步机制-学习笔记 | KobeLuo的技术笔记</title>
+  
 
 
-  <title> Mach 同步机制-学习笔记 | KobeLuo的技术笔记 </title>
+
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .motion-element,
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-title { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
 
   
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  
   
     
   
 
-  <div class="container sidebar-position-left page-post-detail ">
+  <div class="container sidebar-position-left page-post-detail">
     <div class="headband"></div>
-
-    <a href="https://github.com/KobeLuo/TECH"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_green_007200.png" alt="Fork me on GitHub"></a>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
       <div class="header-inner"><div class="site-brand-wrapper">
-  <div class="site-meta ">
+  <div class="site-meta">
     
 
     <div class="custom-logo-site-title">
-      <a href="/TECH/"  class="brand" rel="start">
+      <a href="/TECH/" class="brand" rel="start">
         <span class="logo-line-before"><i></i></span>
         <span class="site-title">KobeLuo的技术笔记</span>
         <span class="logo-line-after"><i></i></span>
       </a>
     </div>
+    
       
         <p class="site-subtitle">不完美源自对完美的追求</p>
       
+    
+    
   </div>
 
   <div class="site-nav-toggle">
-    <button>
+    <button aria-label="Toggle navigation bar">
       <span class="btn-bar"></span>
       <span class="btn-bar"></span>
       <span class="btn-bar"></span>
@@ -190,112 +239,137 @@
   </div>
 </div>
 
-<nav class="site-nav">
-  
 
+
+<nav class="site-nav">
   
     <ul id="menu" class="menu">
       
         
-        <li class="menu-item menu-item-home">
-          <a href="/TECH/" rel="section">
-            
-              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
-            
-            首页
-          </a>
-        </li>
-      
         
-        <li class="menu-item menu-item-archives">
-          <a href="/TECH/archives" rel="section">
-            
-              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
-            
-            归档
-          </a>
-        </li>
-      
         
-        <li class="menu-item menu-item-categories">
-          <a href="/TECH/categories" rel="section">
-            
-              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
-            
-            分类
-          </a>
-        </li>
+          
+          <li class="menu-item menu-item-home">
+
+    
+    
+    
       
+    
+
+    
+      
+    
+
+    <a href="/TECH/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br/>Home</a>
+
+  </li>
         
-        <li class="menu-item menu-item-tags">
-          <a href="/TECH/tags" rel="section">
-            
-              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
-            
-            标签
-          </a>
-        </li>
-      
         
-        <li class="menu-item menu-item-about">
-          <a href="/TECH/about" rel="section">
-            
-              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
-            
-            关于作者
-          </a>
-        </li>
+        
+          
+          <li class="menu-item menu-item-archives">
+
+    
+    
+    
       
+    
+
+    
+      
+    
+
+    <a href="/TECH/archives" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br/>Archives<span class="badge">18</span></a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+
+    
+    
+    
+      
+    
+
+    
+      
+    
+
+    <a href="/TECH/categories" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br/>Categories<span class="badge">4</span></a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tags">
+
+    
+    
+    
+      
+    
+
+    
+      
+    
+
+    <a href="/TECH/tags" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br/>Tags<span class="badge">52</span></a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-about">
+
+    
+    
+    
+      
+    
+
+    
+      
+    
+
+    <a href="/TECH/about" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br/>About</a>
+
+  </li>
 
       
-        <li class="menu-item menu-item-search">
-          
-            <a href="javascript:;" class="popup-trigger">
-          
-            
-              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
-            
-            搜索
-          </a>
-        </li>
       
     </ul>
   
 
   
-    <div class="site-search">
-      
-  <div class="popup search-popup local-search-popup">
-  <div class="local-search-header clearfix">
-    <span class="search-icon">
-      <i class="fa fa-search"></i>
-    </span>
-    <span class="popup-btn-close">
-      <i class="fa fa-times-circle"></i>
-    </span>
-    <div class="local-search-input-wrapper">
-      <input autocapitalize="off" autocomplete="off" autocorrect="off"
-             placeholder="搜索..." spellcheck="false"
-             type="text" id="local-search-input">
-    </div>
-  </div>
-  <div id="local-search-result"></div>
-</div>
+    
 
+  
 
-
-    </div>
   
 </nav>
 
 
 
- </div>
+  
+
+
+
+</div>
     </header>
+
+    
+
 
     <main id="main" class="main">
       <div class="main-inner">
         <div class="content-wrap">
+          
           <div id="content" class="content">
             
 
@@ -308,17 +382,23 @@
   
   
 
-  <article class="post post-type-categories " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://kobeluo.com/TECH/2018/10/31/mach-synchronization/">
+  
+
+  <article class="post post-type-categories" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://kobeluo.com/TECH/2018/10/31/mach-synchronization/"/>
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="KOBE LUO">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/TECH/images/avatar.jpeg">
+      <meta itemprop="name" content="KOBE LUO"/>
+      <meta itemprop="description" content="一个iOS和Mac OS开发的技术渣"/>
+      <meta itemprop="image" content="/TECH/images/avatar.jpeg"/>
     </span>
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="KobeLuo的技术笔记">
+      <meta itemprop="name" content="KobeLuo的技术笔记"/>
     </span>
 
     
@@ -326,11 +406,8 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                Mach 同步机制-学习笔记
+          <h1 class="post-title" itemprop="name headline">Mach 同步机制-学习笔记
+
               
             
           </h1>
@@ -338,37 +415,47 @@
 
         <div class="post-meta">
           <span class="post-time">
+
+            
+            
+            
+
             
               <span class="post-meta-item-icon">
                 <i class="fa fa-calendar-o"></i>
               </span>
               
-                <span class="post-meta-item-text">发表于</span>
+                <span class="post-meta-item-text">Posted on</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-10-31T16:59:31+08:00">
-                2018-10-31
-              </time>
+
+              
+                
+              
+
+              <time title="Created: 2018-10-31 16:59:31" itemprop="dateCreated datePublished" datetime="2018-10-31T16:59:31+08:00">2018-10-31</time>
             
 
             
-              <span class="post-meta-divider">|</span>
-            
+              
 
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-check-o"></i>
-              </span>
               
-                <span class="post-meta-item-text">更新于</span>
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">Edited on</span>
+                
+                <time title="Modified: 2018-11-16 13:43:36" itemprop="dateModified" datetime="2018-11-16T13:43:36+08:00">2018-11-16</time>
               
-              <time title="更新于" itemprop="dateModified" datetime="2018-11-16T13:43:36+08:00">
-                2018-11-16
-              </time>
             
           </span>
 
           
-            <span class="post-category" >
+            <span class="post-category">
             
               <span class="post-meta-divider">|</span>
             
@@ -376,14 +463,10 @@
                 <i class="fa fa-folder-o"></i>
               </span>
               
-                <span class="post-meta-item-text">分类于</span>
+                <span class="post-meta-item-text">In</span>
               
               
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/TECH/categories/OS-Kernal/" itemprop="url" rel="index">
-                    <span itemprop="name">OS Kernal</span>
-                  </a>
-                </span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/TECH/categories/OS-Kernal/" itemprop="url" rel="index"><span itemprop="name">OS Kernal</span></a></span>
 
                 
                 
@@ -393,14 +476,16 @@
 
           
             
+            
+              
               <span class="post-comments-count">
                 <span class="post-meta-divider">|</span>
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
+            
                 <a href="/TECH/2018/10/31/mach-synchronization/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count disqus-comment-count"
-                        data-disqus-identifier="2018/10/31/mach-synchronization/" itemprop="commentCount"></span>
+                  <span class="post-meta-item-text">Comments: </span> <span class="post-comments-count valine-comment-count" data-xid="/TECH/2018/10/31/mach-synchronization/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -408,50 +493,9 @@
 
           
           
-             <span id="/TECH/2018/10/31/mach-synchronization/" class="leancloud_visitors" data-flag-title="Mach 同步机制-学习笔记">
-               <span class="post-meta-divider">|</span>
-               <span class="post-meta-item-icon">
-                 <i class="fa fa-eye"></i>
-               </span>
-               
-                 <span class="post-meta-item-text">阅读次数 </span>
-               
-                 <span class="leancloud-visitors-count"></span>
-             </span>
-          
 
           
 
-          
-            <div class="post-wordcount">
-              
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-file-word-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">字数统计</span>
-                
-                <span title="字数统计">
-                  2.8k
-                </span>
-              
-
-              
-                <span class="post-meta-divider">|</span>
-              
-
-              
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-clock-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">阅读时长</span>
-                
-                <span title="阅读时长">
-                  11
-                </span>
-              
-            </div>
           
 
           
@@ -460,7 +504,9 @@
       </header>
     
 
-
+    
+    
+    
     <div class="post-body" itemprop="articleBody">
 
       
@@ -525,8 +571,9 @@
 <p>互斥锁有一个很大的缺点：<code>就是一次只能由一个线程持有锁对象。</code><br>在很多情况下，多线程可能对资源请求只读的访问。在这些情况下，使用互斥体会阻止并发的访问，即使这些线程之间并不会相互影响，这就带来了性能的瓶颈。</p>
 <h3 id="读写锁对象"><a href="#读写锁对象" class="headerlink" title="读写锁对象"></a>读写锁对象</h3><p>读写锁(read-write lock)的设计初衷就是为了解决互斥锁的缺点。它是更智能的互斥锁，能够区分读写访问，多个只读的线程可以同时持有读写锁，而一次只允许一个写的线程可以获得锁，当一个写的线程持有锁是，其余线程的锁都将被阻塞。<br>跟mutex lock相似，下面是读写锁相关的API:<br><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">extern</span> lck_rw_t *<span class="title">lck_rw_alloc_init</span><span class="params">(<span class="keyword">lck_grp_t</span> *grp, <span class="keyword">lck_attr_t</span> *attr)</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">extern</span> <span class="keyword">void</span> <span class="title">lck_rw_init</span><span class="params">(<span class="keyword">lck_rw_t</span> *lck, <span class="keyword">lck_grp_t</span> *grp, <span class="keyword">lck_attr_t</span> *attr)</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">extern</span> <span class="keyword">void</span> <span class="title">lck_rw_lock_shared</span><span class="params">(<span class="keyword">lck_rw_t</span> *lck)</span></span>;</span><br><span class="line"><span class="function"><span class="keyword">extern</span> <span class="keyword">void</span> <span class="title">lck_rw_unlock_shared</span><span class="params">(<span class="keyword">lck_rw_t</span> *lck)</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">extern</span> <span class="keyword">void</span> <span class="title">lck_rw_lock_exclusive</span><span class="params">(<span class="keyword">lck_rw_t</span> *lck)</span></span>;</span><br><span class="line"><span class="function"><span class="keyword">extern</span> <span class="keyword">void</span> <span class="title">lck_rw_unlock_exclusive</span><span class="params">(<span class="keyword">lck_rw_t</span> *lck)</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">//加锁</span></span><br><span class="line"><span class="comment">//如果当前线程是读，当有写的线程持有锁时，当前线程调用会被阻塞</span></span><br><span class="line"><span class="comment">//如果当前线程是写，当有其他线程获得锁时，调用会被阻塞</span></span><br><span class="line"><span class="comment">//这个API等同于lck_rw_lock_shared + lck_rw_lock_exclusion </span></span><br><span class="line"><span class="function"><span class="keyword">extern</span> <span class="keyword">void</span> <span class="title">lck_rw_lock</span><span class="params">(<span class="keyword">lck_rw_t</span> *lck, <span class="keyword">lck_rw_type_t</span> lck_rw_type)</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">////这个API等同于lck_rw_unlock_shared + lck_rw_unlock_exclusion</span></span><br><span class="line"><span class="function"><span class="keyword">extern</span> <span class="keyword">void</span> <span class="title">lck_rw_unlock</span><span class="params">(<span class="keyword">lck_rw_t</span> *lck, <span class="keyword">lck_rw_type_t</span> lck_rw_type)</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">extern</span> <span class="keyword">void</span> <span class="title">lck_rw_destroy</span><span class="params">(<span class="keyword">lck_rw_t</span> *lck, <span class="keyword">lck_grp_t</span> *grp)</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">extern</span> <span class="keyword">void</span> <span class="title">lck_rw_free</span><span class="params">(<span class="keyword">lck_rw_t</span> *lck, <span class="keyword">lck_grp_t</span> *grp)</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">//action 可以是LCK_SLEEP_SHARED 和 LCK_SLEEP_EXCLUSION.</span></span><br><span class="line"><span class="function"><span class="keyword">extern</span> wait_result_t <span class="title">lck_rw_sleep</span><span class="params">(<span class="keyword">lck_rw_t</span> *lck, <span class="keyword">lck_sleep_action_t</span> lck_sleep_action,</span></span></span><br><span class="line"><span class="function"><span class="params">					  <span class="keyword">event_t</span> event, <span class="keyword">wait_interrupt_t</span> interruptible)</span></span>;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">extern</span> wait_result_t <span class="title">lck_rw_sleep_deadline</span><span class="params">(<span class="keyword">lck_rw_t</span> *lck, <span class="keyword">lck_sleep_action_t</span> lck_sleep_action,</span></span></span><br><span class="line"><span class="function"><span class="params">				  <span class="keyword">event_t</span> event, <span class="keyword">wait_interrupt_t</span> interruptible, <span class="keyword">uint64_t</span> deadline)</span></span>;</span><br></pre></td></tr></table></figure></p>
 <h3 id="信号量对象"><a href="#信号量对象" class="headerlink" title="信号量对象"></a>信号量对象</h3><p>Mach提供了信号量(Semaphore)，信号量是一种泛化的互斥体，互斥体只能是0和1，而信号量是可以将取值达到某个整数时就允许持有信号量的线程同时执行的这样一种互斥体，信号量在用户态使用，而互斥体只能在内核态使用。</p>
-<div class="note info"><p>Mach中的信号量和POSIX中的信号量不同，API也不同，因此两者不相容，在XNU上，POSIX信号量的底层实现是通过Mach的信号量实现的。<br>POSIX中的<code>sem_open()</code>函数其实调用了Mach的<code>semaphore_create()</code>函数</p>
-</div>
+<div class="note info">
+            <p>Mach中的信号量和POSIX中的信号量不同，API也不同，因此两者不相容，在XNU上，POSIX信号量的底层实现是通过Mach的信号量实现的。<br>POSIX中的<code>sem_open()</code>函数其实调用了Mach的<code>semaphore_create()</code>函数</p>
+          </div>
 <p>信号量本身是一个不可锁的对象，拥有很小的结构体，包含了所有者和端口的引用，还包括了一个wait_queue_t用来保证正在等待这个信号量的线程的链表，<br>wait_queue_t会通过硬件锁的方式锁定。<br>下面是信号量对象的结构体:<br><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">ifdef</span> MACH_KERNEL_PRIVATE</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> <span class="title">semaphore</span> &#123;</span></span><br><span class="line">	<span class="keyword">queue_chain_t</span>	  task_link;  <span class="comment">/* chain of semaphores owned by a task */</span></span><br><span class="line">	<span class="class"><span class="keyword">struct</span> <span class="title">wait_queue</span> <span class="title">wait_queue</span>;</span> <span class="comment">/* queue of blocked threads &amp; lock     */</span></span><br><span class="line">	<span class="keyword">task_t</span>		  owner;      <span class="comment">/* task that owns semaphore            */</span></span><br><span class="line">	<span class="keyword">ipc_port_t</span>	  port;	      <span class="comment">/* semaphore port	 		     */</span></span><br><span class="line">	<span class="keyword">int</span>		  ref_count;  <span class="comment">/* reference count		     */</span></span><br><span class="line">	<span class="keyword">int</span>		  count;      <span class="comment">/* current count value	             */</span></span><br><span class="line">	<span class="keyword">boolean_t</span>	  active;     <span class="comment">/* active status			     */</span></span><br><span class="line">&#125; Semaphore;</span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> semaphore_lock(semaphore)   wait_queue_lock(&amp;(semaphore)-&gt;wait_queue)</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> semaphore_unlock(semaphore) wait_queue_unlock(&amp;(semaphore)-&gt;wait_queue)</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">extern</span> <span class="keyword">void</span> <span class="title">semaphore_init</span><span class="params">(<span class="keyword">void</span>)</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">extern</span>	<span class="keyword">void</span>		<span class="title">semaphore_reference</span>	<span class="params">(<span class="keyword">semaphore_t</span> semaphore)</span></span>;</span><br><span class="line"><span class="function"><span class="keyword">extern</span>	<span class="keyword">void</span>		<span class="title">semaphore_dereference</span>	<span class="params">(<span class="keyword">semaphore_t</span> semaphore)</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">endif</span> <span class="comment">/* MACH_KERNEL_PRIVATE */</span></span></span><br></pre></td></tr></table></figure></p>
 <p>下面列出了Mach中 信号量的相关API:<br><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment"> *	Routine:	semaphore_create</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> *	Creates a semaphore.</span></span><br><span class="line"><span class="comment"> *	The port representing the semaphore is returned as a parameter.</span></span><br><span class="line"><span class="comment"> *	为task创建一个信号量new_semaphore,policy表示阻塞的线程如何被唤醒，使用的是和锁策略相同的值。</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">kern_return_t</span> semaphore_create(<span class="keyword">task_t</span> task, <span class="keyword">semaphore_t</span> *new_semaphore, <span class="keyword">int</span> policy, <span class="keyword">int</span> value)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment"> *	Routine:	semaphore_destroy</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> *	Destroys a semaphore.  This call will only succeed if the</span></span><br><span class="line"><span class="comment"> *	specified task is the SAME task name specified at the semaphore's</span></span><br><span class="line"><span class="comment"> *	creation.</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> *	All threads currently blocked on the semaphore are awoken.  These</span></span><br><span class="line"><span class="comment"> *	threads will return with the KERN_TERMINATED error.</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">kern_return_t</span> semaphore_destroy( <span class="keyword">task_t</span> task, <span class="keyword">semaphore_t</span> semaphore)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment"> *	Routine:	semaphore_signal</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> *		Traditional (in-kernel client and MIG interface) semaphore</span></span><br><span class="line"><span class="comment"> *		signal routine.  Most users will access the trap version.</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> *		This interface in not defined to return info about whether</span></span><br><span class="line"><span class="comment"> *		this call found a thread waiting or not.  The internal</span></span><br><span class="line"><span class="comment"> *		routines (and future external routines) do.  We have to</span></span><br><span class="line"><span class="comment"> *		convert those into plain KERN_SUCCESS returns.</span></span><br><span class="line"><span class="comment"> *		增加信号量计数，如果计数器大于等于0，则唤醒一个阻塞的线程。</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">kern_return_t</span> semaphore_signal(<span class="keyword">semaphore_t</span> semaphore)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment"> *	Routine:	semaphore_signal_all</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> *	Awakens ALL threads currently blocked on the semaphore.</span></span><br><span class="line"><span class="comment"> *	The semaphore count returns to zero.</span></span><br><span class="line"><span class="comment"> *	将计数器值置为0，并唤醒所有阻塞的线程。</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">kern_return_t</span> semaphore_signal_all(<span class="keyword">semaphore_t</span> semaphore)</span><br><span class="line"></span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment"> *	Routine:	semaphore_wait</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> *	Traditional (non-continuation) interface presented to</span></span><br><span class="line"><span class="comment"> * 	in-kernel clients to wait on a semaphore.</span></span><br><span class="line"><span class="comment"> * 	减去一个信号量计数，如果小于0，则阻塞知道计数器再次变为非负数。</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">kern_return_t</span> semaphore_wait(<span class="keyword">semaphore_t</span> semaphore)</span><br></pre></td></tr></table></figure></p>
 <p>信号量的属性可以让信号量转换为端口，也可以由端口转换回来，<a href="https://opensource.apple.com/source/xnu/xnu-792.6.76/osfmk/kern/ipc_sync.c.auto.html" target="_blank" rel="noopener">ipc_sync.c</a>中定义了这些操作的函数，但该功能并不为用户态暴露，内核态也未使用。</p>
@@ -544,88 +591,32 @@
       
     </div>
 
-    <div>
-      
-        
-
-      
-    </div>
-
-    <div>
-          
-          <div>
     
-        <div style="text-align:center;color: #ccc;font-size:14px;">------ 文章结束 ------</div>
+
     
-</div>
-          
-    </div>
     
-    <div>
-      
-        
-  <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
-    <div>坚持原创技术分享，您的支持将鼓励我继续创作！</div>
-    <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
-      <span>赏</span>
-    </button>
-    <div id="QR" style="display: none;">
-      
-        <div id="wechat" style="display: inline-block">
-          <img id="wechat_qr" src="https://wx2.sinaimg.cn/mw690/006AZU4wgy1fw6n5xbgnmj30og0zktaf.jpg" alt="KOBE LUO WeChat Pay"/>
-          <p>微信打赏</p>
-        </div>
-      
-      
-        <div id="alipay" style="display: inline-block">
-          <img id="alipay_qr" src="https://wx4.sinaimg.cn/mw690/006AZU4wgy1fw6n5w7j3kj30go0p0wfj.jpg" alt="KOBE LUO Alipay"/>
-          <p>支付宝打赏</p>
-        </div>
-      
-    </div>
-  </div>
+    
 
+    
 
+    
       
-    </div>
+    
+    
 
-    <div>
-      
-        
-  <ul class="post-copyright">
-    <li class="post-copyright-author">
-      <strong>本文作者：</strong>
-      KOBE LUO
-    </li>
-    <li class="post-copyright-title">
-      <strong>本文标题：</strong>
-      Mach 同步机制-学习笔记
-    </li>
-    <li class="post-copyright-link">
-      <strong>本文链接：</strong>
-      <a href="http://www.kobeluo.com/TECH/2018/10/31/mach-synchronization/" title="Mach 同步机制-学习笔记">http://www.kobeluo.com/TECH/2018/10/31/mach-synchronization/</a>
-    </li>
-    <li class="post-copyright-license">
-      <strong>版权声明： </strong>
-      本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 3.0</a> 许可协议。转载请注明出处！
-    </li>
-  </ul>
-
-
-      
-    </div>
+    
 
     <footer class="post-footer">
       
         <div class="post-tags">
           
-            <a href="/TECH/tags/Mach同步机制，同步，mutex，自旋锁，信号量/" rel="tag"><i class="fa fa-tag"></i>Mach同步机制，同步，mutex，自旋锁，信号量</a>
+            <a href="/TECH/tags/Mach同步机制，同步，mutex，自旋锁，信号量/" rel="tag"># Mach同步机制，同步，mutex，自旋锁，信号量</a>
           
         </div>
       
 
       
-        
+      
       
 
       
@@ -653,31 +644,25 @@
       
       
     </footer>
+  </div>
+  
+  
+  
   </article>
 
 
-
-    <div class="post-spread">
-      
-    </div>
   </div>
 
 
           </div>
           
 
+  
+    <div class="comments" id="comments">
+    </div>
 
-          
-  <div class="comments" id="comments">
-    
-      <div id="disqus_thread">
-        <noscript>
-          Please enable JavaScript to view the
-          <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a>
-        </noscript>
-      </div>
-    
-  </div>
+  
+
 
 
         </div>
@@ -693,126 +678,258 @@
   </div>
 
   <aside id="sidebar" class="sidebar">
+    
+      <div id="sidebar-dimmer"></div>
+    
     <div class="sidebar-inner">
 
       
 
       
         <ul class="sidebar-nav motion-element">
-          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
-            文章目录
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
           </li>
-          <li class="sidebar-nav-overview" data-target="site-overview">
-            站点概览
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
           </li>
         </ul>
       
 
-      <section class="site-overview sidebar-panel">
-        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
-          <img class="site-author-image" itemprop="image"
-               src="/TECH/images/avatar.jpeg"
-               alt="KOBE LUO" />
-          <p class="site-author-name" itemprop="name">KOBE LUO</p>
-           
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/TECH/images/avatar.jpeg"
+                alt="KOBE LUO"/>
+            
+              <p class="site-author-name" itemprop="name">KOBE LUO</p>
               <p class="site-description motion-element" itemprop="description">一个iOS和Mac OS开发的技术渣</p>
-          
-        </div>
-        <nav class="site-state motion-element">
-
-          
-            <div class="site-state-item site-state-posts">
-              <a href="/TECH/archives"> 
-              <!-- <a href="/archives">-->
-                <span class="site-state-item-count">18</span>
-                <span class="site-state-item-name">日志</span>
-              </a>
-            </div>
-          
-
-          
-            <div class="site-state-item site-state-categories">
-              <a href="/TECH/categories">
-              <!-- <a href="/categories"> -->
-                <span class="site-state-item-count">4</span>
-                <span class="site-state-item-name">分类</span>
-              </a>
-              <!-- </a> -->
-            </div>
-          
-
-          
-            <div class="site-state-item site-state-tags">
-              <a href="/TECH/tags">
-              <!-- <a href="/tags"> -->
-                <span class="site-state-item-count">52</span>
-                <span class="site-state-item-name">标签</span>
-              </a>
-              <!-- </a> -->
-            </div>
-          
-        </nav>
-
-        
-          <div class="feed-link motion-element">
-            <a href="/TECH/atom.xml" rel="alternate">
-              <i class="fa fa-rss"></i>
-              RSS
-            </a>
           </div>
-        
 
-        <div class="links-of-author motion-element">
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/TECH/archives">
+                
+                    <span class="site-state-item-count">18</span>
+                    <span class="site-state-item-name">posts</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  <a href="/TECH/categories/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">4</span>
+                    <span class="site-state-item-name">categories</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  <a href="/TECH/tags/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">52</span>
+                    <span class="site-state-item-name">tags</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+            <div class="feed-link motion-element">
+              <a href="/TECH/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="https://github.com/KobeLuo" title="GitHub &rarr; https://github.com/KobeLuo" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="http://douban.com" title="豆瓣 &rarr; http://douban.com" rel="noopener" target="_blank"><i class="fa fa-fw fa-zhihu"></i>豆瓣</a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="http://www.zhihu.com" title="知乎 &rarr; http://www.zhihu.com" rel="noopener" target="_blank"><i class="fa fa-fw fa-weibo"></i>知乎</a>
+                </span>
+              
+            </div>
+          
+
+          
+
+          
+          
+
           
             
-              <span class="links-of-author-item">
-                <a href="https://github.com/KobeLuo" target="_blank" title="GitHub">
-                  
-                    <i class="fa fa-fw fa-github"></i>
-                  
-                  GitHub
-                </a>
-              </span>
-            
-              <span class="links-of-author-item">
-                <a href="http://douban.com" target="_blank" title="豆瓣">
-                  
-                    <i class="fa fa-fw fa-globe"></i>
-                  
-                  豆瓣
-                </a>
-              </span>
-            
-              <span class="links-of-author-item">
-                <a href="http://www.zhihu.com" target="_blank" title="知乎">
-                  
-                    <i class="fa fa-fw fa-globe"></i>
-                  
-                  知乎
-                </a>
-              </span>
-            
           
+          
+
         </div>
-
-        
-        
-
-        
-        
-
-        
-
-
-      </section>
+      </div>
 
       
       <!--noindex-->
-        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
           <div class="post-toc">
 
             
-              
+            
+            
             
 
             
@@ -820,7 +937,7 @@
             
 
           </div>
-        </section>
+        </div>
       <!--/noindex-->
       
 
@@ -843,30 +960,39 @@
 
     <footer id="footer" class="footer">
       <div class="footer-inner">
-        <div class="copyright" >
-  
-  &copy;  2015 - 
-  <span itemprop="copyrightYear">2019</span>
-  <span class="with-love">
-    <i class="fa fa-heart"></i>
+        <div class="copyright">&copy; 2015 – <span itemprop="copyrightYear">2019</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
   </span>
-  <span class="author" itemprop="copyrightHolder">KOBE LUO</span>
+  <span class="author" itemprop="copyrightHolder">true</span>
+
+  
+
+  
 </div>
 
 
-<div class="powered-by">
-  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 驱动
-</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> v3.7.1</div>
 
-<div class="theme-info">
-  主题 -
-  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
-    NexT.Mist
-  </a>
-</div>
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a> v6.7.0</div>
+
+
 
 
         
+
+
+
+
+
+
+
 
         
       </div>
@@ -874,11 +1000,16 @@
 
     
 
+    
+
+    
+
+    
   </div>
 
   
 
-<script type="text/javascript">
+<script>
   if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
     window.Promise = null;
   }
@@ -892,104 +1023,17 @@
 
 
 
-  
 
 
 
 
 
 
-  
-  <script type="text/javascript" src="/TECH/lib/jquery/index.js?v=2.1.3"></script>
-
-  
-  <script type="text/javascript" src="/TECH/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
-
-  
-  <script type="text/javascript" src="/TECH/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
-
-  
-  <script type="text/javascript" src="/TECH/lib/velocity/velocity.min.js?v=1.2.1"></script>
-
-  
-  <script type="text/javascript" src="/TECH/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
-
-  
-  <script type="text/javascript" src="/TECH/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
-
-
-  
-
-
-  <script type="text/javascript" src="/TECH/js/src/utils.js?v=5.1.0"></script>
-
-  <script type="text/javascript" src="/TECH/js/src/motion.js?v=5.1.0"></script>
-
-
-
-  
-  
-
-  
-  <script type="text/javascript" src="/TECH/js/src/scrollspy.js?v=5.1.0"></script>
-<script type="text/javascript" src="/TECH/js/src/post-details.js?v=5.1.0"></script>
-
-
-
-  
-
-
-  <script type="text/javascript" src="/TECH/js/src/bootstrap.js?v=5.1.0"></script>
-
-
-
-  
-
-
-  
-
-    
-      <script id="dsq-count-scr" src="https://.disqus.com/count.js" async></script>
-    
-
-    
-      <script type="text/javascript">
-        var disqus_config = function () {
-          this.page.url = 'http://kobeluo.com/2018/10/31/mach-synchronization/';
-          this.page.identifier = '2018/10/31/mach-synchronization/';
-          this.page.title = 'Mach 同步机制-学习笔记';
-        };
-        var d = document, s = d.createElement('script');
-        s.src = 'https://.disqus.com/embed.js';
-        s.setAttribute('data-timestamp', '' + +new Date());
-        (d.head || d.body).appendChild(s);
-      </script>
-    
-
-  
-
-
-
-
-	
 
 
 
 
 
-  
-
-
-
-
-
-  
-
-
-
-
-
-  
 
 
 
@@ -997,243 +1041,84 @@
 
 
   
+  <script src="/TECH/lib/jquery/index.js?v=2.1.3"></script>
 
-  <script type="text/javascript">
-    // Popup Window;
-    var isfetched = false;
-    // Search DB path;
-    var search_path = "search.xml";
-    if (search_path.length == 0) {
-      search_path = "search.xml";
-    }
-    var path = "/TECH/" + search_path;
-    // monitor main search box;
+  
+  <script src="/TECH/lib/velocity/velocity.min.js?v=1.2.1"></script>
 
-    function proceedsearch() {
-      $("body")
-        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
-        .css('overflow', 'hidden');
-      $('.popup').toggle();
-    }
-    // search function;
-    var searchFunc = function(path, search_id, content_id) {
-      'use strict';
-      $.ajax({
-        url: path,
-        dataType: "xml",
-        async: true,
-        success: function( xmlResponse ) {
-          // get the contents from search data
-          isfetched = true;
-          $('.popup').detach().appendTo('.header-inner');
-          var datas = $( "entry", xmlResponse ).map(function() {
-            return {
-              title: $( "title", this ).text(),
-              content: $("content",this).text(),
-              url: $( "url" , this).text()
-            };
-          }).get();
-          var $input = document.getElementById(search_id);
-          var $resultContent = document.getElementById(content_id);
-          $input.addEventListener('input', function(){
-            var matchcounts = 0;
-            var str='<ul class=\"search-result-list\">';
-            var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
-            $resultContent.innerHTML = "";
-            if (this.value.trim().length > 1) {
-              // perform local searching
-              datas.forEach(function(data) {
-                var isMatch = false;
-                var content_index = [];
-                var data_title = data.title.trim().toLowerCase();
-                var data_content = data.content.trim().replace(/<[^>]+>/g,"").toLowerCase();
-                var data_url = decodeURIComponent(data.url);
-                var index_title = -1;
-                var index_content = -1;
-                var first_occur = -1;
-                // only match artiles with not empty titles and contents
-                if(data_title != '') {
-                  keywords.forEach(function(keyword, i) {
-                    index_title = data_title.indexOf(keyword);
-                    index_content = data_content.indexOf(keyword);
-                    if( index_title >= 0 || index_content >= 0 ){
-                      isMatch = true;
-                      if (i == 0) {
-                        first_occur = index_content;
-                      }
-                    }
+  
+  <script src="/TECH/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
 
-                  });
-                }
-                // show search results
-                if (isMatch) {
-                  matchcounts += 1;
-                  str += "<li><a href='"+ data_url +"' class='search-result-title'>"+ data_title +"</a>";
-                  var content = data.content.trim().replace(/<[^>]+>/g,"");
-                  if (first_occur >= 0) {
-                    // cut out 100 characters
-                    var start = first_occur - 20;
-                    var end = first_occur + 80;
-                    if(start < 0){
-                      start = 0;
-                    }
-                    if(start == 0){
-                      end = 50;
-                    }
-                    if(end > content.length){
-                      end = content.length;
-                    }
-                    var match_content = content.substring(start, end);
-                    // highlight all keywords
-                    keywords.forEach(function(keyword){
-                      var regS = new RegExp(keyword, "gi");
-                      match_content = match_content.replace(regS, "<b class=\"search-keyword\">"+keyword+"</b>");
-                    });
 
-                    str += "<p class=\"search-result\">" + match_content +"...</p>"
-                  }
-                  str += "</li>";
-                }
-              })};
-            str += "</ul>";
-            if (matchcounts == 0) { str = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>' }
-            if (keywords == "") { str = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>' }
-            $resultContent.innerHTML = str;
-          });
-          proceedsearch();
-        }
-      });}
+  
 
-    // handle and trigger popup window;
-    $('.popup-trigger').click(function(e) {
-      e.stopPropagation();
-      if (isfetched == false) {
-        searchFunc(path, 'local-search-input', 'local-search-result');
-      } else {
-        proceedsearch();
-      };
-    });
 
-    $('.popup-btn-close').click(function(e){
-      $('.popup').hide();
-      $(".local-search-pop-overlay").remove();
-      $('body').css('overflow', '');
-    });
-    $('.popup').click(function(e){
-      e.stopPropagation();
-    });
-  </script>
+  <script src="/TECH/js/src/utils.js?v=6.7.0"></script>
 
+  <script src="/TECH/js/src/motion.js?v=6.7.0"></script>
+
+
+
+  
+  
+
+
+  <script src="/TECH/js/src/schemes/muse.js?v=6.7.0"></script>
+
+
+
+
+  
+  <script src="/TECH/js/src/scrollspy.js?v=6.7.0"></script>
+<script src="/TECH/js/src/post-details.js?v=6.7.0"></script>
+
+
+
+  
+
+
+  <script src="/TECH/js/src/bootstrap.js?v=6.7.0"></script>
+
+
+
+  
+  
+
+<script src="//cdn1.lncld.net/static/js/3.11.1/av-min.js"></script>
+
+
+
+<script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+
+<script>
+  var GUEST = ['nick', 'mail', 'link'];
+  var guest = 'nick,mail,link';
+  guest = guest.split(',').filter(function(item) {
+    return GUEST.indexOf(item) > -1;
+  });
+  new Valine({
+    el: '#comments',
+    verify: false,
+    notify: false,
+    appId: 'GzQbCxnzte3uEVbJ0bMTc2Kl-gzGzoHsz',
+    appKey: 'kycA8uL7d93nmuj2NP1bJ4yf',
+    placeholder: 'ヾﾉ≧∀≦)o 给博主留个言呗~',
+    avatar: 'mm',
+    meta: guest,
+    pageSize: '10' || 10,
+    visitor: false
+  });
+</script>
 
 
 
 
   
 
+
   
-  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
-  <script>AV.initialize("cTAOGJvwpiIkJufS2JmsnjMf-gzGzoHsz", "pYWSupIvureEPupAE8VAv3AR");</script>
-  <script>
-    function showTime(Counter) {
-      var query = new AV.Query(Counter);
-      var entries = [];
-      var $visitors = $(".leancloud_visitors");
 
-      $visitors.each(function () {
-        entries.push( $(this).attr("id").trim() );
-      });
 
-      query.containedIn('url', entries);
-      query.find()
-        .done(function (results) {
-          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
-
-          if (results.length === 0) {
-            $visitors.find(COUNT_CONTAINER_REF).text(0);
-            return;
-          }
-
-          for (var i = 0; i < results.length; i++) {
-            var item = results[i];
-            var url = item.get('url');
-            var time = item.get('time');
-            var element = document.getElementById(url);
-
-            $(element).find(COUNT_CONTAINER_REF).text(time);
-          }
-          for(var i = 0; i < entries.length; i++) {
-            var url = entries[i];
-            var element = document.getElementById(url);
-            var countSpan = $(element).find(COUNT_CONTAINER_REF);
-            if( countSpan.text() == '') {
-              countSpan.text(0);
-            }
-          }
-        })
-        .fail(function (object, error) {
-          console.log("Error: " + error.code + " " + error.message);
-        });
-    }
-
-    function addCount(Counter) {
-      var $visitors = $(".leancloud_visitors");
-      var url = $visitors.attr('id').trim();
-      var title = $visitors.attr('data-flag-title').trim();
-      var query = new AV.Query(Counter);
-
-      query.equalTo("url", url);
-      query.find({
-        success: function(results) {
-          if (results.length > 0) {
-            var counter = results[0];
-            counter.fetchWhenSave(true);
-            counter.increment("time");
-            counter.save(null, {
-              success: function(counter) {
-                var $element = $(document.getElementById(url));
-                $element.find('.leancloud-visitors-count').text(counter.get('time'));
-              },
-              error: function(counter, error) {
-                console.log('Failed to save Visitor num, with error message: ' + error.message);
-              }
-            });
-          } else {
-            var newcounter = new Counter();
-            /* Set ACL */
-            var acl = new AV.ACL();
-            acl.setPublicReadAccess(true);
-            acl.setPublicWriteAccess(true);
-            newcounter.setACL(acl);
-            /* End Set ACL */
-            newcounter.set("title", title);
-            newcounter.set("url", url);
-            newcounter.set("time", 1);
-            newcounter.save(null, {
-              success: function(newcounter) {
-                var $element = $(document.getElementById(url));
-                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
-              },
-              error: function(newcounter, error) {
-                console.log('Failed to create');
-              }
-            });
-          }
-        },
-        error: function(error) {
-          console.log('Error:' + error.code + " " + error.message);
-        }
-      });
-    }
-
-    $(function() {
-      var Counter = AV.Object.extend("Counter");
-      if ($('.leancloud_visitors').length == 1) {
-        addCount(Counter);
-      } else if ($('.post-title-link').length > 1) {
-        showTime(Counter);
-      }
-    });
-  </script>
 
 
 
@@ -1243,8 +1128,28 @@
 
   
 
-  <script type="text/javascript" src="/lib/clipboard/clipboard.js"></script>
-<script type="text/javascript" src="/js/src/copycode.js"></script>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+  <script src="/TECH/js/src/js.cookie.js?v=6.7.0"></script>
+  <script src="/TECH/js/src/scroll-cookie.js?v=6.7.0"></script>
+
+
+  
+
+  
+
+  
+
+  
 
 </body>
 </html>

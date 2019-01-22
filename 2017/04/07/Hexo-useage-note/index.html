@@ -1,4 +1,13 @@
-<!doctype html>
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
 
 
 
@@ -8,31 +17,35 @@
 <html class="theme-next mist use-motion" lang="zh-Hans">
 <head>
   <meta charset="UTF-8"/>
-<meta http-equiv="X-UA-Compatible" content="IE=edge" />
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
-
-
-
-<meta http-equiv="Cache-Control" content="no-transform" />
-<meta http-equiv="Cache-Control" content="no-siteapp" />
-
-
-
-
-
-
-
-
-
-
-
+<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2"/>
+<meta name="theme-color" content="#222"/>
 
 
 
 
   
   
-  <link href="/TECH/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+    
+    
+  <script src="/TECH/lib/pace/pace.min.js?v=1.0.2"></script>
+  <link rel="stylesheet" href="/TECH/lib/pace/pace-theme-flash.min.css?v=1.0.2"/>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -58,7 +71,7 @@
   
     
     
-    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext"/>
   
 
 
@@ -66,30 +79,57 @@
 
 
 
-<link href="/TECH/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+<link rel="stylesheet" href="/TECH/lib/font-awesome/css/font-awesome.min.css?v=4.6.2"/>
 
-<link href="/TECH/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
-
-
-  <meta name="keywords" content="hexo使用," />
+<link rel="stylesheet" href="/TECH/css/main.css?v=6.7.0"/>
 
 
+  <link rel="apple-touch-icon" sizes="180x180" href="/TECH/images/favicon.ico?v=6.7.0">
 
 
-
-  <link rel="alternate" href="/TECH/atom.xml" title="KobeLuo的技术笔记" type="application/atom+xml" />
-
+  <link rel="icon" type="image/png" sizes="32x32" href="/TECH/images/favicon.ico?v=6.7.0">
 
 
+  <link rel="icon" type="image/png" sizes="16x16" href="/TECH/images/favicon.ico?v=6.7.0">
 
-  <link rel="shortcut icon" type="image/x-icon" href="/TECH/images/favicon.ico?v=5.1.0" />
+
+  <link rel="mask-icon" href="/TECH/images/favicon.ico?v=6.7.0" color="#222">
 
 
 
 
 
 
-<meta name="description" content="博主使用过博客站点有简书、CSDN、博客园、都不同程度的遇到了各种不顺心，MarkDown使用起来也不是特别方便，决定使用GitPages+Hexo来实现编写博客，在完成完成Hexo配置的过程中，踩了不少坑，决定记录下来供大家参考。 个人博客站点:KobeLuo的博客">
+
+<script id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/TECH/',
+    scheme: 'Mist',
+    version: '6.7.0',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":true,"scrollpercent":true,"onmobile":true},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="博主使用过博客站点有简书、CSDN、博客园、都不同程度的遇到了各种不顺心，MarkDown使用起来也不是特别方便，决定使用GitPages+Hexo来实现编写博客，在完成完成Hexo配置的过程中，踩了不少坑，决定记录下来供大家参考。 个人博客站点:KobeLuo的博客">
 <meta name="keywords" content="hexo使用">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Hexo使用笔记">
@@ -104,27 +144,8 @@
 
 
 
-<script type="text/javascript" id="hexo.configurations">
-  var NexT = window.NexT || {};
-  var CONFIG = {
-    root: '/TECH/',
-    scheme: 'Mist',
-    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":true,"scrollpercent":true},
-    fancybox: true,
-    motion: true,
-    duoshuo: {
-      userId: '0',
-      author: '博主'
-    },
-    algolia: {
-      applicationID: '',
-      apiKey: '',
-      indexName: '',
-      hits: {"per_page":10},
-      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
-    }
-  };
-</script>
+  <link rel="alternate" href="/TECH/atom.xml" title="KobeLuo的技术笔记" type="application/atom+xml"/>
+
 
 
 
@@ -132,57 +153,85 @@
 
 
 
+<script id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>Hexo使用笔记 | KobeLuo的技术笔记</title>
+  
 
 
-  <title> Hexo使用笔记 | KobeLuo的技术笔记 </title>
+
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .motion-element,
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-title { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
 
   
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  
   
     
   
 
-  <div class="container sidebar-position-left page-post-detail ">
+  <div class="container sidebar-position-left page-post-detail">
     <div class="headband"></div>
-
-    <a href="https://github.com/KobeLuo/TECH"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_green_007200.png" alt="Fork me on GitHub"></a>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
       <div class="header-inner"><div class="site-brand-wrapper">
-  <div class="site-meta ">
+  <div class="site-meta">
     
 
     <div class="custom-logo-site-title">
-      <a href="/TECH/"  class="brand" rel="start">
+      <a href="/TECH/" class="brand" rel="start">
         <span class="logo-line-before"><i></i></span>
         <span class="site-title">KobeLuo的技术笔记</span>
         <span class="logo-line-after"><i></i></span>
       </a>
     </div>
+    
       
         <p class="site-subtitle">不完美源自对完美的追求</p>
       
+    
+    
   </div>
 
   <div class="site-nav-toggle">
-    <button>
+    <button aria-label="Toggle navigation bar">
       <span class="btn-bar"></span>
       <span class="btn-bar"></span>
       <span class="btn-bar"></span>
@@ -190,112 +239,137 @@
   </div>
 </div>
 
-<nav class="site-nav">
-  
 
+
+<nav class="site-nav">
   
     <ul id="menu" class="menu">
       
         
-        <li class="menu-item menu-item-home">
-          <a href="/TECH/" rel="section">
-            
-              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
-            
-            首页
-          </a>
-        </li>
-      
         
-        <li class="menu-item menu-item-archives">
-          <a href="/TECH/archives" rel="section">
-            
-              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
-            
-            归档
-          </a>
-        </li>
-      
         
-        <li class="menu-item menu-item-categories">
-          <a href="/TECH/categories" rel="section">
-            
-              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
-            
-            分类
-          </a>
-        </li>
+          
+          <li class="menu-item menu-item-home">
+
+    
+    
+    
       
+    
+
+    
+      
+    
+
+    <a href="/TECH/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br/>Home</a>
+
+  </li>
         
-        <li class="menu-item menu-item-tags">
-          <a href="/TECH/tags" rel="section">
-            
-              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
-            
-            标签
-          </a>
-        </li>
-      
         
-        <li class="menu-item menu-item-about">
-          <a href="/TECH/about" rel="section">
-            
-              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
-            
-            关于作者
-          </a>
-        </li>
+        
+          
+          <li class="menu-item menu-item-archives">
+
+    
+    
+    
       
+    
+
+    
+      
+    
+
+    <a href="/TECH/archives" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br/>Archives<span class="badge">18</span></a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+
+    
+    
+    
+      
+    
+
+    
+      
+    
+
+    <a href="/TECH/categories" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br/>Categories<span class="badge">4</span></a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tags">
+
+    
+    
+    
+      
+    
+
+    
+      
+    
+
+    <a href="/TECH/tags" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br/>Tags<span class="badge">52</span></a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-about">
+
+    
+    
+    
+      
+    
+
+    
+      
+    
+
+    <a href="/TECH/about" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br/>About</a>
+
+  </li>
 
       
-        <li class="menu-item menu-item-search">
-          
-            <a href="javascript:;" class="popup-trigger">
-          
-            
-              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
-            
-            搜索
-          </a>
-        </li>
       
     </ul>
   
 
   
-    <div class="site-search">
-      
-  <div class="popup search-popup local-search-popup">
-  <div class="local-search-header clearfix">
-    <span class="search-icon">
-      <i class="fa fa-search"></i>
-    </span>
-    <span class="popup-btn-close">
-      <i class="fa fa-times-circle"></i>
-    </span>
-    <div class="local-search-input-wrapper">
-      <input autocapitalize="off" autocomplete="off" autocorrect="off"
-             placeholder="搜索..." spellcheck="false"
-             type="text" id="local-search-input">
-    </div>
-  </div>
-  <div id="local-search-result"></div>
-</div>
+    
 
+  
 
-
-    </div>
   
 </nav>
 
 
 
- </div>
+  
+
+
+
+</div>
     </header>
+
+    
+
 
     <main id="main" class="main">
       <div class="main-inner">
         <div class="content-wrap">
+          
           <div id="content" class="content">
             
 
@@ -308,17 +382,23 @@
   
   
 
-  <article class="post post-type-categories " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://kobeluo.com/TECH/2017/04/07/Hexo-useage-note/">
+  
+
+  <article class="post post-type-categories" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://kobeluo.com/TECH/2017/04/07/Hexo-useage-note/"/>
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="KOBE LUO">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/TECH/images/avatar.jpeg">
+      <meta itemprop="name" content="KOBE LUO"/>
+      <meta itemprop="description" content="一个iOS和Mac OS开发的技术渣"/>
+      <meta itemprop="image" content="/TECH/images/avatar.jpeg"/>
     </span>
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="KobeLuo的技术笔记">
+      <meta itemprop="name" content="KobeLuo的技术笔记"/>
     </span>
 
     
@@ -326,11 +406,8 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                Hexo使用笔记
+          <h1 class="post-title" itemprop="name headline">Hexo使用笔记
+
               
             
           </h1>
@@ -338,37 +415,47 @@
 
         <div class="post-meta">
           <span class="post-time">
+
+            
+            
+            
+
             
               <span class="post-meta-item-icon">
                 <i class="fa fa-calendar-o"></i>
               </span>
               
-                <span class="post-meta-item-text">发表于</span>
+                <span class="post-meta-item-text">Posted on</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-04-07T21:20:19+08:00">
-                2017-04-07
-              </time>
+
+              
+                
+              
+
+              <time title="Created: 2017-04-07 21:20:19" itemprop="dateCreated datePublished" datetime="2017-04-07T21:20:19+08:00">2017-04-07</time>
             
 
             
-              <span class="post-meta-divider">|</span>
-            
+              
 
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-check-o"></i>
-              </span>
               
-                <span class="post-meta-item-text">更新于</span>
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">Edited on</span>
+                
+                <time title="Modified: 2018-12-03 18:05:13" itemprop="dateModified" datetime="2018-12-03T18:05:13+08:00">2018-12-03</time>
               
-              <time title="更新于" itemprop="dateModified" datetime="2018-12-03T18:05:13+08:00">
-                2018-12-03
-              </time>
             
           </span>
 
           
-            <span class="post-category" >
+            <span class="post-category">
             
               <span class="post-meta-divider">|</span>
             
@@ -376,14 +463,10 @@
                 <i class="fa fa-folder-o"></i>
               </span>
               
-                <span class="post-meta-item-text">分类于</span>
+                <span class="post-meta-item-text">In</span>
               
               
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/TECH/categories/Hexo/" itemprop="url" rel="index">
-                    <span itemprop="name">Hexo</span>
-                  </a>
-                </span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/TECH/categories/Hexo/" itemprop="url" rel="index"><span itemprop="name">Hexo</span></a></span>
 
                 
                 
@@ -393,14 +476,16 @@
 
           
             
+            
+              
               <span class="post-comments-count">
                 <span class="post-meta-divider">|</span>
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
+            
                 <a href="/TECH/2017/04/07/Hexo-useage-note/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count disqus-comment-count"
-                        data-disqus-identifier="2017/04/07/Hexo-useage-note/" itemprop="commentCount"></span>
+                  <span class="post-meta-item-text">Comments: </span> <span class="post-comments-count valine-comment-count" data-xid="/TECH/2017/04/07/Hexo-useage-note/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -408,50 +493,9 @@
 
           
           
-             <span id="/TECH/2017/04/07/Hexo-useage-note/" class="leancloud_visitors" data-flag-title="Hexo使用笔记">
-               <span class="post-meta-divider">|</span>
-               <span class="post-meta-item-icon">
-                 <i class="fa fa-eye"></i>
-               </span>
-               
-                 <span class="post-meta-item-text">阅读次数 </span>
-               
-                 <span class="leancloud-visitors-count"></span>
-             </span>
-          
 
           
 
-          
-            <div class="post-wordcount">
-              
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-file-word-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">字数统计</span>
-                
-                <span title="字数统计">
-                  2k
-                </span>
-              
-
-              
-                <span class="post-meta-divider">|</span>
-              
-
-              
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-clock-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">阅读时长</span>
-                
-                <span title="阅读时长">
-                  7
-                </span>
-              
-            </div>
           
 
           
@@ -460,7 +504,9 @@
       </header>
     
 
-
+    
+    
+    
     <div class="post-body" itemprop="articleBody">
 
       
@@ -472,11 +518,13 @@
 </blockquote>
 <a id="more"></a>
 <h3 id="有关Github仓库"><a href="#有关Github仓库" class="headerlink" title="有关Github仓库"></a>有关<a href="https://github.com/" target="_blank" rel="noopener">Github</a>仓库</h3><hr>
-<h4 id="创建一个Github账号，添加一个Repository"><a href="#创建一个Github账号，添加一个Repository" class="headerlink" title="创建一个Github账号，添加一个Repository"></a>创建一个Github账号，添加一个Repository</h4><div class="note danger"><p><strong>注意： 如果想要使用username.github.io这种方式访问你的博客站点，<br>Repository的名字一定要与用户名username相同</strong>(username/username.github.io)<br>仓库名创建之后一定像这样:KobeLuo/KobeLuo.github.io      </p>
-</div>
+<h4 id="创建一个Github账号，添加一个Repository"><a href="#创建一个Github账号，添加一个Repository" class="headerlink" title="创建一个Github账号，添加一个Repository"></a>创建一个Github账号，添加一个Repository</h4><div class="note danger">
+            <p><strong>注意： 如果想要使用username.github.io这种方式访问你的博客站点，<br>Repository的名字一定要与用户名username相同</strong>(username/username.github.io)<br>仓库名创建之后一定像这样:KobeLuo/KobeLuo.github.io      </p>
+          </div>
 <p>博主曾经在这里踩过坑，导致博客站点报404，一直无法访问</p>
-<h4 id="git分支与关系"><a href="#git分支与关系" class="headerlink" title="git分支与关系"></a><a href="https://help.github.com/articles/configuring-a-publishing-source-for-github-pages/" target="_blank" rel="noopener">git分支与关系</a></h4><p>首先理解一个原理:<br><div class="note info"><p>github仓库下至少需要两个分支,这里我们假设为branch1和branch2，<br>如果branch1作为最后静态页面的发布分支，那么branch2就可以作为平时创作的源代码托管分支.<br>branch1不需要你通过git命令push代码，需要通过使用<code>hexo d</code>命令发布到该分支上，前提是本地_config.yml文件已经配置正确，关于本地配置后面会提到<br>branch2是平时写博客过程中，需要使用git命令push源代码的分支,当然你也可以创建更多的源代码托管分支。</p>
-</div></p>
+<h4 id="git分支与关系"><a href="#git分支与关系" class="headerlink" title="git分支与关系"></a><a href="https://help.github.com/articles/configuring-a-publishing-source-for-github-pages/" target="_blank" rel="noopener">git分支与关系</a></h4><p>首先理解一个原理:<br><div class="note info">
+            <p>github仓库下至少需要两个分支,这里我们假设为branch1和branch2，<br>如果branch1作为最后静态页面的发布分支，那么branch2就可以作为平时创作的源代码托管分支.<br>branch1不需要你通过git命令push代码，需要通过使用<code>hexo d</code>命令发布到该分支上，前提是本地_config.yml文件已经配置正确，关于本地配置后面会提到<br>branch2是平时写博客过程中，需要使用git命令push源代码的分支,当然你也可以创建更多的源代码托管分支。</p>
+          </div></p>
 <p>通常情况下建的博客站点都是在username.github.io这一层，GitPages会默认master作为hexo的发布分支(上面提到的branch1)，此时settings-&gt;Gitpages-&gt;Source下的branch是不可选择的，在这种情况下，开发分支就必须要使用其它的分支(比如develop分支或其他分支)来存储Hexo主题下的源代码。</p>
 <p>如果你的博客站点不是以username.github.io，那么需要按照<a href="https://help.github.com/articles/configuring-a-publishing-source-for-github-pages/" target="_blank" rel="noopener"><strong>git发布配置规范</strong></a>配置站点，此时settings-&gt;GitPages-&gt;Source可以选择，通常情况下会有master、gh-pages和/docs供你选择，选择好静态页面的发布分支后,再考虑源代码托管到哪个分支上面。</p>
 <p><span id="jump"> </span></p>
@@ -484,8 +532,9 @@
 <p>Enter file in which to save the key (/Users/name/.ssh/id_rsa):<strong><code>在此输入id_rsa的名字:id_rsa_name</code></strong><br>例如:id_rsa_person or id_rsa_company,如果只需要管理一个SSHKey,直接回车会默认生成id_rsa为名的SSHKey<br>配置了名字，后面一路回车<br>结束后，.ssh文件夹里边会包括id_rsa_name、id_rsa_name.pub两个文件，复制id_rsa_pub的内容拷贝到github设置的SSHKey选项中即可完成配置。</p>
 <h4 id="多账号管理"><a href="#多账号管理" class="headerlink" title="多账号管理:"></a>多账号管理:</h4><p>如果你有多个Github账号，由于Github账号SSHKey的唯一性，就必须生成多个SSHKey，多个SSHKey只要生成的时候指定的名字不一样即可，假设你生成了两个rsa名为id_rsa_name1和id_rsa_name2,<br>那么你需要在.ssh目录里边创建一个名为<code>config</code>的文件，里边的配置信息如下:</p>
 <figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">Host kobe_old <span class="comment">//所有使用id_rsa_kobe_old.pub作为公钥的github链接中的github.com需要换成kobe_old</span></span><br><span class="line">HostName 			github.com					</span><br><span class="line">User				git</span><br><span class="line">IdentityFile		~/.ssh/id_rsa_kobe_old</span><br><span class="line"></span><br><span class="line">Host kobe_new <span class="comment">//所有使用id_rsa_kobe_new.pub作为公钥的github链接中的github.com需要换成kobe_new</span></span><br><span class="line">HostName 			github.com				</span><br><span class="line">User				git</span><br><span class="line">IdentityFile		~/.ssh/id_rsa_kobe_new </span><br></pre></td></tr></table></figure>
-<div class="note info"><p>从远程clone一个仓库时，例如<a href="https://github.com:KobeLuo/Kobeluo.github.io/" target="_blank" rel="noopener">https://github.com:KobeLuo/Kobeluo.github.io/</a><br>当有多个SSHKey时，<code>需要将github.io改成kobe_new</code>如果该账号使用kobe_new对应的SSHKey<br>更改后的远程地址是<a href="https://kobe_new:KobeLuo/Kobeluo.github.io/" target="_blank" rel="noopener">https://kobe_new:KobeLuo/Kobeluo.github.io/</a></p>
-</div>
+<div class="note info">
+            <p>从远程clone一个仓库时，例如<a href="https://github.com:KobeLuo/Kobeluo.github.io/" target="_blank" rel="noopener">https://github.com:KobeLuo/Kobeluo.github.io/</a><br>当有多个SSHKey时，<code>需要将github.io改成kobe_new</code>如果该账号使用kobe_new对应的SSHKey<br>更改后的远程地址是<a href="https://kobe_new:KobeLuo/Kobeluo.github.io/" target="_blank" rel="noopener">https://kobe_new:KobeLuo/Kobeluo.github.io/</a></p>
+          </div>
 <p>最后使用<code>ssh-add</code>命令将你生成的rsa加入到keychain中,有时候push代码时会报Permission Error,如果你rsa配置正常，也需要执行一下命令:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ ssh-add -K ~/.ssh/id_rsa_your_name</span><br></pre></td></tr></table></figure></p>
 <h4 id="绑定你的独立域名"><a href="#绑定你的独立域名" class="headerlink" title="绑定你的独立域名"></a>绑定你的独立域名</h4><p>Github提供gitpages服务可以生成独立二级域名，如非必要，你大可不必自己购买独立域名，如果你购买了自己的域名，就按照以下步骤做:</p>
 <ul>
@@ -502,10 +551,12 @@
 <figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">hexo new <span class="string">"article"</span></span><br><span class="line"><span class="comment">//创建一篇新文章</span></span><br><span class="line">hexo new page <span class="string">"foldername"</span></span><br><span class="line"><span class="comment">//创建一个新页面</span></span><br><span class="line">hexo g  (hexo generate)</span><br><span class="line"><span class="comment">//生成静态页面</span></span><br><span class="line">hexo s  (hexo server) ,如果报错就执行代码 </span><br><span class="line"><span class="comment">//链接本地服务器</span></span><br><span class="line">hexo d  (hexo deploy)</span><br><span class="line"><span class="comment">//发布到指定服务器</span></span><br><span class="line">hexo clean <span class="comment">//清理静态页面站点，博主使用过一次，会把git配置和hexo搞乱，慎用。</span></span><br><span class="line"></span><br><span class="line">npm install --save hexo-filter-flowchart </span><br><span class="line"><span class="comment">//画流程图的[插件](https://github.com/bubkoo/hexo-filter-flowchart)</span></span><br></pre></td></tr></table></figure>
 <p>执行hexo s可能会报错，如果报错则执行以下命令：<br><figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install hexo-server --save</span><br></pre></td></tr></table></figure></p>
 <h4 id="hexo站点配置"><a href="#hexo站点配置" class="headerlink" title="hexo站点配置"></a>hexo站点配置</h4><p>hexo根目录下的<code>_config.yml</code>就是站点配置文件，使用编辑软件打开,搜索<code>deploy:</code>,<br><figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">deploy:</span><br><span class="line">	type: git</span><br><span class="line">	repo: your.blog.site(like:xxx.github.io)</span><br><span class="line">	branch: gh-pages or master or docs</span><br></pre></td></tr></table></figure></p>
-<div class="note info"><p>填写_config.yml配置文件里边的值前都需要添加一个空格，<br>例如 <code>type: git</code> 注意中间有一个空格</p>
-</div>
-<p>配置好这一项后，使用<code>Hexo d</code>就可以把代码deploy到远程仓库了<br><div class="note warnning"><p>如果你的Github站点不是以github.io结束的，需要配置<code>root:</code>字段，例如，我的技术博客地址是kobeluo.github.io/TECH/ , 那么root:配置就是 <strong><code>/TECH/</code></strong>,否则github无法连接CSS和JS</p>
-</div></p>
+<div class="note info">
+            <p>填写_config.yml配置文件里边的值前都需要添加一个空格，<br>例如 <code>type: git</code> 注意中间有一个空格</p>
+          </div>
+<p>配置好这一项后，使用<code>Hexo d</code>就可以把代码deploy到远程仓库了<br><div class="note warnning">
+            <p>如果你的Github站点不是以github.io结束的，需要配置<code>root:</code>字段，例如，我的技术博客地址是kobeluo.github.io/TECH/ , 那么root:配置就是 <strong><code>/TECH/</code></strong>,否则github无法连接CSS和JS</p>
+          </div></p>
 <h3 id="2018-10-12日更新"><a href="#2018-10-12日更新" class="headerlink" title=" 2018.10.12日更新"></a><center> 2018.10.12日更新</center></h3><hr>
 <p>由于自己懒惰，博客已经停更一年多了，近日再次捡起博客，发现Hexo已经有一些变化，记载于此。<br>首先hexo不再像以前一样安装之后就可以直接使用, <a href="http://coderunthings.com/2017/08/20/howhexoworks/" target="_blank" rel="noopener">hexo是怎么工作的</a>,这篇文章说得非常清楚了。</p>
 <h4 id="关于hexo"><a href="#关于hexo" class="headerlink" title="关于hexo"></a>关于hexo</h4><p>hexo分为三个分支：</p>
@@ -541,94 +592,39 @@
 <ul>
 <li><a href="https://www.jianshu.com/p/9a56f7c13a79" target="_blank" rel="noopener">https://www.jianshu.com/p/9a56f7c13a79</a>     </li>
 </ul>
-<div class="note info"><p><strong>特别鸣谢:</strong><br>建站过程中，<a href="http://liuhongjiang.github.io/hexotech/" target="_blank" rel="noopener"><strong>Andrew Liu</strong></a>提供了非常多的帮助，再次感谢！.</p>
-</div>
+<div class="note info">
+            <p><strong>特别鸣谢:</strong><br>建站过程中，<a href="http://liuhongjiang.github.io/hexotech/" target="_blank" rel="noopener"><strong>Andrew Liu</strong></a>提供了非常多的帮助，再次感谢！.</p>
+          </div>
 
       
     </div>
 
-    <div>
-      
-        
-
-      
-    </div>
-
-    <div>
-          
-          <div>
     
-        <div style="text-align:center;color: #ccc;font-size:14px;">------ 文章结束 ------</div>
+
     
-</div>
-          
-    </div>
     
-    <div>
-      
-        
-  <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
-    <div>坚持原创技术分享，您的支持将鼓励我继续创作！</div>
-    <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
-      <span>赏</span>
-    </button>
-    <div id="QR" style="display: none;">
-      
-        <div id="wechat" style="display: inline-block">
-          <img id="wechat_qr" src="https://wx2.sinaimg.cn/mw690/006AZU4wgy1fw6n5xbgnmj30og0zktaf.jpg" alt="KOBE LUO WeChat Pay"/>
-          <p>微信打赏</p>
-        </div>
-      
-      
-        <div id="alipay" style="display: inline-block">
-          <img id="alipay_qr" src="https://wx4.sinaimg.cn/mw690/006AZU4wgy1fw6n5w7j3kj30go0p0wfj.jpg" alt="KOBE LUO Alipay"/>
-          <p>支付宝打赏</p>
-        </div>
-      
-    </div>
-  </div>
+    
 
+    
 
+    
       
-    </div>
+    
+    
 
-    <div>
-      
-        
-  <ul class="post-copyright">
-    <li class="post-copyright-author">
-      <strong>本文作者：</strong>
-      KOBE LUO
-    </li>
-    <li class="post-copyright-title">
-      <strong>本文标题：</strong>
-      Hexo使用笔记
-    </li>
-    <li class="post-copyright-link">
-      <strong>本文链接：</strong>
-      <a href="http://www.kobeluo.com/TECH/2017/04/07/Hexo-useage-note/" title="Hexo使用笔记">http://www.kobeluo.com/TECH/2017/04/07/Hexo-useage-note/</a>
-    </li>
-    <li class="post-copyright-license">
-      <strong>版权声明： </strong>
-      本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 3.0</a> 许可协议。转载请注明出处！
-    </li>
-  </ul>
-
-
-      
-    </div>
+    
 
     <footer class="post-footer">
       
         <div class="post-tags">
           
-            <a href="/TECH/tags/hexo使用/" rel="tag"><i class="fa fa-tag"></i>hexo使用</a>
+            <a href="/TECH/tags/hexo使用/" rel="tag"># hexo使用</a>
           
         </div>
       
 
       
-        
+      
       
 
       
@@ -656,31 +652,25 @@
       
       
     </footer>
+  </div>
+  
+  
+  
   </article>
 
 
-
-    <div class="post-spread">
-      
-    </div>
   </div>
 
 
           </div>
           
 
+  
+    <div class="comments" id="comments">
+    </div>
 
-          
-  <div class="comments" id="comments">
-    
-      <div id="disqus_thread">
-        <noscript>
-          Please enable JavaScript to view the
-          <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a>
-        </noscript>
-      </div>
-    
-  </div>
+  
+
 
 
         </div>
@@ -696,126 +686,258 @@
   </div>
 
   <aside id="sidebar" class="sidebar">
+    
+      <div id="sidebar-dimmer"></div>
+    
     <div class="sidebar-inner">
 
       
 
       
         <ul class="sidebar-nav motion-element">
-          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
-            文章目录
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
           </li>
-          <li class="sidebar-nav-overview" data-target="site-overview">
-            站点概览
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
           </li>
         </ul>
       
 
-      <section class="site-overview sidebar-panel">
-        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
-          <img class="site-author-image" itemprop="image"
-               src="/TECH/images/avatar.jpeg"
-               alt="KOBE LUO" />
-          <p class="site-author-name" itemprop="name">KOBE LUO</p>
-           
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/TECH/images/avatar.jpeg"
+                alt="KOBE LUO"/>
+            
+              <p class="site-author-name" itemprop="name">KOBE LUO</p>
               <p class="site-description motion-element" itemprop="description">一个iOS和Mac OS开发的技术渣</p>
-          
-        </div>
-        <nav class="site-state motion-element">
-
-          
-            <div class="site-state-item site-state-posts">
-              <a href="/TECH/archives"> 
-              <!-- <a href="/archives">-->
-                <span class="site-state-item-count">18</span>
-                <span class="site-state-item-name">日志</span>
-              </a>
-            </div>
-          
-
-          
-            <div class="site-state-item site-state-categories">
-              <a href="/TECH/categories">
-              <!-- <a href="/categories"> -->
-                <span class="site-state-item-count">4</span>
-                <span class="site-state-item-name">分类</span>
-              </a>
-              <!-- </a> -->
-            </div>
-          
-
-          
-            <div class="site-state-item site-state-tags">
-              <a href="/TECH/tags">
-              <!-- <a href="/tags"> -->
-                <span class="site-state-item-count">52</span>
-                <span class="site-state-item-name">标签</span>
-              </a>
-              <!-- </a> -->
-            </div>
-          
-        </nav>
-
-        
-          <div class="feed-link motion-element">
-            <a href="/TECH/atom.xml" rel="alternate">
-              <i class="fa fa-rss"></i>
-              RSS
-            </a>
           </div>
-        
 
-        <div class="links-of-author motion-element">
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/TECH/archives">
+                
+                    <span class="site-state-item-count">18</span>
+                    <span class="site-state-item-name">posts</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  <a href="/TECH/categories/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">4</span>
+                    <span class="site-state-item-name">categories</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  <a href="/TECH/tags/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">52</span>
+                    <span class="site-state-item-name">tags</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+            <div class="feed-link motion-element">
+              <a href="/TECH/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="https://github.com/KobeLuo" title="GitHub &rarr; https://github.com/KobeLuo" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="http://douban.com" title="豆瓣 &rarr; http://douban.com" rel="noopener" target="_blank"><i class="fa fa-fw fa-zhihu"></i>豆瓣</a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="http://www.zhihu.com" title="知乎 &rarr; http://www.zhihu.com" rel="noopener" target="_blank"><i class="fa fa-fw fa-weibo"></i>知乎</a>
+                </span>
+              
+            </div>
+          
+
+          
+
+          
+          
+
           
             
-              <span class="links-of-author-item">
-                <a href="https://github.com/KobeLuo" target="_blank" title="GitHub">
-                  
-                    <i class="fa fa-fw fa-github"></i>
-                  
-                  GitHub
-                </a>
-              </span>
-            
-              <span class="links-of-author-item">
-                <a href="http://douban.com" target="_blank" title="豆瓣">
-                  
-                    <i class="fa fa-fw fa-globe"></i>
-                  
-                  豆瓣
-                </a>
-              </span>
-            
-              <span class="links-of-author-item">
-                <a href="http://www.zhihu.com" target="_blank" title="知乎">
-                  
-                    <i class="fa fa-fw fa-globe"></i>
-                  
-                  知乎
-                </a>
-              </span>
-            
           
+          
+
         </div>
-
-        
-        
-
-        
-        
-
-        
-
-
-      </section>
+      </div>
 
       
       <!--noindex-->
-        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
           <div class="post-toc">
 
             
-              
+            
+            
             
 
             
@@ -823,7 +945,7 @@
             
 
           </div>
-        </section>
+        </div>
       <!--/noindex-->
       
 
@@ -846,30 +968,39 @@
 
     <footer id="footer" class="footer">
       <div class="footer-inner">
-        <div class="copyright" >
-  
-  &copy;  2015 - 
-  <span itemprop="copyrightYear">2019</span>
-  <span class="with-love">
-    <i class="fa fa-heart"></i>
+        <div class="copyright">&copy; 2015 – <span itemprop="copyrightYear">2019</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
   </span>
-  <span class="author" itemprop="copyrightHolder">KOBE LUO</span>
+  <span class="author" itemprop="copyrightHolder">true</span>
+
+  
+
+  
 </div>
 
 
-<div class="powered-by">
-  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 驱动
-</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> v3.7.1</div>
 
-<div class="theme-info">
-  主题 -
-  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
-    NexT.Mist
-  </a>
-</div>
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a> v6.7.0</div>
+
+
 
 
         
+
+
+
+
+
+
+
 
         
       </div>
@@ -877,11 +1008,16 @@
 
     
 
+    
+
+    
+
+    
   </div>
 
   
 
-<script type="text/javascript">
+<script>
   if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
     window.Promise = null;
   }
@@ -895,104 +1031,17 @@
 
 
 
-  
 
 
 
 
 
 
-  
-  <script type="text/javascript" src="/TECH/lib/jquery/index.js?v=2.1.3"></script>
-
-  
-  <script type="text/javascript" src="/TECH/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
-
-  
-  <script type="text/javascript" src="/TECH/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
-
-  
-  <script type="text/javascript" src="/TECH/lib/velocity/velocity.min.js?v=1.2.1"></script>
-
-  
-  <script type="text/javascript" src="/TECH/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
-
-  
-  <script type="text/javascript" src="/TECH/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
-
-
-  
-
-
-  <script type="text/javascript" src="/TECH/js/src/utils.js?v=5.1.0"></script>
-
-  <script type="text/javascript" src="/TECH/js/src/motion.js?v=5.1.0"></script>
-
-
-
-  
-  
-
-  
-  <script type="text/javascript" src="/TECH/js/src/scrollspy.js?v=5.1.0"></script>
-<script type="text/javascript" src="/TECH/js/src/post-details.js?v=5.1.0"></script>
-
-
-
-  
-
-
-  <script type="text/javascript" src="/TECH/js/src/bootstrap.js?v=5.1.0"></script>
-
-
-
-  
-
-
-  
-
-    
-      <script id="dsq-count-scr" src="https://.disqus.com/count.js" async></script>
-    
-
-    
-      <script type="text/javascript">
-        var disqus_config = function () {
-          this.page.url = 'http://kobeluo.com/2017/04/07/Hexo-useage-note/';
-          this.page.identifier = '2017/04/07/Hexo-useage-note/';
-          this.page.title = 'Hexo使用笔记';
-        };
-        var d = document, s = d.createElement('script');
-        s.src = 'https://.disqus.com/embed.js';
-        s.setAttribute('data-timestamp', '' + +new Date());
-        (d.head || d.body).appendChild(s);
-      </script>
-    
-
-  
-
-
-
-
-	
 
 
 
 
 
-  
-
-
-
-
-
-  
-
-
-
-
-
-  
 
 
 
@@ -1000,243 +1049,84 @@
 
 
   
+  <script src="/TECH/lib/jquery/index.js?v=2.1.3"></script>
 
-  <script type="text/javascript">
-    // Popup Window;
-    var isfetched = false;
-    // Search DB path;
-    var search_path = "search.xml";
-    if (search_path.length == 0) {
-      search_path = "search.xml";
-    }
-    var path = "/TECH/" + search_path;
-    // monitor main search box;
+  
+  <script src="/TECH/lib/velocity/velocity.min.js?v=1.2.1"></script>
 
-    function proceedsearch() {
-      $("body")
-        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
-        .css('overflow', 'hidden');
-      $('.popup').toggle();
-    }
-    // search function;
-    var searchFunc = function(path, search_id, content_id) {
-      'use strict';
-      $.ajax({
-        url: path,
-        dataType: "xml",
-        async: true,
-        success: function( xmlResponse ) {
-          // get the contents from search data
-          isfetched = true;
-          $('.popup').detach().appendTo('.header-inner');
-          var datas = $( "entry", xmlResponse ).map(function() {
-            return {
-              title: $( "title", this ).text(),
-              content: $("content",this).text(),
-              url: $( "url" , this).text()
-            };
-          }).get();
-          var $input = document.getElementById(search_id);
-          var $resultContent = document.getElementById(content_id);
-          $input.addEventListener('input', function(){
-            var matchcounts = 0;
-            var str='<ul class=\"search-result-list\">';
-            var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
-            $resultContent.innerHTML = "";
-            if (this.value.trim().length > 1) {
-              // perform local searching
-              datas.forEach(function(data) {
-                var isMatch = false;
-                var content_index = [];
-                var data_title = data.title.trim().toLowerCase();
-                var data_content = data.content.trim().replace(/<[^>]+>/g,"").toLowerCase();
-                var data_url = decodeURIComponent(data.url);
-                var index_title = -1;
-                var index_content = -1;
-                var first_occur = -1;
-                // only match artiles with not empty titles and contents
-                if(data_title != '') {
-                  keywords.forEach(function(keyword, i) {
-                    index_title = data_title.indexOf(keyword);
-                    index_content = data_content.indexOf(keyword);
-                    if( index_title >= 0 || index_content >= 0 ){
-                      isMatch = true;
-                      if (i == 0) {
-                        first_occur = index_content;
-                      }
-                    }
+  
+  <script src="/TECH/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
 
-                  });
-                }
-                // show search results
-                if (isMatch) {
-                  matchcounts += 1;
-                  str += "<li><a href='"+ data_url +"' class='search-result-title'>"+ data_title +"</a>";
-                  var content = data.content.trim().replace(/<[^>]+>/g,"");
-                  if (first_occur >= 0) {
-                    // cut out 100 characters
-                    var start = first_occur - 20;
-                    var end = first_occur + 80;
-                    if(start < 0){
-                      start = 0;
-                    }
-                    if(start == 0){
-                      end = 50;
-                    }
-                    if(end > content.length){
-                      end = content.length;
-                    }
-                    var match_content = content.substring(start, end);
-                    // highlight all keywords
-                    keywords.forEach(function(keyword){
-                      var regS = new RegExp(keyword, "gi");
-                      match_content = match_content.replace(regS, "<b class=\"search-keyword\">"+keyword+"</b>");
-                    });
 
-                    str += "<p class=\"search-result\">" + match_content +"...</p>"
-                  }
-                  str += "</li>";
-                }
-              })};
-            str += "</ul>";
-            if (matchcounts == 0) { str = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>' }
-            if (keywords == "") { str = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>' }
-            $resultContent.innerHTML = str;
-          });
-          proceedsearch();
-        }
-      });}
+  
 
-    // handle and trigger popup window;
-    $('.popup-trigger').click(function(e) {
-      e.stopPropagation();
-      if (isfetched == false) {
-        searchFunc(path, 'local-search-input', 'local-search-result');
-      } else {
-        proceedsearch();
-      };
-    });
 
-    $('.popup-btn-close').click(function(e){
-      $('.popup').hide();
-      $(".local-search-pop-overlay").remove();
-      $('body').css('overflow', '');
-    });
-    $('.popup').click(function(e){
-      e.stopPropagation();
-    });
-  </script>
+  <script src="/TECH/js/src/utils.js?v=6.7.0"></script>
 
+  <script src="/TECH/js/src/motion.js?v=6.7.0"></script>
+
+
+
+  
+  
+
+
+  <script src="/TECH/js/src/schemes/muse.js?v=6.7.0"></script>
+
+
+
+
+  
+  <script src="/TECH/js/src/scrollspy.js?v=6.7.0"></script>
+<script src="/TECH/js/src/post-details.js?v=6.7.0"></script>
+
+
+
+  
+
+
+  <script src="/TECH/js/src/bootstrap.js?v=6.7.0"></script>
+
+
+
+  
+  
+
+<script src="//cdn1.lncld.net/static/js/3.11.1/av-min.js"></script>
+
+
+
+<script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+
+<script>
+  var GUEST = ['nick', 'mail', 'link'];
+  var guest = 'nick,mail,link';
+  guest = guest.split(',').filter(function(item) {
+    return GUEST.indexOf(item) > -1;
+  });
+  new Valine({
+    el: '#comments',
+    verify: false,
+    notify: false,
+    appId: 'GzQbCxnzte3uEVbJ0bMTc2Kl-gzGzoHsz',
+    appKey: 'kycA8uL7d93nmuj2NP1bJ4yf',
+    placeholder: 'ヾﾉ≧∀≦)o 给博主留个言呗~',
+    avatar: 'mm',
+    meta: guest,
+    pageSize: '10' || 10,
+    visitor: false
+  });
+</script>
 
 
 
 
   
 
+
   
-  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
-  <script>AV.initialize("cTAOGJvwpiIkJufS2JmsnjMf-gzGzoHsz", "pYWSupIvureEPupAE8VAv3AR");</script>
-  <script>
-    function showTime(Counter) {
-      var query = new AV.Query(Counter);
-      var entries = [];
-      var $visitors = $(".leancloud_visitors");
 
-      $visitors.each(function () {
-        entries.push( $(this).attr("id").trim() );
-      });
 
-      query.containedIn('url', entries);
-      query.find()
-        .done(function (results) {
-          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
-
-          if (results.length === 0) {
-            $visitors.find(COUNT_CONTAINER_REF).text(0);
-            return;
-          }
-
-          for (var i = 0; i < results.length; i++) {
-            var item = results[i];
-            var url = item.get('url');
-            var time = item.get('time');
-            var element = document.getElementById(url);
-
-            $(element).find(COUNT_CONTAINER_REF).text(time);
-          }
-          for(var i = 0; i < entries.length; i++) {
-            var url = entries[i];
-            var element = document.getElementById(url);
-            var countSpan = $(element).find(COUNT_CONTAINER_REF);
-            if( countSpan.text() == '') {
-              countSpan.text(0);
-            }
-          }
-        })
-        .fail(function (object, error) {
-          console.log("Error: " + error.code + " " + error.message);
-        });
-    }
-
-    function addCount(Counter) {
-      var $visitors = $(".leancloud_visitors");
-      var url = $visitors.attr('id').trim();
-      var title = $visitors.attr('data-flag-title').trim();
-      var query = new AV.Query(Counter);
-
-      query.equalTo("url", url);
-      query.find({
-        success: function(results) {
-          if (results.length > 0) {
-            var counter = results[0];
-            counter.fetchWhenSave(true);
-            counter.increment("time");
-            counter.save(null, {
-              success: function(counter) {
-                var $element = $(document.getElementById(url));
-                $element.find('.leancloud-visitors-count').text(counter.get('time'));
-              },
-              error: function(counter, error) {
-                console.log('Failed to save Visitor num, with error message: ' + error.message);
-              }
-            });
-          } else {
-            var newcounter = new Counter();
-            /* Set ACL */
-            var acl = new AV.ACL();
-            acl.setPublicReadAccess(true);
-            acl.setPublicWriteAccess(true);
-            newcounter.setACL(acl);
-            /* End Set ACL */
-            newcounter.set("title", title);
-            newcounter.set("url", url);
-            newcounter.set("time", 1);
-            newcounter.save(null, {
-              success: function(newcounter) {
-                var $element = $(document.getElementById(url));
-                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
-              },
-              error: function(newcounter, error) {
-                console.log('Failed to create');
-              }
-            });
-          }
-        },
-        error: function(error) {
-          console.log('Error:' + error.code + " " + error.message);
-        }
-      });
-    }
-
-    $(function() {
-      var Counter = AV.Object.extend("Counter");
-      if ($('.leancloud_visitors').length == 1) {
-        addCount(Counter);
-      } else if ($('.post-title-link').length > 1) {
-        showTime(Counter);
-      }
-    });
-  </script>
 
 
 
@@ -1246,8 +1136,28 @@
 
   
 
-  <script type="text/javascript" src="/lib/clipboard/clipboard.js"></script>
-<script type="text/javascript" src="/js/src/copycode.js"></script>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+  <script src="/TECH/js/src/js.cookie.js?v=6.7.0"></script>
+  <script src="/TECH/js/src/scroll-cookie.js?v=6.7.0"></script>
+
+
+  
+
+  
+
+  
+
+  
 
 </body>
 </html>

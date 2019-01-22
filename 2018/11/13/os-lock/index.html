@@ -1,4 +1,13 @@
-<!doctype html>
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
 
 
 
@@ -8,31 +17,35 @@
 <html class="theme-next mist use-motion" lang="zh-Hans">
 <head>
   <meta charset="UTF-8"/>
-<meta http-equiv="X-UA-Compatible" content="IE=edge" />
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
-
-
-
-<meta http-equiv="Cache-Control" content="no-transform" />
-<meta http-equiv="Cache-Control" content="no-siteapp" />
-
-
-
-
-
-
-
-
-
-
-
+<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2"/>
+<meta name="theme-color" content="#222"/>
 
 
 
 
   
   
-  <link href="/TECH/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+    
+    
+  <script src="/TECH/lib/pace/pace.min.js?v=1.0.2"></script>
+  <link rel="stylesheet" href="/TECH/lib/pace/pace-theme-flash.min.css?v=1.0.2"/>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -58,7 +71,7 @@
   
     
     
-    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext"/>
   
 
 
@@ -66,30 +79,57 @@
 
 
 
-<link href="/TECH/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+<link rel="stylesheet" href="/TECH/lib/font-awesome/css/font-awesome.min.css?v=4.6.2"/>
 
-<link href="/TECH/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
-
-
-  <meta name="keywords" content="OS Lock,锁,locks,osunfairlock,mutex,semaphore,nslock,NSConditionLock," />
+<link rel="stylesheet" href="/TECH/css/main.css?v=6.7.0"/>
 
 
+  <link rel="apple-touch-icon" sizes="180x180" href="/TECH/images/favicon.ico?v=6.7.0">
 
 
-
-  <link rel="alternate" href="/TECH/atom.xml" title="KobeLuo的技术笔记" type="application/atom+xml" />
-
+  <link rel="icon" type="image/png" sizes="32x32" href="/TECH/images/favicon.ico?v=6.7.0">
 
 
+  <link rel="icon" type="image/png" sizes="16x16" href="/TECH/images/favicon.ico?v=6.7.0">
 
-  <link rel="shortcut icon" type="image/x-icon" href="/TECH/images/favicon.ico?v=5.1.0" />
+
+  <link rel="mask-icon" href="/TECH/images/favicon.ico?v=6.7.0" color="#222">
 
 
 
 
 
 
-<meta name="description" content="前言最近一段时间，博主都在做代码性能上的一些优化工作，其中就包括了对Mac OS/iOS锁这一部分的优化，趁此机会，也比较系统的测试了各种用户态的锁分别在单个线程和多个线程中的表现。之所以叫用户态的锁，是因为Mach内核部分其实还有一部分内核态的锁，它并不为用户态所开放，我们一般也使用不到。 对同一个锁对象的加解锁必须保持在同一线程执行，如果尝试在不同线程去加解锁将会引发一个运行时的错误。 用户态">
+
+<script id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/TECH/',
+    scheme: 'Mist',
+    version: '6.7.0',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":true,"scrollpercent":true,"onmobile":true},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="前言最近一段时间，博主都在做代码性能上的一些优化工作，其中就包括了对Mac OS/iOS锁这一部分的优化，趁此机会，也比较系统的测试了各种用户态的锁分别在单个线程和多个线程中的表现。之所以叫用户态的锁，是因为Mach内核部分其实还有一部分内核态的锁，它并不为用户态所开放，我们一般也使用不到。 对同一个锁对象的加解锁必须保持在同一线程执行，如果尝试在不同线程去加解锁将会引发一个运行时的错误。 用户态">
 <meta name="keywords" content="OS Lock,锁,locks,osunfairlock,mutex,semaphore,nslock,NSConditionLock">
 <meta property="og:type" content="article">
 <meta property="og:title" content="细数Mac OS&#x2F;iOS 系统下的锁(lock)">
@@ -113,27 +153,8 @@
 
 
 
-<script type="text/javascript" id="hexo.configurations">
-  var NexT = window.NexT || {};
-  var CONFIG = {
-    root: '/TECH/',
-    scheme: 'Mist',
-    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":true,"scrollpercent":true},
-    fancybox: true,
-    motion: true,
-    duoshuo: {
-      userId: '0',
-      author: '博主'
-    },
-    algolia: {
-      applicationID: '',
-      apiKey: '',
-      indexName: '',
-      hits: {"per_page":10},
-      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
-    }
-  };
-</script>
+  <link rel="alternate" href="/TECH/atom.xml" title="KobeLuo的技术笔记" type="application/atom+xml"/>
+
 
 
 
@@ -141,57 +162,85 @@
 
 
 
+<script id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>细数Mac OS/iOS 系统下的锁(lock) | KobeLuo的技术笔记</title>
+  
 
 
-  <title> 细数Mac OS/iOS 系统下的锁(lock) | KobeLuo的技术笔记 </title>
+
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .motion-element,
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-title { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
 
   
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  
   
     
   
 
-  <div class="container sidebar-position-left page-post-detail ">
+  <div class="container sidebar-position-left page-post-detail">
     <div class="headband"></div>
-
-    <a href="https://github.com/KobeLuo/TECH"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_green_007200.png" alt="Fork me on GitHub"></a>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
       <div class="header-inner"><div class="site-brand-wrapper">
-  <div class="site-meta ">
+  <div class="site-meta">
     
 
     <div class="custom-logo-site-title">
-      <a href="/TECH/"  class="brand" rel="start">
+      <a href="/TECH/" class="brand" rel="start">
         <span class="logo-line-before"><i></i></span>
         <span class="site-title">KobeLuo的技术笔记</span>
         <span class="logo-line-after"><i></i></span>
       </a>
     </div>
+    
       
         <p class="site-subtitle">不完美源自对完美的追求</p>
       
+    
+    
   </div>
 
   <div class="site-nav-toggle">
-    <button>
+    <button aria-label="Toggle navigation bar">
       <span class="btn-bar"></span>
       <span class="btn-bar"></span>
       <span class="btn-bar"></span>
@@ -199,112 +248,137 @@
   </div>
 </div>
 
-<nav class="site-nav">
-  
 
+
+<nav class="site-nav">
   
     <ul id="menu" class="menu">
       
         
-        <li class="menu-item menu-item-home">
-          <a href="/TECH/" rel="section">
-            
-              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
-            
-            首页
-          </a>
-        </li>
-      
         
-        <li class="menu-item menu-item-archives">
-          <a href="/TECH/archives" rel="section">
-            
-              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
-            
-            归档
-          </a>
-        </li>
-      
         
-        <li class="menu-item menu-item-categories">
-          <a href="/TECH/categories" rel="section">
-            
-              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
-            
-            分类
-          </a>
-        </li>
+          
+          <li class="menu-item menu-item-home">
+
+    
+    
+    
       
+    
+
+    
+      
+    
+
+    <a href="/TECH/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br/>Home</a>
+
+  </li>
         
-        <li class="menu-item menu-item-tags">
-          <a href="/TECH/tags" rel="section">
-            
-              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
-            
-            标签
-          </a>
-        </li>
-      
         
-        <li class="menu-item menu-item-about">
-          <a href="/TECH/about" rel="section">
-            
-              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
-            
-            关于作者
-          </a>
-        </li>
+        
+          
+          <li class="menu-item menu-item-archives">
+
+    
+    
+    
       
+    
+
+    
+      
+    
+
+    <a href="/TECH/archives" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br/>Archives<span class="badge">18</span></a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+
+    
+    
+    
+      
+    
+
+    
+      
+    
+
+    <a href="/TECH/categories" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br/>Categories<span class="badge">4</span></a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tags">
+
+    
+    
+    
+      
+    
+
+    
+      
+    
+
+    <a href="/TECH/tags" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br/>Tags<span class="badge">52</span></a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-about">
+
+    
+    
+    
+      
+    
+
+    
+      
+    
+
+    <a href="/TECH/about" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br/>About</a>
+
+  </li>
 
       
-        <li class="menu-item menu-item-search">
-          
-            <a href="javascript:;" class="popup-trigger">
-          
-            
-              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
-            
-            搜索
-          </a>
-        </li>
       
     </ul>
   
 
   
-    <div class="site-search">
-      
-  <div class="popup search-popup local-search-popup">
-  <div class="local-search-header clearfix">
-    <span class="search-icon">
-      <i class="fa fa-search"></i>
-    </span>
-    <span class="popup-btn-close">
-      <i class="fa fa-times-circle"></i>
-    </span>
-    <div class="local-search-input-wrapper">
-      <input autocapitalize="off" autocomplete="off" autocorrect="off"
-             placeholder="搜索..." spellcheck="false"
-             type="text" id="local-search-input">
-    </div>
-  </div>
-  <div id="local-search-result"></div>
-</div>
+    
 
+  
 
-
-    </div>
   
 </nav>
 
 
 
- </div>
+  
+
+
+
+</div>
     </header>
+
+    
+
 
     <main id="main" class="main">
       <div class="main-inner">
         <div class="content-wrap">
+          
           <div id="content" class="content">
             
 
@@ -317,17 +391,23 @@
   
   
 
-  <article class="post post-type-categories " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://kobeluo.com/TECH/2018/11/13/os-lock/">
+  
+
+  <article class="post post-type-categories" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://kobeluo.com/TECH/2018/11/13/os-lock/"/>
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="KOBE LUO">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/TECH/images/avatar.jpeg">
+      <meta itemprop="name" content="KOBE LUO"/>
+      <meta itemprop="description" content="一个iOS和Mac OS开发的技术渣"/>
+      <meta itemprop="image" content="/TECH/images/avatar.jpeg"/>
     </span>
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="KobeLuo的技术笔记">
+      <meta itemprop="name" content="KobeLuo的技术笔记"/>
     </span>
 
     
@@ -335,11 +415,8 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                细数Mac OS/iOS 系统下的锁(lock)
+          <h1 class="post-title" itemprop="name headline">细数Mac OS/iOS 系统下的锁(lock)
+
               
             
           </h1>
@@ -347,37 +424,47 @@
 
         <div class="post-meta">
           <span class="post-time">
+
+            
+            
+            
+
             
               <span class="post-meta-item-icon">
                 <i class="fa fa-calendar-o"></i>
               </span>
               
-                <span class="post-meta-item-text">发表于</span>
+                <span class="post-meta-item-text">Posted on</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-11-13T11:30:49+08:00">
-                2018-11-13
-              </time>
+
+              
+                
+              
+
+              <time title="Created: 2018-11-13 11:30:49" itemprop="dateCreated datePublished" datetime="2018-11-13T11:30:49+08:00">2018-11-13</time>
             
 
             
-              <span class="post-meta-divider">|</span>
-            
+              
 
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-check-o"></i>
-              </span>
               
-                <span class="post-meta-item-text">更新于</span>
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">Edited on</span>
+                
+                <time title="Modified: 2018-11-16 13:42:50" itemprop="dateModified" datetime="2018-11-16T13:42:50+08:00">2018-11-16</time>
               
-              <time title="更新于" itemprop="dateModified" datetime="2018-11-16T13:42:50+08:00">
-                2018-11-16
-              </time>
             
           </span>
 
           
-            <span class="post-category" >
+            <span class="post-category">
             
               <span class="post-meta-divider">|</span>
             
@@ -385,14 +472,10 @@
                 <i class="fa fa-folder-o"></i>
               </span>
               
-                <span class="post-meta-item-text">分类于</span>
+                <span class="post-meta-item-text">In</span>
               
               
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/TECH/categories/Mac-Develop/" itemprop="url" rel="index">
-                    <span itemprop="name">Mac Develop</span>
-                  </a>
-                </span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/TECH/categories/Mac-Develop/" itemprop="url" rel="index"><span itemprop="name">Mac Develop</span></a></span>
 
                 
                 
@@ -402,14 +485,16 @@
 
           
             
+            
+              
               <span class="post-comments-count">
                 <span class="post-meta-divider">|</span>
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
+            
                 <a href="/TECH/2018/11/13/os-lock/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count disqus-comment-count"
-                        data-disqus-identifier="2018/11/13/os-lock/" itemprop="commentCount"></span>
+                  <span class="post-meta-item-text">Comments: </span> <span class="post-comments-count valine-comment-count" data-xid="/TECH/2018/11/13/os-lock/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -417,50 +502,9 @@
 
           
           
-             <span id="/TECH/2018/11/13/os-lock/" class="leancloud_visitors" data-flag-title="细数Mac OS/iOS 系统下的锁(lock)">
-               <span class="post-meta-divider">|</span>
-               <span class="post-meta-item-icon">
-                 <i class="fa fa-eye"></i>
-               </span>
-               
-                 <span class="post-meta-item-text">阅读次数 </span>
-               
-                 <span class="leancloud-visitors-count"></span>
-             </span>
-          
 
           
 
-          
-            <div class="post-wordcount">
-              
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-file-word-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">字数统计</span>
-                
-                <span title="字数统计">
-                  4k
-                </span>
-              
-
-              
-                <span class="post-meta-divider">|</span>
-              
-
-              
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-clock-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">阅读时长</span>
-                
-                <span title="阅读时长">
-                  16
-                </span>
-              
-            </div>
           
 
           
@@ -469,7 +513,9 @@
       </header>
     
 
-
+    
+    
+    
     <div class="post-body" itemprop="articleBody">
 
       
@@ -544,9 +590,9 @@
 <p>结论是：如果无法确定当前多线程环境的所有线程是同一个优先级，请勿使用OSSpinLock.</p>
 <p>Apple在OSX 10.12/iOS 10上使用<code>OSUnfairLock</code>替代了<code>OSSpinLock</code>,后面将会提及<code>OSUnfaieLock</code>相关消息及使用方法。</p>
 <p>其使用方法如下:<br><figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">var</span> splinLock = <span class="type">OS_SPINLOCK_INIT</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//mark: test locks</span></span><br><span class="line"><span class="keyword">private</span> <span class="function"><span class="keyword">func</span> <span class="title">testOSSpinlock</span><span class="params">()</span></span> &#123;</span><br><span class="line">    </span><br><span class="line">    <span class="type">OSSpinLockLock</span>(&amp;splinLock)</span><br><span class="line"></span><br><span class="line">        <span class="comment">//code block in here...</span></span><br><span class="line"></span><br><span class="line">    <span class="type">OSSpinLockUnlock</span>(&amp;splinLock)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<h4 id="OSUnfairLock"><a href="#OSUnfairLock" class="headerlink" title="OSUnfairLock"></a>OSUnfairLock</h4><p><code>OSUnfairLock</code>是在Mac OSX 10.12上，Mac给出了替换<code>OSSpinLock</code>的方案，它也是一个底层的锁对象，与<code>OSSpinLock</code>不同的是，他不再是采用忙等的方式，而是睡眠，知道该锁被unlock时被内核唤醒。官方文档还提到<br><div class="note info"><p>A lock should be considered opaque and implementation-defined. Locks contain thread ownership information that the system may use to attempt to resolve priority inversions.</p>
-<p>//一个锁应该被是不透明的且有实现的定义，锁对象包括的拥有者信息可以用来解决优先级反转问题。</p>
-</div></p>
+<h4 id="OSUnfairLock"><a href="#OSUnfairLock" class="headerlink" title="OSUnfairLock"></a>OSUnfairLock</h4><p><code>OSUnfairLock</code>是在Mac OSX 10.12上，Mac给出了替换<code>OSSpinLock</code>的方案，它也是一个底层的锁对象，与<code>OSSpinLock</code>不同的是，他不再是采用忙等的方式，而是睡眠，知道该锁被unlock时被内核唤醒。官方文档还提到<br><div class="note info">
+            <p>A lock should be considered opaque and implementation-defined. Locks contain thread ownership information that the system may use to attempt to resolve priority inversions.</p><p>//一个锁应该被是不透明的且有实现的定义，锁对象包括的拥有者信息可以用来解决优先级反转问题。</p>
+          </div></p>
 <p>其使用方式如下:<br><figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">var</span> unfair = os_unfair_lock()</span><br><span class="line"><span class="keyword">private</span> <span class="function"><span class="keyword">func</span> <span class="title">testOSUnfairLock</span><span class="params">()</span></span> &#123;</span><br><span class="line">    </span><br><span class="line">    os_unfair_lock_lock(&amp;unfair)</span><br><span class="line">    </span><br><span class="line">    <span class="comment">//your code block in here.</span></span><br><span class="line">    </span><br><span class="line">    os_unfair_lock_unlock(&amp;unfair)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
 <h4 id="pthread-mutex-t"><a href="#pthread-mutex-t" class="headerlink" title="pthread_mutex_t"></a>pthread_mutex_t</h4><p><code>pthread_mutex_t</code>是 linux系统下的互斥体，属于底层锁，但它跟Mach内核太的互斥体不是一回事，实际上POSIX下的互斥体的底层实现应该是使用了Mach内核的互斥体(<code>lck_mtx_t</code>),，POSIX下的互斥体文档中有很多函数实现，以下仅简单说明重要的函数使用。<br><figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//初始化互斥体</span></span><br><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">func</span> <span class="title">pthread_attr_init</span><span class="params">(<span class="number">_</span>: UnsafeMutablePointer&lt;pthread_attr_t&gt;)</span></span> -&gt; <span class="type">Int32</span></span><br><span class="line"><span class="comment">//初始化一个pthread的属性</span></span><br><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">func</span> <span class="title">pthread_attr_init</span><span class="params">(<span class="number">_</span>: UnsafeMutablePointer&lt;pthread_attr_t&gt;)</span></span> -&gt; <span class="type">Int32</span></span><br><span class="line"><span class="comment">//销毁一个曾经初始化的属性</span></span><br><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">func</span> <span class="title">pthread_attr_destroy</span><span class="params">(<span class="number">_</span>: UnsafeMutablePointer&lt;pthread_attr_t&gt;)</span></span> -&gt; <span class="type">Int32</span></span><br><span class="line"><span class="comment">///设置pthread属性的类型,分别是</span></span><br><span class="line"><span class="comment">/// PTHREAD_MUTEX_NORMAL, PTHREAD_MUTEX_ERRORCHECK</span></span><br><span class="line"><span class="comment">/// PTHREAD_MUTEX_DEFAULT, PTHREAD_MUTEX_RECURSIVE</span></span><br><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">func</span> <span class="title">pthread_mutexattr_settype</span><span class="params">(<span class="number">_</span>: UnsafeMutablePointer&lt;pthread_mutexattr_t&gt;, <span class="number">_</span>: Int32)</span></span> -&gt; <span class="type">Int32</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//初始化mutex</span></span><br><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">func</span> <span class="title">pthread_mutex_init</span><span class="params">(<span class="number">_</span>: UnsafeMutablePointer&lt;pthread_mutex_t&gt;, <span class="number">_</span>: UnsafePointer&lt;pthread_mutexattr_t&gt;?)</span></span> -&gt; <span class="type">Int32</span></span><br><span class="line"><span class="comment">//给指定的mutex加锁</span></span><br><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">func</span> <span class="title">pthread_mutex_lock</span><span class="params">(<span class="number">_</span>: UnsafeMutablePointer&lt;pthread_mutex_t&gt;)</span></span> -&gt; <span class="type">Int32</span></span><br><span class="line"><span class="comment">//尝试给指定的mutex加锁，是pthread_mutex_lock的非阻塞版本，返回0则加锁成功，返回其它值以表示当前锁的状态。</span></span><br><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">func</span> <span class="title">pthread_mutex_trylock</span><span class="params">(<span class="number">_</span>: UnsafeMutablePointer&lt;pthread_mutex_t&gt;)</span></span> -&gt; <span class="type">Int32</span></span><br><span class="line"><span class="comment">//给指定的mutex解锁，必须入pthread_mutex_lock或成功执行的pthread_mutex_trylock成对出现</span></span><br><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">func</span> <span class="title">pthread_mutex_unlock</span><span class="params">(<span class="number">_</span>: UnsafeMutablePointer&lt;pthread_mutex_t&gt;)</span></span> -&gt; <span class="type">Int32</span></span><br></pre></td></tr></table></figure></p>
 <h5 id="互斥锁的简单使用"><a href="#互斥锁的简单使用" class="headerlink" title="互斥锁的简单使用"></a>互斥锁的简单使用</h5><figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> mutex = pthread_mutex_t()</span><br><span class="line"></span><br><span class="line"><span class="comment">//initial mutex</span></span><br><span class="line">pthread_mutex_init(&amp;mutex, <span class="literal">nil</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span> <span class="function"><span class="keyword">func</span> <span class="title">testPthreadMutex</span><span class="params">()</span></span> &#123;</span><br><span class="line">    </span><br><span class="line">    pthread_mutex_lock(&amp;mutex)</span><br><span class="line">    </span><br><span class="line">    <span class="comment">//your code block in here...</span></span><br><span class="line">    </span><br><span class="line">    pthread_mutex_unlock(&amp;mutex)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
@@ -554,13 +600,15 @@
 <h4 id="Dispatch-semaphore-t"><a href="#Dispatch-semaphore-t" class="headerlink" title="Dispatch_semaphore_t"></a>Dispatch_semaphore_t</h4><p>信号量跟其它的锁概念有所不同，OS上的锁其本质上都是通过Mach内核中的互斥锁<code>lck_mtx_t</code>根据不同的不同的场景需求而设计的锁，它们大多采用阻塞的方式，少部分使用忙等的方式；而信号量不一致，它是使用信号的方式来控制多线程对于资源的控制，并且信号量可同时释放信号量以保证多个线程同时访问资源，博主曾经写过<a href="http://www.kobeluo.com/TECH/2017/03/28/dispatch-semaphore/" target="_blank" rel="noopener">这篇博客</a>对信号量的用法做了分析。</p>
 <p>简单使用方式大致如下:<br><figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">let</span> sema: <span class="type">DispatchSemaphore</span> = <span class="type">DispatchSemaphore</span>.<span class="keyword">init</span>(value: <span class="number">1</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span> <span class="function"><span class="keyword">func</span> <span class="title">testSemaphore</span><span class="params">()</span></span> &#123;</span><br><span class="line">    </span><br><span class="line">    sema.wait()</span><br><span class="line">	</span><br><span class="line">    <span class="comment">// your code block in here...</span></span><br><span class="line">    </span><br><span class="line">    sema.signal()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
 <h4 id="NSLock-NSRecusiveLock"><a href="#NSLock-NSRecusiveLock" class="headerlink" title="NSLock / NSRecusiveLock"></a>NSLock / NSRecusiveLock</h4><p><code>NSLock</code>是OS封装的一个上层锁对象，它可以用来间接的读取全局数据或者保护一个临界区域的代码安全，<code>NSLock</code>支持原子操作。</p>
-<div class="note danger"><p>NSLock使用 POSIX线程来实现Lock的行为，当发送一个<code>unlock()</code>消息到NSLock对象，你必须确保之前在同样的线程已经发送了一个<code>lock()</code>消息,<br>对于同一个NSLock锁的实例，如果<code>lock()</code>和<code>unlock()</code>不在同一线程，将引发一个未知的错误（can result in undefined behavior.）。</p>
-</div>
+<div class="note danger">
+            <p>NSLock使用 POSIX线程来实现Lock的行为，当发送一个<code>unlock()</code>消息到NSLock对象，你必须确保之前在同样的线程已经发送了一个<code>lock()</code>消息,<br>对于同一个NSLock锁的实例，如果<code>lock()</code>和<code>unlock()</code>不在同一线程，将引发一个未知的错误（can result in undefined behavior.）。</p>
+          </div>
 <p>NSLock无法支持对同一个NSLock的实例连续进行两次及以上的<code>lock()</code>操作，否则会引发死锁，如果需要递归的调用<code>lock()</code>操作，应该是用<code>NSRecusiveLock</code>。</p>
 <p><code>Unlocking a lock that is not locked is considered a programmer error and should be fixed in your code</code><br>如果你尝试解锁一个未被加锁的NSLock对象，这被认为是程序员的错误，同时输出一个类似的错误在console上。</p>
 <p>其简单使用如下:<br><figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">let</span> lock = <span class="type">NSLock</span>.<span class="keyword">init</span>()</span><br><span class="line"><span class="keyword">private</span> <span class="function"><span class="keyword">func</span> <span class="title">testNSLock</span><span class="params">()</span></span> &#123;</span><br><span class="line">        </span><br><span class="line">    lock.lock()</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// your code block in here...</span></span><br><span class="line">    </span><br><span class="line">    lock.unlock()</span><br><span class="line">&#125;</span><br><span class="line">    </span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> rlock = <span class="type">NSRecursiveLock</span>.<span class="keyword">init</span>()</span><br><span class="line"><span class="keyword">private</span> <span class="function"><span class="keyword">func</span> <span class="title">testNSRecusiveLock</span><span class="params">()</span></span> &#123;</span><br><span class="line">        </span><br><span class="line">    rlock.lock()</span><br><span class="line"></span><br><span class="line">    <span class="comment">//your code block in here ...</span></span><br><span class="line">    </span><br><span class="line">    rlock.unlock()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<h4 id="NSCondition"><a href="#NSCondition" class="headerlink" title="NSCondition"></a>NSCondition</h4><div class="note info"><p>官方文档:<br>A condition object acts as both a lock and a checkpoint in a given thread. The lock protects your code while it tests the condition and performs the task triggered by the condition. The checkpoint behavior requires that the condition be true before the thread proceeds with its task. While the condition is not true, the thread blocks. It remains blocked until another thread signals the condition object.</p>
-</div>
+<h4 id="NSCondition"><a href="#NSCondition" class="headerlink" title="NSCondition"></a>NSCondition</h4><div class="note info">
+            <p>官方文档:<br>A condition object acts as both a lock and a checkpoint in a given thread. The lock protects your code while it tests the condition and performs the task triggered by the condition. The checkpoint behavior requires that the condition be true before the thread proceeds with its task. While the condition is not true, the thread blocks. It remains blocked until another thread signals the condition object.</p>
+          </div>
 <p>一个Condition对象被用于指定线程的checkpoint或一个锁。 作为锁，可以在当测试某种条件和执行有条件触发的任务时来保护你的代码。作为checkpoint，其要求在线程执行完之前，condition为true,否则该线程将被一直锁住,直到另一个线程发送一个condition对象的信号。</p>
 <p><code>NSCondition</code>官方使用六大步：</p>
 <ul>
@@ -573,8 +621,9 @@
 </ul>
 <p>简单的锁使用方式如下:<br><figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">let</span> condition = <span class="type">NSCondition</span>.<span class="keyword">init</span>()</span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span> <span class="function"><span class="keyword">func</span> <span class="title">testNSCondition</span><span class="params">()</span></span> &#123;</span><br><span class="line">	</span><br><span class="line">    condition.lock()</span><br><span class="line">    <span class="keyword">while</span>( booleanvalue == <span class="literal">false</span>) &#123;</span><br><span class="line"></span><br><span class="line">    	condition.wait()</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//your code in here...</span></span><br><span class="line"></span><br><span class="line">    condition.unlock()    </span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="comment">//set the booleanvalue to true in a given time.</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
 <p>作为上层锁，其内部实现复杂度是要高于底层锁的，因此从性能上开率，除特殊需求外，不建议使用此类锁。</p>
-<p>最后再上一段官方的使用心得：<br><div class="note info"><p>Whenever you use a condition object, the first step is to lock the condition. Locking the condition ensures that your predicate and task code are protected from interference by other threads using the same condition. Once you have completed your task, you can set other predicates or signal other conditions based on the needs of your code. You should always set predicates and signal conditions while holding the condition object’s lock.</p>
-</div></p>
+<p>最后再上一段官方的使用心得：<br><div class="note info">
+            <p>Whenever you use a condition object, the first step is to lock the condition. Locking the condition ensures that your predicate and task code are protected from interference by other threads using the same condition. Once you have completed your task, you can set other predicates or signal other conditions based on the needs of your code. You should always set predicates and signal conditions while holding the condition object’s lock.</p>
+          </div></p>
 <h4 id="NSConditionLock"><a href="#NSConditionLock" class="headerlink" title="NSConditionLock"></a>NSConditionLock</h4><p>使用NSConditionLock对象需要确保线程可以在确定的条件下拿到锁，一旦拿到锁并执行了关键区域的代码(被保护的代码)，该线程可以丢弃该锁或者设置新的相关条件，条件是不固定的，根据你的项目而自定。</p>
 <p>其简单使用如下:<br><figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> clock = <span class="type">NSConditionLock</span>.<span class="keyword">init</span>()</span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span> <span class="function"><span class="keyword">func</span> <span class="title">testNSConditionLock</span><span class="params">()</span></span> &#123;</span><br><span class="line">	</span><br><span class="line">	clock.lock()</span><br><span class="line">    <span class="comment">///your code block in here...</span></span><br><span class="line">    clock.unlock()</span><br><span class="line"></span><br><span class="line">    <span class="comment">/// clock.try() 尝试加锁，如果成功获取锁，则返回一个正值，否则返回负值， try()成功，才可以unlock(),否则引发一个未知错误。</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
 <h4 id="synchronized"><a href="#synchronized" class="headerlink" title="@synchronized"></a>@synchronized</h4><p>这是Objective-C上面封装的一个上层锁，允许递归使用，其内部处理逻辑相对复杂，因此性能在所有的锁中相对较差，其简单使用方式：</p>
@@ -587,102 +636,46 @@
       
     </div>
 
-    <div>
-      
-        
-
-      
-    </div>
-
-    <div>
-          
-          <div>
     
-        <div style="text-align:center;color: #ccc;font-size:14px;">------ 文章结束 ------</div>
+
     
-</div>
-          
-    </div>
     
-    <div>
-      
-        
-  <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
-    <div>坚持原创技术分享，您的支持将鼓励我继续创作！</div>
-    <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
-      <span>赏</span>
-    </button>
-    <div id="QR" style="display: none;">
-      
-        <div id="wechat" style="display: inline-block">
-          <img id="wechat_qr" src="https://wx2.sinaimg.cn/mw690/006AZU4wgy1fw6n5xbgnmj30og0zktaf.jpg" alt="KOBE LUO WeChat Pay"/>
-          <p>微信打赏</p>
-        </div>
-      
-      
-        <div id="alipay" style="display: inline-block">
-          <img id="alipay_qr" src="https://wx4.sinaimg.cn/mw690/006AZU4wgy1fw6n5w7j3kj30go0p0wfj.jpg" alt="KOBE LUO Alipay"/>
-          <p>支付宝打赏</p>
-        </div>
-      
-    </div>
-  </div>
+    
 
+    
 
+    
       
-    </div>
+    
+    
 
-    <div>
-      
-        
-  <ul class="post-copyright">
-    <li class="post-copyright-author">
-      <strong>本文作者：</strong>
-      KOBE LUO
-    </li>
-    <li class="post-copyright-title">
-      <strong>本文标题：</strong>
-      细数Mac OS/iOS 系统下的锁(lock)
-    </li>
-    <li class="post-copyright-link">
-      <strong>本文链接：</strong>
-      <a href="http://www.kobeluo.com/TECH/2018/11/13/os-lock/" title="细数Mac OS/iOS 系统下的锁(lock)">http://www.kobeluo.com/TECH/2018/11/13/os-lock/</a>
-    </li>
-    <li class="post-copyright-license">
-      <strong>版权声明： </strong>
-      本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 3.0</a> 许可协议。转载请注明出处！
-    </li>
-  </ul>
-
-
-      
-    </div>
+    
 
     <footer class="post-footer">
       
         <div class="post-tags">
           
-            <a href="/TECH/tags/OS-Lock/" rel="tag"><i class="fa fa-tag"></i>OS Lock</a>
+            <a href="/TECH/tags/OS-Lock/" rel="tag"># OS Lock</a>
           
-            <a href="/TECH/tags/锁/" rel="tag"><i class="fa fa-tag"></i>锁</a>
+            <a href="/TECH/tags/锁/" rel="tag"># 锁</a>
           
-            <a href="/TECH/tags/locks/" rel="tag"><i class="fa fa-tag"></i>locks</a>
+            <a href="/TECH/tags/locks/" rel="tag"># locks</a>
           
-            <a href="/TECH/tags/osunfairlock/" rel="tag"><i class="fa fa-tag"></i>osunfairlock</a>
+            <a href="/TECH/tags/osunfairlock/" rel="tag"># osunfairlock</a>
           
-            <a href="/TECH/tags/mutex/" rel="tag"><i class="fa fa-tag"></i>mutex</a>
+            <a href="/TECH/tags/mutex/" rel="tag"># mutex</a>
           
-            <a href="/TECH/tags/semaphore/" rel="tag"><i class="fa fa-tag"></i>semaphore</a>
+            <a href="/TECH/tags/semaphore/" rel="tag"># semaphore</a>
           
-            <a href="/TECH/tags/nslock/" rel="tag"><i class="fa fa-tag"></i>nslock</a>
+            <a href="/TECH/tags/nslock/" rel="tag"># nslock</a>
           
-            <a href="/TECH/tags/NSConditionLock/" rel="tag"><i class="fa fa-tag"></i>NSConditionLock</a>
+            <a href="/TECH/tags/NSConditionLock/" rel="tag"># NSConditionLock</a>
           
         </div>
       
 
       
-        
+      
       
 
       
@@ -710,31 +703,25 @@
       
       
     </footer>
+  </div>
+  
+  
+  
   </article>
 
 
-
-    <div class="post-spread">
-      
-    </div>
   </div>
 
 
           </div>
           
 
+  
+    <div class="comments" id="comments">
+    </div>
 
-          
-  <div class="comments" id="comments">
-    
-      <div id="disqus_thread">
-        <noscript>
-          Please enable JavaScript to view the
-          <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a>
-        </noscript>
-      </div>
-    
-  </div>
+  
+
 
 
         </div>
@@ -750,126 +737,258 @@
   </div>
 
   <aside id="sidebar" class="sidebar">
+    
+      <div id="sidebar-dimmer"></div>
+    
     <div class="sidebar-inner">
 
       
 
       
         <ul class="sidebar-nav motion-element">
-          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
-            文章目录
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
           </li>
-          <li class="sidebar-nav-overview" data-target="site-overview">
-            站点概览
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
           </li>
         </ul>
       
 
-      <section class="site-overview sidebar-panel">
-        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
-          <img class="site-author-image" itemprop="image"
-               src="/TECH/images/avatar.jpeg"
-               alt="KOBE LUO" />
-          <p class="site-author-name" itemprop="name">KOBE LUO</p>
-           
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/TECH/images/avatar.jpeg"
+                alt="KOBE LUO"/>
+            
+              <p class="site-author-name" itemprop="name">KOBE LUO</p>
               <p class="site-description motion-element" itemprop="description">一个iOS和Mac OS开发的技术渣</p>
-          
-        </div>
-        <nav class="site-state motion-element">
-
-          
-            <div class="site-state-item site-state-posts">
-              <a href="/TECH/archives"> 
-              <!-- <a href="/archives">-->
-                <span class="site-state-item-count">18</span>
-                <span class="site-state-item-name">日志</span>
-              </a>
-            </div>
-          
-
-          
-            <div class="site-state-item site-state-categories">
-              <a href="/TECH/categories">
-              <!-- <a href="/categories"> -->
-                <span class="site-state-item-count">4</span>
-                <span class="site-state-item-name">分类</span>
-              </a>
-              <!-- </a> -->
-            </div>
-          
-
-          
-            <div class="site-state-item site-state-tags">
-              <a href="/TECH/tags">
-              <!-- <a href="/tags"> -->
-                <span class="site-state-item-count">52</span>
-                <span class="site-state-item-name">标签</span>
-              </a>
-              <!-- </a> -->
-            </div>
-          
-        </nav>
-
-        
-          <div class="feed-link motion-element">
-            <a href="/TECH/atom.xml" rel="alternate">
-              <i class="fa fa-rss"></i>
-              RSS
-            </a>
           </div>
-        
 
-        <div class="links-of-author motion-element">
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/TECH/archives">
+                
+                    <span class="site-state-item-count">18</span>
+                    <span class="site-state-item-name">posts</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  <a href="/TECH/categories/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">4</span>
+                    <span class="site-state-item-name">categories</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  <a href="/TECH/tags/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">52</span>
+                    <span class="site-state-item-name">tags</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+            <div class="feed-link motion-element">
+              <a href="/TECH/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="https://github.com/KobeLuo" title="GitHub &rarr; https://github.com/KobeLuo" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="http://douban.com" title="豆瓣 &rarr; http://douban.com" rel="noopener" target="_blank"><i class="fa fa-fw fa-zhihu"></i>豆瓣</a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="http://www.zhihu.com" title="知乎 &rarr; http://www.zhihu.com" rel="noopener" target="_blank"><i class="fa fa-fw fa-weibo"></i>知乎</a>
+                </span>
+              
+            </div>
+          
+
+          
+
+          
+          
+
           
             
-              <span class="links-of-author-item">
-                <a href="https://github.com/KobeLuo" target="_blank" title="GitHub">
-                  
-                    <i class="fa fa-fw fa-github"></i>
-                  
-                  GitHub
-                </a>
-              </span>
-            
-              <span class="links-of-author-item">
-                <a href="http://douban.com" target="_blank" title="豆瓣">
-                  
-                    <i class="fa fa-fw fa-globe"></i>
-                  
-                  豆瓣
-                </a>
-              </span>
-            
-              <span class="links-of-author-item">
-                <a href="http://www.zhihu.com" target="_blank" title="知乎">
-                  
-                    <i class="fa fa-fw fa-globe"></i>
-                  
-                  知乎
-                </a>
-              </span>
-            
           
+          
+
         </div>
-
-        
-        
-
-        
-        
-
-        
-
-
-      </section>
+      </div>
 
       
       <!--noindex-->
-        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
           <div class="post-toc">
 
             
-              
+            
+            
             
 
             
@@ -877,7 +996,7 @@
             
 
           </div>
-        </section>
+        </div>
       <!--/noindex-->
       
 
@@ -900,30 +1019,39 @@
 
     <footer id="footer" class="footer">
       <div class="footer-inner">
-        <div class="copyright" >
-  
-  &copy;  2015 - 
-  <span itemprop="copyrightYear">2019</span>
-  <span class="with-love">
-    <i class="fa fa-heart"></i>
+        <div class="copyright">&copy; 2015 – <span itemprop="copyrightYear">2019</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
   </span>
-  <span class="author" itemprop="copyrightHolder">KOBE LUO</span>
+  <span class="author" itemprop="copyrightHolder">true</span>
+
+  
+
+  
 </div>
 
 
-<div class="powered-by">
-  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 驱动
-</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> v3.7.1</div>
 
-<div class="theme-info">
-  主题 -
-  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
-    NexT.Mist
-  </a>
-</div>
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a> v6.7.0</div>
+
+
 
 
         
+
+
+
+
+
+
+
 
         
       </div>
@@ -931,11 +1059,16 @@
 
     
 
+    
+
+    
+
+    
   </div>
 
   
 
-<script type="text/javascript">
+<script>
   if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
     window.Promise = null;
   }
@@ -949,104 +1082,17 @@
 
 
 
-  
 
 
 
 
 
 
-  
-  <script type="text/javascript" src="/TECH/lib/jquery/index.js?v=2.1.3"></script>
-
-  
-  <script type="text/javascript" src="/TECH/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
-
-  
-  <script type="text/javascript" src="/TECH/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
-
-  
-  <script type="text/javascript" src="/TECH/lib/velocity/velocity.min.js?v=1.2.1"></script>
-
-  
-  <script type="text/javascript" src="/TECH/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
-
-  
-  <script type="text/javascript" src="/TECH/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
-
-
-  
-
-
-  <script type="text/javascript" src="/TECH/js/src/utils.js?v=5.1.0"></script>
-
-  <script type="text/javascript" src="/TECH/js/src/motion.js?v=5.1.0"></script>
-
-
-
-  
-  
-
-  
-  <script type="text/javascript" src="/TECH/js/src/scrollspy.js?v=5.1.0"></script>
-<script type="text/javascript" src="/TECH/js/src/post-details.js?v=5.1.0"></script>
-
-
-
-  
-
-
-  <script type="text/javascript" src="/TECH/js/src/bootstrap.js?v=5.1.0"></script>
-
-
-
-  
-
-
-  
-
-    
-      <script id="dsq-count-scr" src="https://.disqus.com/count.js" async></script>
-    
-
-    
-      <script type="text/javascript">
-        var disqus_config = function () {
-          this.page.url = 'http://kobeluo.com/2018/11/13/os-lock/';
-          this.page.identifier = '2018/11/13/os-lock/';
-          this.page.title = '细数Mac OS/iOS 系统下的锁(lock)';
-        };
-        var d = document, s = d.createElement('script');
-        s.src = 'https://.disqus.com/embed.js';
-        s.setAttribute('data-timestamp', '' + +new Date());
-        (d.head || d.body).appendChild(s);
-      </script>
-    
-
-  
-
-
-
-
-	
 
 
 
 
 
-  
-
-
-
-
-
-  
-
-
-
-
-
-  
 
 
 
@@ -1054,243 +1100,84 @@
 
 
   
+  <script src="/TECH/lib/jquery/index.js?v=2.1.3"></script>
 
-  <script type="text/javascript">
-    // Popup Window;
-    var isfetched = false;
-    // Search DB path;
-    var search_path = "search.xml";
-    if (search_path.length == 0) {
-      search_path = "search.xml";
-    }
-    var path = "/TECH/" + search_path;
-    // monitor main search box;
+  
+  <script src="/TECH/lib/velocity/velocity.min.js?v=1.2.1"></script>
 
-    function proceedsearch() {
-      $("body")
-        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
-        .css('overflow', 'hidden');
-      $('.popup').toggle();
-    }
-    // search function;
-    var searchFunc = function(path, search_id, content_id) {
-      'use strict';
-      $.ajax({
-        url: path,
-        dataType: "xml",
-        async: true,
-        success: function( xmlResponse ) {
-          // get the contents from search data
-          isfetched = true;
-          $('.popup').detach().appendTo('.header-inner');
-          var datas = $( "entry", xmlResponse ).map(function() {
-            return {
-              title: $( "title", this ).text(),
-              content: $("content",this).text(),
-              url: $( "url" , this).text()
-            };
-          }).get();
-          var $input = document.getElementById(search_id);
-          var $resultContent = document.getElementById(content_id);
-          $input.addEventListener('input', function(){
-            var matchcounts = 0;
-            var str='<ul class=\"search-result-list\">';
-            var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
-            $resultContent.innerHTML = "";
-            if (this.value.trim().length > 1) {
-              // perform local searching
-              datas.forEach(function(data) {
-                var isMatch = false;
-                var content_index = [];
-                var data_title = data.title.trim().toLowerCase();
-                var data_content = data.content.trim().replace(/<[^>]+>/g,"").toLowerCase();
-                var data_url = decodeURIComponent(data.url);
-                var index_title = -1;
-                var index_content = -1;
-                var first_occur = -1;
-                // only match artiles with not empty titles and contents
-                if(data_title != '') {
-                  keywords.forEach(function(keyword, i) {
-                    index_title = data_title.indexOf(keyword);
-                    index_content = data_content.indexOf(keyword);
-                    if( index_title >= 0 || index_content >= 0 ){
-                      isMatch = true;
-                      if (i == 0) {
-                        first_occur = index_content;
-                      }
-                    }
+  
+  <script src="/TECH/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
 
-                  });
-                }
-                // show search results
-                if (isMatch) {
-                  matchcounts += 1;
-                  str += "<li><a href='"+ data_url +"' class='search-result-title'>"+ data_title +"</a>";
-                  var content = data.content.trim().replace(/<[^>]+>/g,"");
-                  if (first_occur >= 0) {
-                    // cut out 100 characters
-                    var start = first_occur - 20;
-                    var end = first_occur + 80;
-                    if(start < 0){
-                      start = 0;
-                    }
-                    if(start == 0){
-                      end = 50;
-                    }
-                    if(end > content.length){
-                      end = content.length;
-                    }
-                    var match_content = content.substring(start, end);
-                    // highlight all keywords
-                    keywords.forEach(function(keyword){
-                      var regS = new RegExp(keyword, "gi");
-                      match_content = match_content.replace(regS, "<b class=\"search-keyword\">"+keyword+"</b>");
-                    });
 
-                    str += "<p class=\"search-result\">" + match_content +"...</p>"
-                  }
-                  str += "</li>";
-                }
-              })};
-            str += "</ul>";
-            if (matchcounts == 0) { str = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>' }
-            if (keywords == "") { str = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>' }
-            $resultContent.innerHTML = str;
-          });
-          proceedsearch();
-        }
-      });}
+  
 
-    // handle and trigger popup window;
-    $('.popup-trigger').click(function(e) {
-      e.stopPropagation();
-      if (isfetched == false) {
-        searchFunc(path, 'local-search-input', 'local-search-result');
-      } else {
-        proceedsearch();
-      };
-    });
 
-    $('.popup-btn-close').click(function(e){
-      $('.popup').hide();
-      $(".local-search-pop-overlay").remove();
-      $('body').css('overflow', '');
-    });
-    $('.popup').click(function(e){
-      e.stopPropagation();
-    });
-  </script>
+  <script src="/TECH/js/src/utils.js?v=6.7.0"></script>
 
+  <script src="/TECH/js/src/motion.js?v=6.7.0"></script>
+
+
+
+  
+  
+
+
+  <script src="/TECH/js/src/schemes/muse.js?v=6.7.0"></script>
+
+
+
+
+  
+  <script src="/TECH/js/src/scrollspy.js?v=6.7.0"></script>
+<script src="/TECH/js/src/post-details.js?v=6.7.0"></script>
+
+
+
+  
+
+
+  <script src="/TECH/js/src/bootstrap.js?v=6.7.0"></script>
+
+
+
+  
+  
+
+<script src="//cdn1.lncld.net/static/js/3.11.1/av-min.js"></script>
+
+
+
+<script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+
+<script>
+  var GUEST = ['nick', 'mail', 'link'];
+  var guest = 'nick,mail,link';
+  guest = guest.split(',').filter(function(item) {
+    return GUEST.indexOf(item) > -1;
+  });
+  new Valine({
+    el: '#comments',
+    verify: false,
+    notify: false,
+    appId: 'GzQbCxnzte3uEVbJ0bMTc2Kl-gzGzoHsz',
+    appKey: 'kycA8uL7d93nmuj2NP1bJ4yf',
+    placeholder: 'ヾﾉ≧∀≦)o 给博主留个言呗~',
+    avatar: 'mm',
+    meta: guest,
+    pageSize: '10' || 10,
+    visitor: false
+  });
+</script>
 
 
 
 
   
 
+
   
-  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
-  <script>AV.initialize("cTAOGJvwpiIkJufS2JmsnjMf-gzGzoHsz", "pYWSupIvureEPupAE8VAv3AR");</script>
-  <script>
-    function showTime(Counter) {
-      var query = new AV.Query(Counter);
-      var entries = [];
-      var $visitors = $(".leancloud_visitors");
 
-      $visitors.each(function () {
-        entries.push( $(this).attr("id").trim() );
-      });
 
-      query.containedIn('url', entries);
-      query.find()
-        .done(function (results) {
-          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
-
-          if (results.length === 0) {
-            $visitors.find(COUNT_CONTAINER_REF).text(0);
-            return;
-          }
-
-          for (var i = 0; i < results.length; i++) {
-            var item = results[i];
-            var url = item.get('url');
-            var time = item.get('time');
-            var element = document.getElementById(url);
-
-            $(element).find(COUNT_CONTAINER_REF).text(time);
-          }
-          for(var i = 0; i < entries.length; i++) {
-            var url = entries[i];
-            var element = document.getElementById(url);
-            var countSpan = $(element).find(COUNT_CONTAINER_REF);
-            if( countSpan.text() == '') {
-              countSpan.text(0);
-            }
-          }
-        })
-        .fail(function (object, error) {
-          console.log("Error: " + error.code + " " + error.message);
-        });
-    }
-
-    function addCount(Counter) {
-      var $visitors = $(".leancloud_visitors");
-      var url = $visitors.attr('id').trim();
-      var title = $visitors.attr('data-flag-title').trim();
-      var query = new AV.Query(Counter);
-
-      query.equalTo("url", url);
-      query.find({
-        success: function(results) {
-          if (results.length > 0) {
-            var counter = results[0];
-            counter.fetchWhenSave(true);
-            counter.increment("time");
-            counter.save(null, {
-              success: function(counter) {
-                var $element = $(document.getElementById(url));
-                $element.find('.leancloud-visitors-count').text(counter.get('time'));
-              },
-              error: function(counter, error) {
-                console.log('Failed to save Visitor num, with error message: ' + error.message);
-              }
-            });
-          } else {
-            var newcounter = new Counter();
-            /* Set ACL */
-            var acl = new AV.ACL();
-            acl.setPublicReadAccess(true);
-            acl.setPublicWriteAccess(true);
-            newcounter.setACL(acl);
-            /* End Set ACL */
-            newcounter.set("title", title);
-            newcounter.set("url", url);
-            newcounter.set("time", 1);
-            newcounter.save(null, {
-              success: function(newcounter) {
-                var $element = $(document.getElementById(url));
-                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
-              },
-              error: function(newcounter, error) {
-                console.log('Failed to create');
-              }
-            });
-          }
-        },
-        error: function(error) {
-          console.log('Error:' + error.code + " " + error.message);
-        }
-      });
-    }
-
-    $(function() {
-      var Counter = AV.Object.extend("Counter");
-      if ($('.leancloud_visitors').length == 1) {
-        addCount(Counter);
-      } else if ($('.post-title-link').length > 1) {
-        showTime(Counter);
-      }
-    });
-  </script>
 
 
 
@@ -1300,8 +1187,28 @@
 
   
 
-  <script type="text/javascript" src="/lib/clipboard/clipboard.js"></script>
-<script type="text/javascript" src="/js/src/copycode.js"></script>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+  <script src="/TECH/js/src/js.cookie.js?v=6.7.0"></script>
+  <script src="/TECH/js/src/scroll-cookie.js?v=6.7.0"></script>
+
+
+  
+
+  
+
+  
+
+  
 
 </body>
 </html>
