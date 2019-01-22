@@ -3,19 +3,30 @@
 ## Source: https://github.com/hexojs/hexo/
 
 # Site
-title: kobeLuo的技术笔记
-subtitle: 简于心 精于行
+title: KobeLuo的技术笔记
+subtitle: 不完美源自对完美的追求
 description: 一个iOS和Mac OS开发的技术渣
-author: luo gang
-language: zh-Hans
+author: KOBE LUO
+language: zh-CN
 timezone: Asia/Shanghai
 
 # URL
 ## If your site is put in a subdirectory, set url as 'http://yoursite.com/child' and root as '/child/'
-# url: http://yoursite.com
-root: /TECH/
+url: http://kobeluo.com
+root: /tech/
 permalink: :year/:month/:day/:title/
 permalink_defaults:
+
+#流程图
+# flowchart:
+#   raphael: https://cdnjs.cloudflare.com/ajax/libs/raphael/2.2.7/raphael.min.js
+#   flowchart: https://cdnjs.cloudflare.com/ajax/libs/flowchart/1.6.5/flowchart.min.js
+#   options:
+#     scale: 1
+#     line-width: 2
+#     line-length: 50
+#     text-margin: 10
+#     font-size: 12
 
 # Directory
 source_dir: source
@@ -34,7 +45,7 @@ titlecase: false # Transform title into titlecase
 external_link: true # Open external links in new tab
 filename_case: 0
 render_drafts: false
-post_asset_folder: false
+post_asset_folder: true
 relative_link: false
 future: true
 highlight:
@@ -49,7 +60,7 @@ category_map: categories
 tag_map: tags
 
 # Date / Time format
-## Hexo uses Moment.js to parse and display date
+## Hexo uses Moment.js to parse and display date_format
 ## You can customize the date format as defined in
 ## http://momentjs.com/docs/#/displaying/format/
 date_format: YYYY-MM-DD
@@ -63,7 +74,8 @@ pagination_dir: page
 # Extensions
 ## Plugins: https://hexo.io/plugins/
 ## Themes: https://hexo.io/themes/
-theme: hexo-theme-next
+# theme: hexo-theme-next
+theme: next-reloaded
 
 feed:
         type: atom
@@ -76,9 +88,22 @@ search:
   format: html
   limit: 10000
 
+# Extensions
+## Plugins: http://hexo.io/plugins/
+plugins: hexo-generate-feed
+
+
+# hexo sitemap网站地图
+sitemap:
+  path: sitemap.xml
+baidusitemap:
+  path: baidusitemap.xml
+
+
 # Deployment
 ## Docs: https://hexo.io/docs/deployment.html
 deploy:
   type: git
-  repo: git@KobeV5:KobeLuo/TECH.git
+  repo: git@github.com:KobeLuo/tech.git
   branch: gh-pages
+  type: baidu_url_submitter
