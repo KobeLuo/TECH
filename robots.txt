@@ -10,5 +10,5 @@ Disallow: /fonts/
 Disallow: /vendors/
 Disallow: /fancybox/
 
-Sitemap: http://www.kobeluo.com/sitemap.xml
-Sitemap: https://www.kobeluo.com/sitemap.xml
+Sitemap: http://www.kobeluo.com/tech/sitemap.xml
+Sitemap: https://www.kobeluo.com/tech/sitemap.xml
