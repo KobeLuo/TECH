@@ -137,16 +137,16 @@
 <meta property="og:site_name" content="KobeLuo的技术笔记">
 <meta property="og:description" content="在git使用这篇文章中，博主列出了常用的git命令和一些使用方法，可以应付日常的开发工作，熟悉git的朋友应该知道，git是一个非常强大的工具，能使用git的常规命令只能说你掌握了git的基本操作，如果还需要更深入的理解git，理解每一条命令背后执行的操作和含义，则需要更为深刻的理解git的运行机制和设计原理，博主对于git的理解也很浅显，该文在谈及git内涵外，也希望有更多的大神能够相互交流，以">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="http://kobeluo.com/TECH/2018/10/16/git-deep/git-structure.png">
-<meta property="og:image" content="http://kobeluo.com/TECH/2018/10/16/git-deep/git-structure-desc.png">
-<meta property="og:image" content="http://kobeluo.com/TECH/2018/10/16/git-deep/file-status-all.png">
-<meta property="og:image" content="http://kobeluo.com/TECH/2018/10/16/git-deep/commit-root.png">
-<meta property="og:image" content="http://kobeluo.com/TECH/2018/10/16/git-deep/snap-pointer-relation.png">
+<meta property="og:image" content="http://kobeluo.com/tech/2018/10/16/git-deep/git-structure.png">
+<meta property="og:image" content="http://kobeluo.com/tech/2018/10/16/git-deep/git-structure-desc.png">
+<meta property="og:image" content="http://kobeluo.com/tech/2018/10/16/git-deep/file-status-all.png">
+<meta property="og:image" content="http://kobeluo.com/tech/2018/10/16/git-deep/commit-root.png">
+<meta property="og:image" content="http://kobeluo.com/tech/2018/10/16/git-deep/snap-pointer-relation.png">
 <meta property="og:updated_time" content="2018-11-16T05:41:19.833Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="git深入理解">
 <meta name="twitter:description" content="在git使用这篇文章中，博主列出了常用的git命令和一些使用方法，可以应付日常的开发工作，熟悉git的朋友应该知道，git是一个非常强大的工具，能使用git的常规命令只能说你掌握了git的基本操作，如果还需要更深入的理解git，理解每一条命令背后执行的操作和含义，则需要更为深刻的理解git的运行机制和设计原理，博主对于git的理解也很浅显，该文在谈及git内涵外，也希望有更多的大神能够相互交流，以">
-<meta name="twitter:image" content="http://kobeluo.com/TECH/2018/10/16/git-deep/git-structure.png">
+<meta name="twitter:image" content="http://kobeluo.com/tech/2018/10/16/git-deep/git-structure.png">
 
 
 
@@ -534,12 +534,12 @@
 <li><a href="https://services.github.com/on-demand/downloads/github-git-cheat-sheet.pdf" target="_blank" rel="noopener">git常用命令</a></li>
 <li><a href="https://git-scm.com/doc" target="_blank" rel="noopener">git权威指南</a></li>
 </ul>
-<h2 id="git仓库介绍"><a href="#git仓库介绍" class="headerlink" title="git仓库介绍"></a>git仓库介绍</h2><h3 id="关于git仓库基础构造的官方文档如下图"><a href="#关于git仓库基础构造的官方文档如下图" class="headerlink" title="关于git仓库基础构造的官方文档如下图"></a>关于git仓库基础构造的官方文档如下图</h3><p><img src="/TECH/2018/10/16/git-deep/git-structure.png" alt="git仓库基础结构"><br><img src="/TECH/2018/10/16/git-deep/git-structure-desc.png" alt="git仓库细节"></p>
+<h2 id="git仓库介绍"><a href="#git仓库介绍" class="headerlink" title="git仓库介绍"></a>git仓库介绍</h2><h3 id="关于git仓库基础构造的官方文档如下图"><a href="#关于git仓库基础构造的官方文档如下图" class="headerlink" title="关于git仓库基础构造的官方文档如下图"></a>关于git仓库基础构造的官方文档如下图</h3><p><img src="/tech/2018/10/16/git-deep/git-structure.png" alt="git仓库基础结构"><br><img src="/tech/2018/10/16/git-deep/git-structure-desc.png" alt="git仓库细节"></p>
 <h3 id="个人理解"><a href="#个人理解" class="headerlink" title="个人理解"></a>个人理解</h3><h4 id="git仓库代码树的三大状态"><a href="#git仓库代码树的三大状态" class="headerlink" title="git仓库代码树的三大状态:"></a>git仓库代码树的三大状态:</h4><p><code>Modified：</code> 代表被检出的代码已经被更改，但是还没有添加到暂存区，当然也没有提交到本地仓库；<br><code>Staged：</code> 代表被检出的代码已经加入了暂存区，它将是你下一次执行commit时提交的变更内容；<br><code>Committed：</code> 代表你的代码已经安全永久的提交到了本地仓库。</p>
 <h4 id="git仓库的三大仓库区"><a href="#git仓库的三大仓库区" class="headerlink" title="git仓库的三大仓库区"></a>git仓库的三大仓库区</h4><p><code>git repository</code> 本地仓库，git最重要的部分，存储了一个工程所有的git信息和数据对象。<br><code>Working Directory</code> 工作目录或工作区，是指当你执行<code>git checkout branch</code>时，存储branch所指的节点的数据和git信息，以提供你增删改查。<br><code>Staging Area</code> 暂存区 介于检出代码于modified和committed之间的一种状态区域，当你执行<code>git add -a</code>时，将已经modified的代码添加到暂存区，以供下一次commit时将暂存区的变更提交到本地仓库。</p>
 <h4 id="从实际项目出发理解"><a href="#从实际项目出发理解" class="headerlink" title="从实际项目出发理解"></a>从实际项目出发理解</h4><p>1.执行<code>git clone</code>时，将远程代码clone到本地，此时建立了git本地仓库，同时默认工作区是master分支，此时暂存区为空；<br>2.执行<code>git checkout branch</code>时，将branch分支的代码作为工作区，此时工作区从master分支变更为branch分支的代码内容和git信息；<br>3.现在开始增删改查项目的内容；<br>4.当你保存更改时，git将变更的内容标记为modified；<br>5.此时你可能需要提交代码了；执行 <code>git add .</code>将 已更改的代码提交到暂存区，被更改的代码的状态从<code>Modified</code>变更为<code>Staged</code>；<br>6.此时执行命令<code>git commit</code>提交代码，将暂存区的变更快照提交到本地仓库，变更代码状态从<code>Staged</code>变更为<code>Committed</code>，自此你的变更内容将永久安全的存储到本地仓库。</p>
 <h2 id="文件的记录过程"><a href="#文件的记录过程" class="headerlink" title="文件的记录过程"></a>文件的记录过程</h2><p>每个文件在working copy中的状态有两种: tracked(被跟踪) or untracked(未被跟踪)<br><figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">Remember</span> that each file <span class="keyword">in</span> your working directory can be <span class="keyword">in</span> one of two states: tracked or untracked. </span><br><span class="line"><span class="type">Tracked</span> files are files that were <span class="keyword">in</span> the last snapshot; they can be unmodified, modified, or staged.</span><br><span class="line"><span class="type">In</span> short, tracked files are files that <span class="type">Git</span> knows about.</span><br></pre></td></tr></table></figure></p>
-<p>被跟踪的文件的文件状态存储在最后一次快照中。<br><img src="/TECH/2018/10/16/git-deep/file-status-all.png" alt="git文件全状态"></p>
+<p>被跟踪的文件的文件状态存储在最后一次快照中。<br><img src="/tech/2018/10/16/git-deep/file-status-all.png" alt="git文件全状态"></p>
 <h2 id="忽略暂存区提交"><a href="#忽略暂存区提交" class="headerlink" title="忽略暂存区提交"></a>忽略暂存区提交</h2><p>常用的提交流程是：<br><figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">git add .</span><br><span class="line">git commit</span><br></pre></td></tr></table></figure></p>
 <p>命令<code>git add .</code>会将已变更的代码添加到暂存区，然后通过<code>git commit</code>命令将暂存区的快照提交到本地仓库。</p>
 <p>这儿还有一种方式提交代码：<br><figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git commit -a</span><br></pre></td></tr></table></figure></p>
@@ -555,8 +555,8 @@
 </ul>
 <h2 id="git-commit-实现"><a href="#git-commit-实现" class="headerlink" title="git commit 实现"></a>git commit 实现</h2><p>假如说当前是一个全新的仓库，并执行以下命令：<br><figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">git <span class="keyword">init</span> </span><br><span class="line">git add <span class="type">README</span> test.rb <span class="type">LICENSE</span></span><br><span class="line">git commit -m :<span class="type">The</span> <span class="type">Initial</span> commit of my project:</span><br></pre></td></tr></table></figure></p>
 <p>当你运行<code>git commit</code>创建commit时，git checksums所有的子目录和git仓库中存储这些文件的<code>tree object</code>，同时git创建一个拥有元数据和一个指向<code>root project tree</code>的指针的<code>commit object</code>, 一个<code>commit object</code>其实质上就是一个<code>snapshot</code>.</p>
-<p>现在，git仓库包含了五个object,分别是三个文件(README test.rb LICENSE),一个包含跟目录下所有内容<br>和指定<code>name&lt;--&gt;file匹配</code>的列表的<code>tree</code>和一个包含所有提交元数据和指向<code>root true</code>的指针，<br>比较抽象，其实就是三个文件和一个snapshot和一个指向<code>root commit</code>的指针，如下图所示：<br><img src="/TECH/2018/10/16/git-deep/commit-root.png" alt="commit-root"></p>
-<p>此时如果你又提交了几次，那么关于snapshot和指针的关系图，如下所示：<br><img src="/TECH/2018/10/16/git-deep/snap-pointer-relation.png" alt="snap-pointer-relation"></p>
+<p>现在，git仓库包含了五个object,分别是三个文件(README test.rb LICENSE),一个包含跟目录下所有内容<br>和指定<code>name&lt;--&gt;file匹配</code>的列表的<code>tree</code>和一个包含所有提交元数据和指向<code>root true</code>的指针，<br>比较抽象，其实就是三个文件和一个snapshot和一个指向<code>root commit</code>的指针，如下图所示：<br><img src="/tech/2018/10/16/git-deep/commit-root.png" alt="commit-root"></p>
+<p>此时如果你又提交了几次，那么关于snapshot和指针的关系图，如下所示：<br><img src="/tech/2018/10/16/git-deep/snap-pointer-relation.png" alt="snap-pointer-relation"></p>
 <p>通过上图可以理解到git commit背后运行的规律：<br><div class="note info">
             <p>1.git commit并不是存储的变化的文件，而是存储的一些列snapshot和一个带链表结构的指向父指针的指针。<br>2.整个分支结构路由是靠链表结构的指针来运作的，所以当你<code>git branch newbranch</code>时，其实就是创建了一个新的指针，该指针指向当前的指针加上一个branch name,整个过程非常高效快速。<br>3.当通过<code>git checkout commitId</code>去切换到以前的某个分支时，其实是通过指针去挨个找寻父指针，并从父指针指向的snapshot中去将变更挨个恢复，因此你可以感觉到chekout越早的分支速度越慢，git需要遍历更多的指针去恢复变更数据。</p>
           </div></p>

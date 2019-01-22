@@ -138,9 +138,9 @@
 <meta property="og:description" content="就普通的开发而言，普通需求的实现，对于大多数有经验的开发者只是时间问题，其实并没有太大的难度，需求的实现过程则相对轻松； 比较恶心的是发布产品后，遇到的各式奇葩的crash，如果你早有准备，在发布的时候打包了符号文件，那么恭喜你，你还可以通过符号文件来查找崩溃代码，否则，可能就是让bug出现者不停的复现crash，费事费力，可能最终还找不到问题。 符号文件可以通过一定规则将内存地址转换为可读的函数">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://developer.apple.com/library/archive/technotes/tn2151/Art/tn2151_crash_flow.png">
-<meta property="og:image" content="http://kobeluo.com/TECH/2017/11/16/crashAnalysis/orgnizerArchived.png">
-<meta property="og:image" content="http://kobeluo.com/TECH/2017/11/16/crashAnalysis/finderShowPackage.png">
-<meta property="og:image" content="http://kobeluo.com/TECH/2017/11/16/crashAnalysis/dsYM.png">
+<meta property="og:image" content="http://kobeluo.com/tech/2017/11/16/crashAnalysis/orgnizerArchived.png">
+<meta property="og:image" content="http://kobeluo.com/tech/2017/11/16/crashAnalysis/finderShowPackage.png">
+<meta property="og:image" content="http://kobeluo.com/tech/2017/11/16/crashAnalysis/dsYM.png">
 <meta property="og:image" content="https://developer.apple.com/library/archive/technotes/tn2151/Art/tn2151_symbolication_levels.png">
 <meta property="og:image" content="https://developer.apple.com/library/archive/technotes/tn2151/Art/tn2151_atos_info.png">
 <meta property="og:updated_time" content="2018-12-07T05:23:19.885Z">
@@ -538,7 +538,7 @@
 <p><img src="https://developer.apple.com/library/archive/technotes/tn2151/Art/tn2151_crash_flow.png" alt="crash connect"></p>
 <p>1.编译器将源码转化成机器码，并生成调试符号文件，用于将机器码回溯成源代码的行号和函数名，关于dsYM的设置可以在<code>BuildSettings</code>搜索<em>DEBUG_INFORMATION_FORMAT</em>设置，这些调试符号存储在二进制文件中或者.dsYM文件中，debug包的应用存储编译后的二进制文件中，而release包的的符号文件则伴随在<em>.dsYM</em>文件中，以便节省包的大小。</p>
 <p>调试符号文件和产品二进制包被捆包在一个基于每次编译的一个UUID, 每次编译都会产生一个新的UUID,即使没有任何内容更改。</p>
-<p>2.一旦你使用Archive了一个发布包，Xcode会生成一个带有.dsYM的二进制包到Xcode的oranizer下的Archived组。<br><img src="/TECH/2017/11/16/crashAnalysis/orgnizerArchived.png" alt="archived"></p>
+<p>2.一旦你使用Archive了一个发布包，Xcode会生成一个带有.dsYM的二进制包到Xcode的oranizer下的Archived组。<br><img src="/tech/2017/11/16/crashAnalysis/orgnizerArchived.png" alt="archived"></p>
 <p>3.当你上传准备好的二进制包到iTunesConnect时，有一个可选项是让你选择二进制包是否包含.dSYM文件<em>Include app symbols for your application…</em>,为了后续分析问题方便，建议勾选。</p>
 <p>4.产品发布后，关于你的产品的任何崩溃都将在用户的手机中创建并存储崩溃信息。</p>
 <p>5.用户可以从设备中通过<a href="https://developer.apple.com/library/archive/qa/qa1747/_index.html" target="_blank" rel="noopener">调试发布的产品</a>中直接取到crash报告。如果你的包是“AdHoc”或”Enterprise”企业版发布，那么这种方式将是苹果提供的唯一一种读取崩溃报告的方式。</p>
@@ -547,7 +547,7 @@
 <p>8.Apple Store符号化崩溃报告，并将类似的崩溃报告组合在一起，形成一个相似的崩溃报告，这被称为崩溃点。</p>
 <p>9.crash崩溃报告也可以在“Organizer的Crash组”中看到。 </p>
 <h4 id="dsYM文件的获取方式"><a href="#dsYM文件的获取方式" class="headerlink" title=".dsYM文件的获取方式"></a>.dsYM文件的获取方式</h4><ul>
-<li><p>通过“Organizer的Archived”找到你发布的相应包，然后右键“ShowInFinder”去找<br><img src="/TECH/2017/11/16/crashAnalysis/finderShowPackage.png" alt="finder"><br><img src="/TECH/2017/11/16/crashAnalysis/dsYM.png" alt="dSYM"></p>
+<li><p>通过“Organizer的Archived”找到你发布的相应包，然后右键“ShowInFinder”去找<br><img src="/tech/2017/11/16/crashAnalysis/finderShowPackage.png" alt="finder"><br><img src="/tech/2017/11/16/crashAnalysis/dsYM.png" alt="dSYM"></p>
 </li>
 <li><p>通过iTunes Connect查找。<br>具体方法是登录iTunesConnect,点击某个APP详情页，从所有的编译版本中找到需要的版本，然后点击下载相应的dSYM文件。</p>
 </li>
