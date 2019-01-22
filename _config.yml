@@ -13,7 +13,7 @@ timezone: Asia/Shanghai
 # URL
 ## If your site is put in a subdirectory, set url as 'http://yoursite.com/child' and root as '/child/'
 url: http://kobeluo.com
-root: /TECH/
+root: /tech/
 permalink: :year/:month/:day/:title/
 permalink_defaults:
 
@@ -96,5 +96,5 @@ plugins: hexo-generate-feed
 ## Docs: https://hexo.io/docs/deployment.html
 deploy:
   type: git
-  repo: git@github.com:KobeLuo/TECH.git
+  repo: git@github.com:KobeLuo/tech.git
   branch: gh-pages
