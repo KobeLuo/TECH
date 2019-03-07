@@ -55,7 +55,7 @@ highlight:
   tab_replace:
 
 # Category & Tag
-default_category: uncategorized
+default_category: Objective-C
 category_map: categories
 tag_map: tags
 
@@ -106,4 +106,4 @@ deploy:
   type: git
   repo: git@github.com:KobeLuo/tech.git
   branch: gh-pages
-  type: baidu_url_submitter
+#  type: baidu_url_submitter
