@@ -129,16 +129,17 @@
 
 
 
-  <meta name="description" content="一个iOS和Mac OS开发的技术渣">
-<meta property="og:type" content="website">
-<meta property="og:title" content="KobeLuo的技术笔记">
-<meta property="og:url" content="http://kobeluo.com/archives/2018/07/index.html">
+  <meta name="description" content="###用到的工具或技术点chmodchflagsetFileGetFileInfo hidden &amp;amp; nohidden文件在GUI上隐藏和显示，但在命令行中使用ls依然可以看到该文件12$ chflags hidden file$ chflags nohidden file apaque &amp;amp; noapaque12$ chflags apaque file$ chflags noap">
+<meta property="og:type" content="article">
+<meta property="og:title" content="OS X文件权限控制（未完结）">
+<meta property="og:url" content="http://kobeluo.com/2019/02/22/osx-permisson-control/index.html">
 <meta property="og:site_name" content="KobeLuo的技术笔记">
-<meta property="og:description" content="一个iOS和Mac OS开发的技术渣">
+<meta property="og:description" content="###用到的工具或技术点chmodchflagsetFileGetFileInfo hidden &amp;amp; nohidden文件在GUI上隐藏和显示，但在命令行中使用ls依然可以看到该文件12$ chflags hidden file$ chflags nohidden file apaque &amp;amp; noapaque12$ chflags apaque file$ chflags noap">
 <meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2019-03-07T06:37:41.210Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="KobeLuo的技术笔记">
-<meta name="twitter:description" content="一个iOS和Mac OS开发的技术渣">
+<meta name="twitter:title" content="OS X文件权限控制（未完结）">
+<meta name="twitter:description" content="###用到的工具或技术点chmodchflagsetFileGetFileInfo hidden &amp;amp; nohidden文件在GUI上隐藏和显示，但在命令行中使用ls依然可以看到该文件12$ chflags hidden file$ chflags nohidden file apaque &amp;amp; noapaque12$ chflags apaque file$ chflags noap">
 
 
 
@@ -147,7 +148,7 @@
 
 
 
-  <link rel="canonical" href="http://kobeluo.com/archives/2018/07/"/>
+  <link rel="canonical" href="http://kobeluo.com/2019/02/22/osx-permisson-control/"/>
 
 
 
@@ -157,7 +158,7 @@
   };
 </script>
 
-  <title>归档 | KobeLuo的技术笔记</title>
+  <title>OS X文件权限控制（未完结） | KobeLuo的技术笔记</title>
   
 
 
@@ -205,7 +206,7 @@
     
   
 
-  <div class="container sidebar-position-left page-archive">
+  <div class="container sidebar-position-left page-post-detail">
     <div class="headband"></div>
     <a href="https://github.com/KobeLuo/tech" class="github-corner" aria-label="View source on GitHub"><svg width="80" height="80" viewBox="0 0 250 250" style="fill:#151513; color:#fff; position: absolute; top: 0; border: 0; right: 0;" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a><style>.github-corner:hover .octo-arm{animation:octocat-wave 560ms ease-in-out}@keyframes octocat-wave{0%,100%{transform:rotate(0)}20%,60%{transform:rotate(-25deg)}40%,80%{transform:rotate(10deg)}}@media (max-width:500px){.github-corner:hover .octo-arm{animation:none}.github-corner .octo-arm{animation:octocat-wave 560ms ease-in-out}}</style>
 
@@ -268,7 +269,7 @@
         
         
           
-          <li class="menu-item menu-item-archives menu-item-active">
+          <li class="menu-item menu-item-archives">
 
     
     
@@ -357,28 +358,6 @@
   
     
 
-    
-    
-      
-      
-    
-      
-      
-    
-      
-      
-    
-      
-      
-    
-      
-      
-    
-    
-
-  
-
-
   
 
   
@@ -426,80 +405,272 @@
           <div id="content" class="content">
             
 
+  <div id="posts" class="posts-expand">
+    
+
+  
+
   
   
   
-  <div class="post-block archive">
-    <div id="posts" class="posts-collapse">
-      <span class="archive-move-on"></span>
 
-      
-      <span class="archive-page-counter">
-        
-        
-        
-          
-        
-        嗯..! 目前共计 19 篇日志。 继续努力。
-      </span>
-      
-
-      
-
-        
-        
-        
-
-        
-          
-          <div class="collection-title">
-            <h1 class="archive-year" id="archive-year-2018">2018</h1>
-          </div>
-        
-        
-
-        
+  
 
   <article class="post post-type-categories" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://kobeluo.com/tech/2019/02/22/osx-permisson-control/"/>
 
-      <h2 class="post-title">
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="KOBE LUO"/>
+      <meta itemprop="description" content="一个iOS和Mac OS开发的技术渣"/>
+      <meta itemprop="image" content="/tech/images/avatar.jpeg"/>
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="KobeLuo的技术笔记"/>
+    </span>
+
+    
+      <header class="post-header">
+
         
-          <a class="post-title-link" href="/tech/2018/07/05/codesnapshot/" itemprop="url">
-            
-              <span itemprop="name">Swift 桥接OC代码重构</span>
-            
-          </a>
         
-      </h2>
+          <h1 class="post-title" itemprop="name headline">OS X文件权限控制（未完结）
 
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2018-07-05T10:48:11+08:00"
-              content="2018-07-05">
-          07-05
-        </time>
-      </div>
+              
+            
+          </h1>
+        
 
-    </header>
-  </article>
+        <div class="post-meta">
+          <span class="post-time">
 
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2019-02-22 09:37:11" itemprop="dateCreated datePublished" datetime="2019-02-22T09:37:11+08:00">2019-02-22</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2019-03-07 14:37:41" itemprop="dateModified" datetime="2019-03-07T14:37:41+08:00">2019-03-07</time>
+              
+            
+          </span>
+
+          
+
+          
+            
+            
+              
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+            
+                <a href="/tech/2019/02/22/osx-permisson-control/#comments" itemprop="discussionUrl">
+                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/tech/2019/02/22/osx-permisson-control/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="post-meta-item-icon"
+            >
+            <i class="fa fa-eye"></i>
+             阅读次数： 
+            <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>###用到的工具或技术点<br><a href="http://ahaack.net/technology/OS-X-Access-Control-Lists-ACL.html" target="_blank" rel="noopener">chmod</a><br><a href="https://ss64.com/osx/chflags.html" target="_blank" rel="noopener">chflag</a><br><a href="https://ss64.com/osx/setfile.html" target="_blank" rel="noopener">setFile</a><br><a href="https://ss64.com/osx/getfileinfo.html" target="_blank" rel="noopener">GetFileInfo</a></p>
+<h4 id="hidden-amp-nohidden"><a href="#hidden-amp-nohidden" class="headerlink" title="hidden &amp; nohidden"></a>hidden &amp; nohidden</h4><p>文件在GUI上隐藏和显示，但在命令行中使用ls依然可以看到该文件<br><figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ chflags hidden file</span><br><span class="line">$ chflags nohidden file</span><br></pre></td></tr></table></figure></p>
+<h3 id="apaque-amp-noapaque"><a href="#apaque-amp-noapaque" class="headerlink" title="apaque &amp; noapaque"></a>apaque &amp; noapaque</h3><figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ chflags apaque file</span><br><span class="line">$ chflags noapaque file</span><br></pre></td></tr></table></figure>
+<h3 id="uchg-amp-nouchg"><a href="#uchg-amp-nouchg" class="headerlink" title="uchg &amp; nouchg"></a>uchg &amp; nouchg</h3><figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">chflags uchg file</span><br><span class="line">chflags nouchg file</span><br></pre></td></tr></table></figure>
+<p>递归加解锁<br><figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">chflags -R uchg folder</span><br><span class="line">chflags -R nouchg folder</span><br></pre></td></tr></table></figure></p>
+<h3 id="schg-amp-noschg"><a href="#schg-amp-noschg" class="headerlink" title="schg &amp; noschg"></a>schg &amp; noschg</h3><p>控制文件权限<br><figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ sudo chflags schg file</span><br><span class="line">$ sudo chflags noschg file</span><br></pre></td></tr></table></figure></p>
+<p>设置文件的type,该type不能再file attributes中显示，但可以通过GetFileInfo获取<br><figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ setFile -t <span class="string">"ABCD"</span> file</span><br><span class="line">$ GetFileInfo -t file</span><br></pre></td></tr></table></figure></p>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    <div>
+          
+          <div>
+    
+        <div style="text-align:center;color: #ccc;font-size:14px;">------ 本文结束 ------</div>
+    
+</div>
+          
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+  <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+    <div>坚持原创技术分享，您的支持将鼓励我继续创作！</div>
+    <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+      <span>赏</span>
+    </button>
+    <div id="QR" style="display: none;">
+      
+        <div id="wechat" style="display: inline-block">
+          <img id="wechat_qr" src="https://wx2.sinaimg.cn/mw690/006AZU4wgy1fw6n5xbgnmj30og0zktaf.jpg" alt="KOBE LUO WeChat Pay"/>
+          <p>微信打赏</p>
+        </div>
+      
+      
+        <div id="alipay" style="display: inline-block">
+          <img id="alipay_qr" src="https://wx4.sinaimg.cn/mw690/006AZU4wgy1fw6n5w7j3kj30go0p0wfj.jpg" alt="KOBE LUO Alipay"/>
+          <p>支付宝打赏</p>
+        </div>
+      
+    </div>
+  </div>
 
 
       
-
     </div>
+
+    <div>
+      
+        
+  <ul class="post-copyright">
+    <li class="post-copyright-author">
+      <strong>本文作者：</strong>
+      KOBE LUO
+    </li>
+    <li class="post-copyright-title">
+      <strong>本文标题：</strong>
+      OS X文件权限控制（未完结）
+    </li>
+    <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="http://www.kobeluo.com/tech/2019/02/22/osx-permisson-control/" title="OS X文件权限控制（未完结）">http://www.kobeluo.com/tech/2019/02/22/osx-permisson-control/</a>
+    </li>
+    <li class="post-copyright-license">
+      <strong>版权声明： </strong>
+      本博客所有文章除特别声明外，均采用 https://creativecommons.org/licenses/by-nc-sa/4.0/ 许可协议。转载请注明出处！
+    </li>
+  </ul>
+
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/tech/2019/01/15/monitorFSOnOSX/" rel="next" title="Monitor Filesystem on Mac OS X">
+                <i class="fa fa-chevron-left"></i> Monitor Filesystem on Mac OS X
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
   </div>
   
   
   
+  </article>
 
-  
 
+  </div>
 
 
           </div>
           
+
+  
+    <div class="comments" id="comments">
+    </div>
+
+  
+
+
 
         </div>
         
@@ -522,8 +693,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <div class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <div class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -759,6 +939,23 @@
       </div>
 
       
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#hidden-amp-nohidden"><span class="nav-number">1.</span> <span class="nav-text">hidden &amp; nohidden</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#apaque-amp-noapaque"><span class="nav-number"></span> <span class="nav-text">apaque &amp; noapaque</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#uchg-amp-nouchg"><span class="nav-number"></span> <span class="nav-text">uchg &amp; nouchg</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#schg-amp-noschg"><span class="nav-number"></span> <span class="nav-text">schg &amp; noschg</span></a></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
+      
 
       
         <div class="back-to-top">
@@ -902,6 +1099,10 @@
 
 
   
+  <script src="/tech/js/src/scrollspy.js?v=6.7.0"></script>
+<script src="/tech/js/src/post-details.js?v=6.7.0"></script>
+
+
 
   
 
@@ -949,6 +1150,8 @@
 
 
 
+
+  
 
 
   
@@ -1321,7 +1524,7 @@
   <script src="/tech/lib/bookmark/bookmark.min.js?v=1.0"></script>
   <script>
   
-    bookmark.loadBookmark();
+    bookmark.scrollToMark('auto', "#更多");
   
   </script>
 
