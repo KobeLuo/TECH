@@ -80,6 +80,7 @@ comments: false
 - <font color="#5bc0de">沟通能力强</font>，各种复杂的问题能说到点上，对方可以很快理解意思
 - 抗压力OK，保质完成过多个紧急的项目
 - <font color="#5bc0de">架构能力OK</font>，4年以上项目架构经验
+- <font color="#5bc0de">拥抱变化</font>，能随时跟随公司的业务变更改变自身角色
 
 ---
 

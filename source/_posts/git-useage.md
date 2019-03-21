@@ -157,6 +157,9 @@ git stash
 git stash pop 
 //将最后一次暂存的代码恢复
 
+git stash save "some description"
+//给暂存内容定义一个描述：some description
+
 git stash -p path/to/file
 //暂存某一个文件的内容，执行命令后要选择'y',暂存成功后，该文件将从本地变更中移出。
 
@@ -166,8 +169,13 @@ git stash -p -- path/to/file1 path/to/file2
 git stash list
 //列出所有stash列表
 
+git stash pop 1
+//取出index为1的暂存数据
+
 git stash drop
 //丢弃最后一次代码暂存内容
+
+
 ```
 [更多用法](https://git-scm.com/docs/git-stash)
 

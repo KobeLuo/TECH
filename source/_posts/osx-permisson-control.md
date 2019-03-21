@@ -6,7 +6,7 @@ date: 2019-02-22 09:37:11
 categories:
 tags:
 ---
-###用到的工具或技术点
+### 用到的工具或技术点
 [chmod](http://ahaack.net/technology/OS-X-Access-Control-Lists-ACL.html)
 [chflag](https://ss64.com/osx/chflags.html)
 [setFile](https://ss64.com/osx/setfile.html)
