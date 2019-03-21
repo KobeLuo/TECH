@@ -1,172 +1,460 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  
+
+    
+    
   <url>
     <loc>http://kobeluo.com/2019/02/22/osx-permisson-control/</loc>
-    
     <lastmod>2019-03-14T06:01:54.552Z</lastmod>
+    <data>
+        <display>
+        <title>OS X文件权限控制（未完结）</title>
+        <pubTime>2019-02-22T01:37:11.000Z</pubTime>
+        
+         
+           
+        </display>
+    </data>
+    </url>
+
     
-  </url>
-  
   <url>
     <loc>http://kobeluo.com/2016/07/15/git-useage/</loc>
-    
     <lastmod>2019-03-08T07:34:32.424Z</lastmod>
+    <data>
+        <display>
+        <title>git使用</title>
+        <pubTime>2016-07-15T11:15:50.000Z</pubTime>
+        
+        <tag>常用命令 </tag>
+         
+        <tag>git </tag>
+         
+         
+           
+             
+              <breadCrumb title="Tools" url="http://kobeluo.com/categories/Tools/"/>
+          
+        </display>
+    </data>
+    </url>
+
     
-  </url>
-  
   <url>
     <loc>http://kobeluo.com/2016/11/16/developerSites/</loc>
-    
     <lastmod>2019-03-07T06:33:17.935Z</lastmod>
+    <data>
+        <display>
+        <title>开发的一些站点记录</title>
+        <pubTime>2016-11-16T06:22:21.000Z</pubTime>
+        
+         
+           
+             
+              <breadCrumb title="Tools" url="http://kobeluo.com/categories/Tools/"/>
+          
+        </display>
+    </data>
+    </url>
+
     
-  </url>
-  
   <url>
     <loc>http://kobeluo.com/2017/03/20/dispatch_queue/</loc>
-    
     <lastmod>2019-02-22T01:35:10.314Z</lastmod>
+    <data>
+        <display>
+        <title>GCD系列:队列(dispatch_queue)</title>
+        <pubTime>2017-03-20T03:44:22.000Z</pubTime>
+        
+        <tag>GCD </tag>
+         
+        <tag>Dispatch queue </tag>
+         
+        <tag>队列 </tag>
+         
+         
+           
+             
+              <breadCrumb title="Mac Develop" url="http://kobeluo.com/categories/Mac-Develop/"/>
+          
+        </display>
+    </data>
+    </url>
+
     
-  </url>
-  
   <url>
     <loc>http://kobeluo.com/2017/04/07/Hexo-useage-note/</loc>
-    
     <lastmod>2019-02-22T01:35:10.313Z</lastmod>
+    <data>
+        <display>
+        <title>Hexo使用笔记</title>
+        <pubTime>2017-04-07T13:20:19.000Z</pubTime>
+        
+        <tag>hexo使用 </tag>
+         
+         
+           
+             
+              <breadCrumb title="Hexo" url="http://kobeluo.com/categories/Hexo/"/>
+          
+        </display>
+    </data>
+    </url>
+
     
-  </url>
-  
-  <url>
-    <loc>http://kobeluo.com/about/index.html</loc>
     
-    <lastmod>2019-01-22T09:35:25.756Z</lastmod>
     
-  </url>
-  
-  <url>
-    <loc>http://kobeluo.com/tags/index.html</loc>
-    
-    <lastmod>2019-01-22T09:33:55.370Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://kobeluo.com/categories/index.html</loc>
-    
-    <lastmod>2019-01-22T09:33:55.369Z</lastmod>
-    
-  </url>
-  
   <url>
     <loc>http://kobeluo.com/2017/07/24/osxfuse/</loc>
-    
     <lastmod>2019-01-22T09:33:55.366Z</lastmod>
+    <data>
+        <display>
+        <title>mac上建立基于osx fuse的虚拟磁盘</title>
+        <pubTime>2017-07-24T12:25:04.000Z</pubTime>
+        
+        <tag>FUSE </tag>
+         
+        <tag>Mount Disk </tag>
+         
+        <tag>LookbackFS </tag>
+         
+         
+           
+             
+              <breadCrumb title="Mac Develop" url="http://kobeluo.com/categories/Mac-Develop/"/>
+          
+        </display>
+    </data>
+    </url>
+
     
-  </url>
-  
   <url>
     <loc>http://kobeluo.com/2018/11/13/os-lock/</loc>
-    
     <lastmod>2019-01-22T09:33:55.357Z</lastmod>
+    <data>
+        <display>
+        <title>细数Mac OS/iOS 系统下的锁(lock)</title>
+        <pubTime>2018-11-13T03:30:49.000Z</pubTime>
+        
+        <tag>OS Lock </tag>
+         
+        <tag>锁 </tag>
+         
+        <tag>locks </tag>
+         
+        <tag>osunfairlock </tag>
+         
+        <tag>mutex </tag>
+         
+        <tag>semaphore </tag>
+         
+        <tag>nslock </tag>
+         
+        <tag>NSConditionLock </tag>
+         
+         
+           
+             
+              <breadCrumb title="Mac Develop" url="http://kobeluo.com/categories/Mac-Develop/"/>
+          
+        </display>
+    </data>
+    </url>
+
     
-  </url>
-  
   <url>
     <loc>http://kobeluo.com/2019/01/15/monitorFSOnOSX/</loc>
-    
     <lastmod>2019-01-22T09:33:55.357Z</lastmod>
+    <data>
+        <display>
+        <title>Monitor Filesystem on Mac OS X</title>
+        <pubTime>2019-01-15T10:02:18.000Z</pubTime>
+        
+        <tag>Monitor FS </tag>
+         
+        <tag>监控文件系统 </tag>
+         
+        <tag>FSEvent </tag>
+         
+        <tag>MACF </tag>
+         
+        <tag>fswatch </tag>
+         
+        <tag>Dtrace </tag>
+         
+        <tag>NSFileCoordinate </tag>
+         
+         
+           
+             
+              <breadCrumb title="Mac Develop" url="http://kobeluo.com/categories/Mac-Develop/"/>
+          
+        </display>
+    </data>
+    </url>
+
     
-  </url>
-  
   <url>
     <loc>http://kobeluo.com/2018/10/31/mach-synchronization/</loc>
-    
     <lastmod>2019-01-22T09:33:55.356Z</lastmod>
+    <data>
+        <display>
+        <title>Mach 同步机制-学习笔记</title>
+        <pubTime>2018-10-31T08:59:31.000Z</pubTime>
+        
+        <tag>Mach同步机制，同步，mutex，自旋锁，信号量 </tag>
+         
+         
+           
+             
+              <breadCrumb title="OS Kernal" url="http://kobeluo.com/categories/OS-Kernal/"/>
+          
+        </display>
+    </data>
+    </url>
+
     
-  </url>
-  
   <url>
     <loc>http://kobeluo.com/2018/10/16/git-deep/</loc>
-    
     <lastmod>2019-01-22T09:33:55.348Z</lastmod>
+    <data>
+        <display>
+        <title>git深入理解</title>
+        <pubTime>2018-10-16T01:53:11.000Z</pubTime>
+        
+        <tag>git理解 </tag>
+         
+        <tag>git </tag>
+         
+        <tag>git进阶 </tag>
+         
+         
+           
+             
+              <breadCrumb title="Tools" url="http://kobeluo.com/categories/Tools/"/>
+          
+        </display>
+    </data>
+    </url>
+
     
-  </url>
-  
-  <url>
-    <loc>http://kobeluo.com/2017/03/28/dispatch-semaphore/</loc>
-    
-    <lastmod>2019-01-22T09:33:55.347Z</lastmod>
-    
-  </url>
-  
   <url>
     <loc>http://kobeluo.com/2017/03/27/dispatch-block/</loc>
-    
     <lastmod>2019-01-22T09:33:55.347Z</lastmod>
+    <data>
+        <display>
+        <title>GCD系列:代码块(dispatch_block)</title>
+        <pubTime>2017-03-27T12:25:04.000Z</pubTime>
+        
+        <tag>GCD </tag>
+         
+        <tag>Dispatch block </tag>
+         
+        <tag>dispatch代码块 </tag>
+         
+         
+           
+             
+              <breadCrumb title="Mac Develop" url="http://kobeluo.com/categories/Mac-Develop/"/>
+          
+        </display>
+    </data>
+    </url>
+
     
-  </url>
-  
+  <url>
+    <loc>http://kobeluo.com/2017/03/28/dispatch-semaphore/</loc>
+    <lastmod>2019-01-22T09:33:55.347Z</lastmod>
+    <data>
+        <display>
+        <title>GCD系列:信号量(dispatch_semaphore)</title>
+        <pubTime>2017-03-28T12:44:35.000Z</pubTime>
+        
+        <tag>GCD </tag>
+         
+        <tag>dispatch_semaphore </tag>
+         
+        <tag>信号量 </tag>
+         
+         
+           
+             
+              <breadCrumb title="Mac Develop" url="http://kobeluo.com/categories/Mac-Develop/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
   <url>
     <loc>http://kobeluo.com/2017/11/16/crashAnalysis/</loc>
-    
     <lastmod>2019-01-22T09:33:55.341Z</lastmod>
+    <data>
+        <display>
+        <title>iOS/Mac OS下的 Crash 崩溃分析</title>
+        <pubTime>2017-11-16T05:35:48.000Z</pubTime>
+        
+        <tag>崩溃日志 </tag>
+         
+        <tag>崩溃解析 </tag>
+         
+        <tag>crash analysis </tag>
+         
+        <tag>.dSYM .crash </tag>
+         
+         
+           
+             
+              <breadCrumb title="Mac Develop" url="http://kobeluo.com/categories/Mac-Develop/"/>
+          
+        </display>
+    </data>
+    </url>
+
     
-  </url>
-  
   <url>
     <loc>http://kobeluo.com/2018/07/05/codesnapshot/</loc>
-    
     <lastmod>2019-01-22T09:33:55.340Z</lastmod>
+    <data>
+        <display>
+        <title>Swift 桥接OC代码重构</title>
+        <pubTime>2018-07-05T02:48:11.000Z</pubTime>
+        
+        <tag>代码共享 </tag>
+         
+        <tag>片段代码 </tag>
+         
+         
+           
+             
+              <breadCrumb title="Mac Develop" url="http://kobeluo.com/categories/Mac-Develop/"/>
+          
+        </display>
+    </data>
+    </url>
+
     
-  </url>
-  
-  <url>
-    <loc>http://kobeluo.com/2018/10/31/Mach/</loc>
-    
-    <lastmod>2019-01-22T09:33:55.339Z</lastmod>
-    
-  </url>
-  
   <url>
     <loc>http://kobeluo.com/2018/11/05/StringEncode/</loc>
-    
     <lastmod>2019-01-22T09:33:55.339Z</lastmod>
+    <data>
+        <display>
+        <title>Unicode Forms</title>
+        <pubTime>2018-11-05T03:16:15.000Z</pubTime>
+        
+        <tag>编码格式 </tag>
+         
+        <tag>FormC </tag>
+         
+        <tag>FormD </tag>
+         
+        <tag>unicode Encode </tag>
+         
+         
+           
+             
+              <breadCrumb title="Tools" url="http://kobeluo.com/categories/Tools/"/>
+          
+        </display>
+    </data>
+    </url>
+
     
-  </url>
-  
   <url>
-    <loc>http://kobeluo.com/2018/10/31/IPC/</loc>
+    <loc>http://kobeluo.com/2018/10/31/Mach/</loc>
+    <lastmod>2019-01-22T09:33:55.339Z</lastmod>
+    <data>
+        <display>
+        <title>Mach 原语-学习笔记</title>
+        <pubTime>2018-10-31T02:21:59.000Z</pubTime>
+        
+        <tag>Mach </tag>
+         
+        <tag>MAC OS </tag>
+         
+        <tag>Mac内核 </tag>
+         
+         
+           
+             
+              <breadCrumb title="OS Kernal" url="http://kobeluo.com/categories/OS-Kernal/"/>
+          
+        </display>
+    </data>
+    </url>
+
     
-    <lastmod>2019-01-22T09:33:55.338Z</lastmod>
-    
-  </url>
-  
   <url>
     <loc>http://kobeluo.com/2016/04/06/Mac%20useage/</loc>
-    
     <lastmod>2019-01-22T09:33:55.338Z</lastmod>
+    <data>
+        <display>
+        <title>Mac使用笔记</title>
+        <pubTime>2016-04-06T09:48:11.000Z</pubTime>
+        
+        <tag>常用命令 </tag>
+         
+         
+           
+             
+              <breadCrumb title="Tools" url="http://kobeluo.com/categories/Tools/"/>
+          
+        </display>
+    </data>
+    </url>
+
     
-  </url>
-  
+  <url>
+    <loc>http://kobeluo.com/2018/10/31/IPC/</loc>
+    <lastmod>2019-01-22T09:33:55.338Z</lastmod>
+    <data>
+        <display>
+        <title>IPC-进程间通信</title>
+        <pubTime>2018-10-31T08:06:25.000Z</pubTime>
+        
+        <tag>进程 </tag>
+         
+        <tag>Process Communication </tag>
+         
+        <tag>进程间通信 </tag>
+         
+        <tag>IPC </tag>
+         
+         
+           
+             
+              <breadCrumb title="OS Kernal" url="http://kobeluo.com/categories/OS-Kernal/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
   <url>
     <loc>http://kobeluo.com/2018/01/15/FinderSync/</loc>
-    
     <lastmod>2019-01-22T09:33:55.337Z</lastmod>
+    <data>
+        <display>
+        <title>FinderSync插件的使用及调试</title>
+        <pubTime>2018-01-15T10:01:23.000Z</pubTime>
+        
+        <tag>FinderSync </tag>
+         
+        <tag>Finder插件 </tag>
+         
+        <tag>右键菜单 </tag>
+         
+        <tag>文件图标 </tag>
+         
+         
+           
+             
+              <breadCrumb title="Mac Develop" url="http://kobeluo.com/categories/Mac-Develop/"/>
+          
+        </display>
+    </data>
+    </url>
+
     
-  </url>
-  
-  <url>
-    <loc>http://kobeluo.com//404.html</loc>
     
-    <lastmod>2019-01-22T09:33:55.336Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://kobeluo.com/commonweal/index.html</loc>
-    
-    <lastmod>2018-10-15T02:30:19.598Z</lastmod>
-    
-  </url>
-  
 </urlset>
