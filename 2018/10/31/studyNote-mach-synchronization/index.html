@@ -133,11 +133,11 @@
 <meta name="keywords" content="Mach同步机制，同步，mutex，自旋锁，信号量">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Mach 同步机制-学习笔记">
-<meta property="og:url" content="http://kobeluo.com/2018/10/31/mach-synchronization/index.html">
+<meta property="og:url" content="http://kobeluo.com/2018/10/31/studyNote-mach-synchronization/index.html">
 <meta property="og:site_name" content="KobeLuo的技术笔记">
 <meta property="og:description" content="消息传递机制是 Mach IPC架构中的一个组件，另一个组件是同步机制(synchronization)，同步机制用于判定多个并发的操纵时，如何访问共享资源的问题。同步机制的本质是:排他访问的能力，即：在使用一个资源时，排除其它对象对该资源的访问的能力。最基本的同步原语是互斥(mutual exclusion)对象，也叫互斥体(mutex)。互斥体只不过是内核内存中的普通变量，硬件必须对这些变量进">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2019-01-22T09:33:55.356Z">
+<meta property="og:updated_time" content="2019-03-21T07:50:46.114Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Mach 同步机制-学习笔记">
 <meta name="twitter:description" content="消息传递机制是 Mach IPC架构中的一个组件，另一个组件是同步机制(synchronization)，同步机制用于判定多个并发的操纵时，如何访问共享资源的问题。同步机制的本质是:排他访问的能力，即：在使用一个资源时，排除其它对象对该资源的访问的能力。最基本的同步原语是互斥(mutual exclusion)对象，也叫互斥体(mutex)。互斥体只不过是内核内存中的普通变量，硬件必须对这些变量进">
@@ -149,7 +149,7 @@
 
 
 
-  <link rel="canonical" href="http://kobeluo.com/2018/10/31/mach-synchronization/"/>
+  <link rel="canonical" href="http://kobeluo.com/2018/10/31/studyNote-mach-synchronization/"/>
 
 
 
@@ -422,7 +422,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://kobeluo.com/tech/2018/10/31/mach-synchronization/"/>
+    <link itemprop="mainEntityOfPage" href="http://kobeluo.com/tech/2018/10/31/studyNote-mach-synchronization/"/>
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="KOBE LUO"/>
@@ -482,7 +482,7 @@
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：2019-01-22 17:33:55" itemprop="dateModified" datetime="2019-01-22T17:33:55+08:00">2019-01-22</time>
+                <time title="修改时间：2019-03-21 15:50:46" itemprop="dateModified" datetime="2019-03-21T15:50:46+08:00">2019-03-21</time>
               
             
           </span>
@@ -517,8 +517,8 @@
                   <i class="fa fa-comment-o"></i>
                 </span>
             
-                <a href="/tech/2018/10/31/mach-synchronization/#comments" itemprop="discussionUrl">
-                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/tech/2018/10/31/mach-synchronization/" itemprop="commentCount"></span>
+                <a href="/tech/2018/10/31/studyNote-mach-synchronization/#comments" itemprop="discussionUrl">
+                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/tech/2018/10/31/studyNote-mach-synchronization/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -697,7 +697,7 @@
     </li>
     <li class="post-copyright-link">
       <strong>本文链接：</strong>
-      <a href="http://www.kobeluo.com/tech/2018/10/31/mach-synchronization/" title="Mach 同步机制-学习笔记">http://www.kobeluo.com/tech/2018/10/31/mach-synchronization/</a>
+      <a href="http://www.kobeluo.com/tech/2018/10/31/studyNote-mach-synchronization/" title="Mach 同步机制-学习笔记">http://www.kobeluo.com/tech/2018/10/31/studyNote-mach-synchronization/</a>
     </li>
     <li class="post-copyright-license">
       <strong>版权声明： </strong>
@@ -726,8 +726,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/tech/2018/10/31/IPC/" rel="next" title="IPC-进程间通信">
-                <i class="fa fa-chevron-left"></i> IPC-进程间通信
+              <a href="/tech/2018/10/31/studyNote-IPC/" rel="next" title="IPC-进程间通信-学习笔记">
+                <i class="fa fa-chevron-left"></i> IPC-进程间通信-学习笔记
               </a>
             
           </div>

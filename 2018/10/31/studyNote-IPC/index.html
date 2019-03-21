@@ -129,18 +129,18 @@
 
 
 
-  <meta name="description" content="Mach 概述 Mach设计原则Mac OS X采用Mach作为锡系统的内核，其源头可以追溯到乔老爷创立的NeXT。Mach采用了极简主义概念:具有一个简单最小的核心，支持面向对象的模型，使得独立的具有良好定义的组件可以通过消息的方式互相通信。Mach只提供了一个极简的模型，操作系统本身可以在这个模型基础上实现，OS X的XNU是UNIX（FreeBSD 4.4）在Mach上的一个具体实现，Win">
-<meta name="keywords" content="Mach,MAC OS,Mac内核">
+  <meta name="description" content="进程间通信的基础原语: 消息、端口、已经确保并发安全的信号量和锁。这篇文章主要对于这些原语的底层实现和端口的内部实现做一些探讨。 Mach任务是一个对应于进程的高层次抽象，Mach任务包含了一个指向自己的IPC namespace（命名空间），在命名空间中保存了自己的端口，此外mach任务也可以获得系统范围内的端口，如：主机端口、特权端口和其它端口。">
+<meta name="keywords" content="进程,Process Communication,进程间通信,IPC">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Mach 原语-学习笔记">
-<meta property="og:url" content="http://kobeluo.com/2018/10/31/Mach/index.html">
+<meta property="og:title" content="IPC-进程间通信-学习笔记">
+<meta property="og:url" content="http://kobeluo.com/2018/10/31/studyNote-IPC/index.html">
 <meta property="og:site_name" content="KobeLuo的技术笔记">
-<meta property="og:description" content="Mach 概述 Mach设计原则Mac OS X采用Mach作为锡系统的内核，其源头可以追溯到乔老爷创立的NeXT。Mach采用了极简主义概念:具有一个简单最小的核心，支持面向对象的模型，使得独立的具有良好定义的组件可以通过消息的方式互相通信。Mach只提供了一个极简的模型，操作系统本身可以在这个模型基础上实现，OS X的XNU是UNIX（FreeBSD 4.4）在Mach上的一个具体实现，Win">
+<meta property="og:description" content="进程间通信的基础原语: 消息、端口、已经确保并发安全的信号量和锁。这篇文章主要对于这些原语的底层实现和端口的内部实现做一些探讨。 Mach任务是一个对应于进程的高层次抽象，Mach任务包含了一个指向自己的IPC namespace（命名空间），在命名空间中保存了自己的端口，此外mach任务也可以获得系统范围内的端口，如：主机端口、特权端口和其它端口。">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2019-01-22T09:33:55.339Z">
+<meta property="og:updated_time" content="2019-03-21T07:49:31.205Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Mach 原语-学习笔记">
-<meta name="twitter:description" content="Mach 概述 Mach设计原则Mac OS X采用Mach作为锡系统的内核，其源头可以追溯到乔老爷创立的NeXT。Mach采用了极简主义概念:具有一个简单最小的核心，支持面向对象的模型，使得独立的具有良好定义的组件可以通过消息的方式互相通信。Mach只提供了一个极简的模型，操作系统本身可以在这个模型基础上实现，OS X的XNU是UNIX（FreeBSD 4.4）在Mach上的一个具体实现，Win">
+<meta name="twitter:title" content="IPC-进程间通信-学习笔记">
+<meta name="twitter:description" content="进程间通信的基础原语: 消息、端口、已经确保并发安全的信号量和锁。这篇文章主要对于这些原语的底层实现和端口的内部实现做一些探讨。 Mach任务是一个对应于进程的高层次抽象，Mach任务包含了一个指向自己的IPC namespace（命名空间），在命名空间中保存了自己的端口，此外mach任务也可以获得系统范围内的端口，如：主机端口、特权端口和其它端口。">
 
 
 
@@ -149,7 +149,7 @@
 
 
 
-  <link rel="canonical" href="http://kobeluo.com/2018/10/31/Mach/"/>
+  <link rel="canonical" href="http://kobeluo.com/2018/10/31/studyNote-IPC/"/>
 
 
 
@@ -159,7 +159,7 @@
   };
 </script>
 
-  <title>Mach 原语-学习笔记 | KobeLuo的技术笔记</title>
+  <title>IPC-进程间通信-学习笔记 | KobeLuo的技术笔记</title>
   
 
 
@@ -422,7 +422,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://kobeluo.com/tech/2018/10/31/Mach/"/>
+    <link itemprop="mainEntityOfPage" href="http://kobeluo.com/tech/2018/10/31/studyNote-IPC/"/>
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="KOBE LUO"/>
@@ -439,7 +439,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">Mach 原语-学习笔记
+          <h1 class="post-title" itemprop="name headline">IPC-进程间通信-学习笔记
 
               
             
@@ -465,7 +465,7 @@
                 
               
 
-              <time title="创建时间：2018-10-31 10:21:59" itemprop="dateCreated datePublished" datetime="2018-10-31T10:21:59+08:00">2018-10-31</time>
+              <time title="创建时间：2018-10-31 16:06:25" itemprop="dateCreated datePublished" datetime="2018-10-31T16:06:25+08:00">2018-10-31</time>
             
 
             
@@ -482,7 +482,7 @@
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：2019-01-22 17:33:55" itemprop="dateModified" datetime="2019-01-22T17:33:55+08:00">2019-01-22</time>
+                <time title="修改时间：2019-03-21 15:49:31" itemprop="dateModified" datetime="2019-03-21T15:49:31+08:00">2019-03-21</time>
               
             
           </span>
@@ -517,8 +517,8 @@
                   <i class="fa fa-comment-o"></i>
                 </span>
             
-                <a href="/tech/2018/10/31/Mach/#comments" itemprop="discussionUrl">
-                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/tech/2018/10/31/Mach/" itemprop="commentCount"></span>
+                <a href="/tech/2018/10/31/studyNote-IPC/#comments" itemprop="discussionUrl">
+                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/tech/2018/10/31/studyNote-IPC/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -554,190 +554,40 @@
       
 
       
-        <h3 id="Mach-概述"><a href="#Mach-概述" class="headerlink" title="Mach 概述"></a><a href="https://zh.wikipedia.org/wiki/Mach" target="_blank" rel="noopener">Mach</a> 概述</h3><hr>
-<h4 id="Mach设计原则"><a href="#Mach设计原则" class="headerlink" title="Mach设计原则"></a>Mach设计原则</h4><p>Mac OS X采用Mach作为锡系统的内核，其源头可以追溯到乔老爷创立的NeXT。Mach采用了极简主义概念:<br><code>具有一个简单最小的核心，支持面向对象的模型，使得独立的具有良好定义的组件可以通过消息的方式互相通信。</code><br>Mach只提供了一个极简的模型，操作系统本身可以在这个模型基础上实现，OS X的<a href="https://en.wikipedia.org/wiki/XNU" target="_blank" rel="noopener">XNU</a>是UNIX（<a href="https://zh.wikipedia.org/zh-hans/FreeBSD" target="_blank" rel="noopener">FreeBSD</a> 4.4）在Mach上的一个具体实现，Windows也采用了一些Mach的原则，不过其实现方式与Mac OS则完全不同。</p>
-<p>Mach内核成为了一个底层的基础，它只关心驱动操作系统的最少需求，其余的功能则需要由上层来实现，尽管Mach对用户态也是可见的，使用Mach都是实现了深层次的核心功能，在这个基础上可以实现更大的内核，而Mach则是内核中的内核，<code>XNU的官方API是BSD的POSIX API,Apple保持了Mach绝对的极简，基于Mach外层则有丰富的Cocoa API来支撑，因此Mach是Mac OS X操作系统中最关键最基础的部分</code></p>
+        <p>进程间通信的基础原语: 消息、端口、已经确保并发安全的信号量和锁。这篇文章主要对于这些原语的底层实现和端口的内部实现做一些探讨。</p>
+<p>Mach任务是一个对应于进程的高层次抽象，Mach任务包含了一个指向自己的IPC namespace（命名空间），在命名空间中保存了自己的端口，此外mach任务也可以获得系统范围内的端口，如：主机端口、特权端口和其它端口。</p>
 <a id="more"></a>
-<p>在Mach的所有都是通过自己的对象实现的。进程、线程、虚拟内存其实都是对象，所有的对象都有自己的属性，所谓的对象其实就是C语言的结构体加上函数指针实现的。</p>
-<p>Mach的独特之处在于选择了通过消息传递的方式实现对象与对象之间的通信。而其他架构中一个对象要访问另一个对象则需要一个接口来实现。而Mach对象不能直接调用另一个对象，而是通过消息传递的方式，源发送一条消息，这条消息被加入到目标对象的队列中等待处理，类似，消息处理中可能会产生一个应答，该应答则通过另一条消息被发送回源对象，消息发送的方式是以FIFIO的方式保证了传输的可靠性，而内容则由发送者和接收者协商。</p>
-<h4 id="Mach-设计目标"><a href="#Mach-设计目标" class="headerlink" title="Mach 设计目标"></a>Mach 设计目标</h4><p>其最重要的目标是将所有的功能都移出内核，将功能放在用户态中去实现，保持内核极简，其主要功能如下:</p>
+<h3 id="端口"><a href="#端口" class="headerlink" title="端口"></a>端口</h3><hr>
+<p>导出给用户空间的端口对象(mach_port_t)实际上是对”真正”端口对象的一个句柄，后者是<a href="https://opensource.apple.com/source/xnu/xnu-344/osfmk/ipc/ipc_port.h" target="_blank" rel="noopener">ipc_port_t</a>，其数据结构如下:<br><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment"> *  A receive right (port) can be in four states:</span></span><br><span class="line"><span class="comment"> *	1) dead (not active, ip_timestamp has death time)</span></span><br><span class="line"><span class="comment"> *	2) in a space (ip_receiver_name != 0, ip_receiver points</span></span><br><span class="line"><span class="comment"> *	to the space but doesn't hold a ref for it)</span></span><br><span class="line"><span class="comment"> *	3) in transit (ip_receiver_name == 0, ip_destination points</span></span><br><span class="line"><span class="comment"> *	to the destination port and holds a ref for it)</span></span><br><span class="line"><span class="comment"> *	4) in limbo (ip_receiver_name == 0, ip_destination == IP_NULL)</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> *  If the port is active, and ip_receiver points to some space,</span></span><br><span class="line"><span class="comment"> *  then ip_receiver_name != 0, and that space holds receive rights.</span></span><br><span class="line"><span class="comment"> *  If the port is not active, then ip_timestamp contains a timestamp</span></span><br><span class="line"><span class="comment"> *  taken when the port was destroyed.</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">typedef</span> <span class="keyword">unsigned</span> <span class="keyword">int</span> <span class="keyword">ipc_port_timestamp_t</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">typedef</span> <span class="keyword">unsigned</span> <span class="keyword">int</span> <span class="keyword">ipc_port_flags_t</span>;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">ipc_port</span> &#123;</span></span><br><span class="line"></span><br><span class="line">	<span class="comment">/*</span></span><br><span class="line"><span class="comment">	 * Initial sub-structure in common with ipc_pset and rpc_port</span></span><br><span class="line"><span class="comment">	 * First element is an ipc_object</span></span><br><span class="line"><span class="comment">	 */</span></span><br><span class="line">	<span class="class"><span class="keyword">struct</span> <span class="title">ipc_object</span> <span class="title">ip_object</span>;</span> <span class="comment">//ipc对象，初始化子结构跟ipc_pset和rpc_port一致。</span></span><br><span class="line"></span><br><span class="line">	<span class="keyword">union</span> &#123;</span><br><span class="line">		<span class="class"><span class="keyword">struct</span> <span class="title">ipc_space</span> *<span class="title">receiver</span>;</span> <span class="comment">//指向接收者的IPC指针</span></span><br><span class="line">		<span class="class"><span class="keyword">struct</span> <span class="title">ipc_port</span> *<span class="title">destination</span>;</span> <span class="comment">//指向全局端口的指针</span></span><br><span class="line">		<span class="keyword">ipc_port_timestamp_t</span> timestamp;</span><br><span class="line">	&#125; data;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">ipc_kobject_t</span> ip_kobject;</span><br><span class="line">	<span class="keyword">mach_port_mscount_t</span> ip_mscount;</span><br><span class="line">	<span class="keyword">mach_port_rights_t</span> ip_srights;</span><br><span class="line">	<span class="keyword">mach_port_rights_t</span> ip_sorights;</span><br><span class="line"></span><br><span class="line">	<span class="class"><span class="keyword">struct</span> <span class="title">ipc_port</span> *<span class="title">ip_nsrequest</span>;</span></span><br><span class="line">	<span class="class"><span class="keyword">struct</span> <span class="title">ipc_port</span> *<span class="title">ip_pdrequest</span>;</span></span><br><span class="line">	<span class="class"><span class="keyword">struct</span> <span class="title">ipc_port_request</span> *<span class="title">ip_dnrequests</span>;</span></span><br><span class="line"></span><br><span class="line">	<span class="keyword">unsigned</span> <span class="keyword">int</span> ip_pset_count;</span><br><span class="line">	<span class="class"><span class="keyword">struct</span> <span class="title">ipc_mqueue</span> <span class="title">ip_messages</span>;</span> <span class="comment">//消息队列</span></span><br><span class="line">	<span class="class"><span class="keyword">struct</span> <span class="title">ipc_kmsg</span> *<span class="title">ip_premsg</span>;</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">if</span>	NORMA_VM</span></span><br><span class="line">	<span class="comment">/*</span></span><br><span class="line"><span class="comment">	 *	These fields are needed for the use of XMM.</span></span><br><span class="line"><span class="comment">	 *	Few ports need this information; it should</span></span><br><span class="line"><span class="comment">	 *	be kept in XMM instead (TBD).  XXX</span></span><br><span class="line"><span class="comment">	 */</span></span><br><span class="line">	<span class="keyword">long</span>		ip_norma_xmm_object_refs;</span><br><span class="line">	<span class="class"><span class="keyword">struct</span> <span class="title">ipc_port</span>	*<span class="title">ip_norma_xmm_object</span>;</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">endif</span></span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">if</span>	MACH_ASSERT</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span>	IP_NSPARES		10</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span>	IP_CALLSTACK_MAX	10</span></span><br><span class="line">	<span class="keyword">queue_chain_t</span>	ip_port_links;	<span class="comment">/* all allocated ports */</span></span><br><span class="line">	<span class="keyword">natural_t</span>	ip_thread;	<span class="comment">/* who made me?  thread context */</span></span><br><span class="line">	<span class="keyword">unsigned</span> <span class="keyword">long</span>	ip_timetrack;	<span class="comment">/* give an idea of "when" created */</span></span><br><span class="line">	<span class="keyword">natural_t</span>	ip_callstack[IP_CALLSTACK_MAX]; <span class="comment">/* stack trace */</span></span><br><span class="line">	<span class="keyword">unsigned</span> <span class="keyword">long</span>	ip_spares[IP_NSPARES]; <span class="comment">/* for debugging */</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">endif</span>	<span class="comment">/* MACH_ASSERT */</span></span></span><br><span class="line">	<span class="keyword">int</span>		alias;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
+<h3 id="消息传递的实现"><a href="#消息传递的实现" class="headerlink" title="消息传递的实现"></a>消息传递的实现</h3><hr>
+<p>用户态的Mach消息传递使用的函数是<code>mach_msg()</code>函数，这个函数通过内核的Mach trap调用内核函数<code>mach_msg_trap()</code>。然后<code>mach_msg_trap</code>调用<code>mach_msg_overwrite_trap()</code>,<code>mach_msg_overwrite_trap</code>通过测试<code>MACH_SEND_MSG</code>和<code>MACH_RCV_MSG</code>标志位来判断是发送操作还是接收操作。</p>
+<p>下面分析IPC最重要的两个函数<code>mach_msg_send()</code>和<code>mach_msg_receive()</code>的实现</p>
+<h4 id="发送消息"><a href="#发送消息" class="headerlink" title="发送消息"></a>发送消息</h4><p>Mach 消息发送的核心逻辑在内核中有两处实现: <code>mach_msg_overwrite_trap()</code>和<code>mach_msg_send()</code>。后者只用于内核态的消息传递，对用户态不可见。两处实现的逻辑大同小异并遵循以下流程：</p>
 <ul>
-<li>控制点和执行单元(线程)管理</li>
-<li>线程和线程组的资源分配</li>
-<li>虚拟内存的分配和管理</li>
-<li>底层物理资源的分配(即CPU、内存和其他任何物理设备)</li>
+<li>调用<code>current_space()</code>来获取当前的IPC空间。</li>
+<li>调用<code>current_map()</code>来获取当前VM空间(<a href="https://www.freebsd.org/cgi/man.cgi?query=vm_map&amp;sektion=9&amp;apropos=0&amp;manpath=FreeBSD+11-current" target="_blank" rel="noopener">vm_map</a>)</li>
+<li>对消息的大小进行正确性检查。</li>
+<li>计算要分配的消息大小，从send_size参数获得大小再加上硬编码的MAX_TRAILER_SIZE。</li>
+<li>通过ipc_kmsg_alloc分配消息。</li>
+<li>复制消息(复制消息send_size字节的部分)，然后在消息头设置msgh_size。</li>
+<li>复制消息关联的端口权限，然后通过ipc_kmsg_copyin将所有的OOL数据的内存复制到当前的vm_map。 ipc_kmsg_copyin函数调用了ipc_kmsg_copyin_header和ipc_kmsg_copyin_body。</li>
+<li>调用ipc_kmsg_send()发送消息：<ul>
+<li>获得msgh_remote_port引用，并锁定端口。</li>
+<li>如果该端口是一个内核端口（即端口的ip_receiver是内核的IPC空间），那么通过ipc_kobject_server()函数处理消息。该函数会在内核中找到相应的函数来执行消息，还会生成消息的应答。</li>
+<li>不论哪种端口，调用ipc_mqueue_send(),这个函数将消息直接复制到端口的ip_messages队列中并唤醒任何正在等待的线程处理消息。</li>
 </ul>
-<p>Mach只提供了实行策略的方法，而不提供策略本身，Mach也不会识别任何安全特性、优先级和选项(Options)，所有这些都需要上层去定义和实现。</p>
-<p>Mach设计中有一个强大的优点:<strong>多处理(multi process)</strong>。<br>内核中大部分的功能都是由独立的组件实现，组件之间的传递具有良好定义的消息，之间没有公共作用域，因此，没有必要所有的组件都在同一个处理器上执行，甚至不要求在同一台计算机上执行。<br><strong>理论上：Mach可以轻松扩展成计算机集群使用的操作系统。</strong></p>
-<h3 id="Mach消息"><a href="#Mach消息" class="headerlink" title="Mach消息"></a>Mach消息</h3><hr>
-<p>消息是Mach中最基本的概念，通过短点(endpoint)或端口(port)之间传递，消息是Mach IPC的核心模块。</p>
-<h4 id="简单消息"><a href="#简单消息" class="headerlink" title="简单消息"></a>简单消息</h4><p>一条消息就像一个网络数据包，通过固定的包头进行封装，定义为BLOB(binary large object,二进制大对象)，在Mach中，消息定义在<code>&lt;mach/message.h&gt;</code>中<br><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> </span></span><br><span class="line"><span class="class">&#123;</span>	</span><br><span class="line">  <span class="keyword">mach_msg_header_t</span>		header;</span><br><span class="line">  <span class="keyword">mach_msg_body_t</span>		body;</span><br><span class="line">&#125;<span class="keyword">mach_msg_base_t</span>;</span><br></pre></td></tr></table></figure></p>
-<p>而消息头是强制要求的，其中定义了相关的元数据，内容如下：<br><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typedef</span>	<span class="class"><span class="keyword">struct</span> </span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line">  <span class="keyword">mach_msg_bits_t</span>	msgh_bits; 			<span class="comment">//消息头的标识位</span></span><br><span class="line">  <span class="keyword">mach_msg_size_t</span>	msgh_size;			<span class="comment">//大小，以字节为单位</span></span><br><span class="line">  <span class="keyword">mach_port_t</span>		msgh_remote_port;	<span class="comment">//目标(发出的消息)或源(接收的消息)</span></span><br><span class="line">  <span class="keyword">mach_port_t</span>		msgh_local_port;	<span class="comment">//源(发出的消息)或目标(接收的消息)</span></span><br><span class="line">  <span class="keyword">mach_port_name_t</span>	msgh_voucher_port;	<span class="comment">//</span></span><br><span class="line">  <span class="keyword">mach_msg_id_t</span>		msgh_id;			<span class="comment">//唯一ID</span></span><br><span class="line">&#125; <span class="keyword">mach_msg_header_t</span>;</span><br></pre></td></tr></table></figure></p>
-<p>一条消息就是一个BLOB,通过端口发送到另一个端口并带有可选的标识；<br>消息还可以选择带有一个消息尾(trailer),其定义如下:<br><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typedef</span>	<span class="keyword">unsigned</span> <span class="keyword">int</span> <span class="keyword">mach_msg_trailer_type_t</span>;</span><br><span class="line"><span class="keyword">typedef</span>	<span class="keyword">unsigned</span> <span class="keyword">int</span> <span class="keyword">mach_msg_trailer_size_t</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> </span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line">  <span class="keyword">mach_msg_trailer_type_t</span>	msgh_trailer_type;</span><br><span class="line">  <span class="keyword">mach_msg_trailer_size_t</span>	msgh_trailer_size;</span><br><span class="line">&#125; <span class="keyword">mach_msg_trailer_t</span>;</span><br></pre></td></tr></table></figure></p>
-<p>每一种trailer类型都定义了一种特殊的trailer格式，这些格式都是为未来可以实现扩展的，下面是一些已经定义好的类型：</p>
-<table>
-<thead>
-<tr>
-<th style="text-align:left">trailer</th>
-<th style="text-align:left">用途</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:left">mach_msg_trailer_t</td>
-<td style="text-align:left">空trailer</td>
-</tr>
-<tr>
-<td style="text-align:left">mach_msg_security_trailer_t</td>
-<td style="text-align:left">发送者安全令牌</td>
-</tr>
-<tr>
-<td style="text-align:left">mach_msg_seqno_trailer_t</td>
-<td style="text-align:left">顺序编号</td>
-</tr>
-<tr>
-<td style="text-align:left">mach_msg_audit_trailer_t，mach_msg_context_trailer_t</td>
-<td style="text-align:left">审计令牌(用于BSM)</td>
-</tr>
-<tr>
-<td style="text-align:left">mach_msg_mac_trailer_t</td>
-<td style="text-align:left">MAC策略标签</td>
-</tr>
-</tbody>
-</table>
-<p>应答消息和内核消息使用到了trailer.</p>
-<h4 id="复杂消息"><a href="#复杂消息" class="headerlink" title="复杂消息"></a>复杂消息</h4><p>除了简单的消息外，有一些带有额外的字段和结构的消息被称为”复杂消息”，它们是通过消息头标志中的MACH_MSGH_BITS_COMPLEX位来表示的，而且数据结构也不同：<br><code>消息头后面跟着一个描述符计数字段，再接一个串行化的描述符</code></p>
-<table>
-<thead>
-<tr>
-<th style="text-align:left">trailer</th>
-<th style="text-align:left">用途</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:left">MACH_MSG_PORT_DESCRIPTOR</td>
-<td style="text-align:left">传递一个端口权限</td>
-</tr>
-<tr>
-<td style="text-align:left">MACH_MSG_OOL_DESCRIPTOR</td>
-<td style="text-align:left">传递 out-of-line 数据</td>
-</tr>
-<tr>
-<td style="text-align:left">MACH_MSG_OOL_PORTS_DESCRIPTOR</td>
-<td style="text-align:left">传递 out-of-line 端口</td>
-</tr>
-<tr>
-<td style="text-align:left">MACH_MSG_OOL_VOLATILE_DESCRIPTOR</td>
-<td style="text-align:left">传递有可能发生变化(volatile)的out-of-line数据</td>
-</tr>
-</tbody>
-</table>
-<p>以上是一些已规定的复杂消息描述符，其中<code>out-of-line</code>是Mach消息的一个重要特性，允许添加各种数据的分散指针，类似于电子邮件添加附件的功能，其64位的数据结构如下:<br><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line">  <span class="keyword">void</span>*				address;				<span class="comment">//指向数据的指针</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">if</span> !defined(__LP64__)</span></span><br><span class="line">  <span class="keyword">mach_msg_size_t</span>       	size;			<span class="comment">//数据大小</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">endif</span></span></span><br><span class="line"></span><br><span class="line">  <span class="keyword">boolean_t</span>     		deallocate: <span class="number">8</span>;		<span class="comment">//发送之后是否解除分配</span></span><br><span class="line">  <span class="keyword">mach_msg_copy_options_t</span>       copy: <span class="number">8</span>;	<span class="comment">//复制指令</span></span><br><span class="line">  <span class="keyword">unsigned</span> <span class="keyword">int</span>     		pad1: <span class="number">8</span>;			<span class="comment">//预留参数</span></span><br><span class="line">  <span class="keyword">mach_msg_descriptor_type_t</span>    type: <span class="number">8</span>;	<span class="comment">//MACH_MSG_OOL_DESCRIPTOR</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">if</span> defined(__LP64__)</span></span><br><span class="line">  <span class="keyword">mach_msg_size_t</span>       	size;</span><br><span class="line"><span class="meta">#<span class="meta-keyword">endif</span></span></span><br><span class="line">&#125; <span class="keyword">mach_msg_ool_descriptor_t</span>;</span><br></pre></td></tr></table></figure></p>
-<p>OOL描述了要附加的数据的地址和大小，一级如何处理数据的指令，例如是否可以解除分配，以及复制选项(如物理内存和虚拟内存的复制)。<br>OOL描述符常用语传递大块的数据，能避免昂贵的复制操作。</p>
-<h4 id="发送消息"><a href="#发送消息" class="headerlink" title="发送消息"></a>发送消息</h4><p>Mach消息的发送和接收都是通过同一个API函数mach_msg()来完成的，该函数在用户态和内核态都有实现，其原型如下:<br><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment"> *	Routine:	mach_msg</span></span><br><span class="line"><span class="comment"> *	Purpose:</span></span><br><span class="line"><span class="comment"> *		Send and/or receive a message.  If the message operation</span></span><br><span class="line"><span class="comment"> *		is interrupted, and the user did not request an indication</span></span><br><span class="line"><span class="comment"> *		of that fact, then restart the appropriate parts of the</span></span><br><span class="line"><span class="comment"> *		operation silently (trap version does not restart).</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line">__WATCHOS_PROHIBITED __TVOS_PROHIBITED</span><br><span class="line"><span class="function"><span class="keyword">extern</span> mach_msg_return_t	<span class="title">mach_msg</span><span class="params">(</span></span></span><br><span class="line"><span class="function"><span class="params">					<span class="keyword">mach_msg_header_t</span> *msg,</span></span></span><br><span class="line"><span class="function"><span class="params">					<span class="keyword">mach_msg_option_t</span> option,</span></span></span><br><span class="line"><span class="function"><span class="params">					<span class="keyword">mach_msg_size_t</span> send_size,</span></span></span><br><span class="line"><span class="function"><span class="params">					<span class="keyword">mach_msg_size_t</span> rcv_size,</span></span></span><br><span class="line"><span class="function"><span class="params">					<span class="keyword">mach_port_name_t</span> rcv_name,</span></span></span><br><span class="line"><span class="function"><span class="params">					<span class="keyword">mach_msg_timeout_t</span> timeout,</span></span></span><br><span class="line"><span class="function"><span class="params">					<span class="keyword">mach_port_name_t</span> notify)</span></span>;</span><br></pre></td></tr></table></figure></p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment"> *	Routine:	mach_msg_overwrite</span></span><br><span class="line"><span class="comment"> *	Purpose:</span></span><br><span class="line"><span class="comment"> *		Send and/or receive a message.  If the message operation</span></span><br><span class="line"><span class="comment"> *		is interrupted, and the user did not request an indication</span></span><br><span class="line"><span class="comment"> *		of that fact, then restart the appropriate parts of the</span></span><br><span class="line"><span class="comment"> *		operation silently (trap version does not restart).</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> *		Distinct send and receive buffers may be specified.  If</span></span><br><span class="line"><span class="comment"> *		no separate receive buffer is specified, the msg parameter</span></span><br><span class="line"><span class="comment"> *		will be used for both send and receive operations.</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> *		In addition to a distinct receive buffer, that buffer may</span></span><br><span class="line"><span class="comment"> *		already contain scatter control information to direct the</span></span><br><span class="line"><span class="comment"> *		receiving of the message.</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line">__WATCHOS_PROHIBITED __TVOS_PROHIBITED</span><br><span class="line"><span class="function"><span class="keyword">extern</span> mach_msg_return_t	<span class="title">mach_msg_overwrite</span><span class="params">(</span></span></span><br><span class="line"><span class="function"><span class="params">					<span class="keyword">mach_msg_header_t</span> *msg,</span></span></span><br><span class="line"><span class="function"><span class="params">					<span class="keyword">mach_msg_option_t</span> option,</span></span></span><br><span class="line"><span class="function"><span class="params">					<span class="keyword">mach_msg_size_t</span> send_size,</span></span></span><br><span class="line"><span class="function"><span class="params">					<span class="keyword">mach_msg_size_t</span> rcv_size,</span></span></span><br><span class="line"><span class="function"><span class="params">					<span class="keyword">mach_port_name_t</span> rcv_name,</span></span></span><br><span class="line"><span class="function"><span class="params">					<span class="keyword">mach_msg_timeout_t</span> timeout,</span></span></span><br><span class="line"><span class="function"><span class="params">					<span class="keyword">mach_port_name_t</span> notify,</span></span></span><br><span class="line"><span class="function"><span class="params">					<span class="keyword">mach_msg_header_t</span> *rcv_msg,</span></span></span><br><span class="line"><span class="function"><span class="params">					<span class="keyword">mach_msg_size_t</span> rcv_limit)</span></span>;</span><br></pre></td></tr></table></figure>
-<p>该函数接受一个消息缓冲区参数，对于发送操作是一个输入指针，对于接收操作是一个输出指针。该函数还有一个姊妹函数<code>mach_msg_overwrite</code>，允许调用者指定另外两个参数:一个是<code>mach_msg_header_t*</code>指向接收缓冲区，一个是<code>mach_msg_size_t</code>用于表示缓冲区大小。<br>无论哪个函数，都可以通过按位操作选项来指定，具体的操作如下表：</p>
-<table>
-<thead>
-<tr>
-<th style="text-align:left">选项标志位</th>
-<th style="text-align:left">用途</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:left">MACH_RCV_MSG</td>
-<td style="text-align:left">接收一条消息放在msg缓冲区</td>
-</tr>
-<tr>
-<td style="text-align:left">MACH_RCV_LARGE</td>
-<td style="text-align:left">如果接收缓冲区太小，则将过大的消息放在队列中，并且出错返回MACH_RCV_TOO_LARGE。在这种情况下，只返回消息头(指定消息的大小)，因此调用者可以分配更多的内存</td>
-</tr>
-<tr>
-<td style="text-align:left">MACH_RCV_TIMEOUT</td>
-<td style="text-align:left">单位是毫秒，如果接收超时，则出错返回MACH_RCV_TIMED_OUT。timeout值可以指定为0</td>
-</tr>
-<tr>
-<td style="text-align:left">MACH_RCV_NOTIFY</td>
-<td style="text-align:left">带通知的接收操作</td>
-</tr>
-<tr>
-<td style="text-align:left">MACH_RCV_INTERRUPT</td>
-<td style="text-align:left">允许操作被打断(返回MACH_RCV_INTERRUPT)</td>
-</tr>
-<tr>
-<td style="text-align:left">MACH_RCV_OVERWRITW</td>
-<td style="text-align:left">在mach_msg_overwrite中，指定额外的参数：接收缓冲区参数，输入还是输出</td>
-</tr>
-<tr>
-<td style="text-align:left">MACH_SEND_MSG</td>
-<td style="text-align:left">发送msg缓冲区中的消息</td>
-</tr>
-<tr>
-<td style="text-align:left">MACH_SEND_INTERRUPT</td>
-<td style="text-align:left">允许发送操作被打断</td>
-</tr>
-<tr>
-<td style="text-align:left">MACH_SEND_TIMEOUT</td>
-<td style="text-align:left">发送超时，单位是毫秒。如果发送timeout秒后还未发送完成，则返回MACH_SEND_TIME_OUT</td>
-</tr>
-<tr>
-<td style="text-align:left">MACH_SEND_NOTIFY</td>
-<td style="text-align:left">向通知端口通知消息的传递 </td>
-</tr>
-<tr>
-<td style="text-align:left">MACH_SEND_ALWAYS</td>
-<td style="text-align:left">内部使用</td>
-</tr>
-<tr>
-<td style="text-align:left">MACH_SEND_TRAILER</td>
-<td style="text-align:left">表示一个已知的Mach trailer位于位置大小偏移的位置(也就是紧跟着消息缓冲区之后的位置，有点晦涩，笔者没看明白)</td>
-</tr>
-<tr>
-<td style="text-align:left">MACH_SEND_CANCEL</td>
-<td style="text-align:left">取消一条消息(Lion中已经被移出了)</td>
-</tr>
-</tbody>
-</table>
-<p>Mach消息原本是为真正的微内核框架而设计的，也就是说<code>mach_msg()</code>必须在发送者和接收者之间复制消息所在的内存，这种实现方式忠于微内核的范式，但事实证明：频繁的复制内存所带来的性能消耗是无法忍受的。<br>因此，XNU通过单一内核方式:所有的内核组件都共享同一个地址空间，这样传递消息的过程中只需要传递消息的指针的就可以了，从而省去了昂贵的内存复制操作。</p>
-<p>为了实现消息的发送和接收，<code>mach_msg()</code>函数调用了一个Mach trap,在用户态调用<code>mach_msg_trap()</code>函数会引发陷阱机制，切换到内核态，而在内核态中，内核实现的<code>mach_msg()</code>会完成实际的工作。</p>
-<h4 id="端口"><a href="#端口" class="headerlink" title="端口"></a>端口</h4><p>端口是一个32位整型的标识符，不能按整数来操作，而是要按照透明的对象来操作。<br><code>像一个端口发送消息实际是将消息放在一个队列中，直到消息能被接收者处理。</code><br>所有的Mach原生对象都是通过对应的端口访问的，查找一个对象的句柄(Handle)时，实际上请求的是这个对象端口的句柄，访问端口是通过访问端口权限的方式进行的，Mach端口权限的定义如下:</p>
-<table>
-<thead>
-<tr>
-<th style="text-align:left">MACH_PORT_RIGHT_</th>
-<th style="text-align:left">含义</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:left">SEND</td>
-<td style="text-align:left">向端口发送消息。允许多个发送者</td>
-</tr>
-<tr>
-<td style="text-align:left">RECEIVE</td>
-<td style="text-align:left">从端口读取消息，实际上这是对端口的所有权</td>
-</tr>
-<tr>
-<td style="text-align:left">SEND_ONCE</td>
-<td style="text-align:left">只发送一次消息，该权限在使用后立即被撤销(revoke)，成为DEAD_NAME</td>
-</tr>
-<tr>
-<td style="text-align:left">PORT_SET</td>
-<td style="text-align:left">同时拥有多个端口的接受权限</td>
-</tr>
-<tr>
-<td style="text-align:left">DEAD_NAME</td>
-<td style="text-align:left">端口在SEND_ONCE之后用完了权限</td>
-</tr>
-</tbody>
-</table>
-<p>关键是SEND和RECEIVE,而SEND_ONCE跟SEND一样，只不过只能发送一次。MACH_PORT_RIGHT_RECEIVE权限的持有者实际上是端口的所有者，这是允许从该端口读取队列消息的唯一实体。</p>
-<p>&lt;mach/mach_port.h&gt;中的函数可以用于操纵任何端口，甚至可以在任务之外操纵。其中，<code>mach_port_names</code>函数可以导出给定任务的端口空间名称。</p>
-<p>端口和权限也可以从一个实体传递到另一个实体。实际上，通过复杂消息将端口从一个任务传递到另一个任务并不罕见，这是IPC设计中的一个非常强大的特性，有点类似于UNIX中的<code>domain socket</code>允许在进程间传递描述符。<br>Lion允许UNIX文件描述符和Mach端口相互转换。这些对象称为fileport，主要有通知系统使用。</p>
-<p>Mach通过端口命名服务器注册全局的端口-即系统范围内的端口。在XNU中，这个“自举服务器”正是PID为1的launchd(8)，该进程注册自举服务器端口，由于系统的所有进程都是launchd的后代，因此从诞生起都集成了这个端口。</p>
-<h4 id="Mach-接口生成器-MIG"><a href="#Mach-接口生成器-MIG" class="headerlink" title="Mach 接口生成器(MIG)"></a>Mach 接口生成器(MIG)</h4><p>Mach没有使用专门的端口映射器(不过launchd(8)处理了一部分端口映射的逻辑）,但是Mach中有一个类似于<a href="https://en.wikipedia.org/wiki/RPCGEN" target="_blank" rel="noopener">rpcgen</a>的组件，即Mach接口生成器(Mach Interface Generator)，简称MIG。rpcgen在经典UNIX中的SUN-RPC中，通过rpcgen编译器从IDL(Interface Definition Language, IDL)生成代码。</p>
+</li>
+</ul>
+<h4 id="接收消息"><a href="#接收消息" class="headerlink" title="接收消息"></a>接收消息</h4><p>Mach接收消息的方式个发送类似，也体现在内核的两个地方，<code>mach_msg_overwrite_trap()</code>用用户态接收请求，而内核通过<code>mach_msg_receive()</code>函数接收消息。</p>
+<ul>
+<li>调用current_space()来获取当前的IPC空间</li>
+<li>调用current_map()</li>
+<li>不校对消息大小，因为发送的时候已经校对过了</li>
+<li>通过调用ipc_mqueue_copyin()获取IPC队列</li>
+<li>持有当前线程的一个引用。使用当前线程的引用可使它适合使用Mach的续体模型，续体(continuation)模型可以表面维护完整线程栈的必要性。<code>续体是撒玩意儿博主也弄不明白</code></li>
+<li>调用ipc_mqueue_receive()从队列中取出消息</li>
+<li>调用mach_msg_receive_results()函数，该函数也可以从续体中调用</li>
+</ul>
 
       
     </div>
@@ -803,11 +653,11 @@
     </li>
     <li class="post-copyright-title">
       <strong>本文标题：</strong>
-      Mach 原语-学习笔记
+      IPC-进程间通信-学习笔记
     </li>
     <li class="post-copyright-link">
       <strong>本文链接：</strong>
-      <a href="http://www.kobeluo.com/tech/2018/10/31/Mach/" title="Mach 原语-学习笔记">http://www.kobeluo.com/tech/2018/10/31/Mach/</a>
+      <a href="http://www.kobeluo.com/tech/2018/10/31/studyNote-IPC/" title="IPC-进程间通信-学习笔记">http://www.kobeluo.com/tech/2018/10/31/studyNote-IPC/</a>
     </li>
     <li class="post-copyright-license">
       <strong>版权声明： </strong>
@@ -823,11 +673,13 @@
       
         <div class="post-tags">
           
-            <a href="/tech/tags/Mach/" rel="tag"># Mach</a>
+            <a href="/tech/tags/进程/" rel="tag"># 进程</a>
           
-            <a href="/tech/tags/MAC-OS/" rel="tag"># MAC OS</a>
+            <a href="/tech/tags/Process-Communication/" rel="tag"># Process Communication</a>
           
-            <a href="/tech/tags/Mac内核/" rel="tag"># Mac内核</a>
+            <a href="/tech/tags/进程间通信/" rel="tag"># 进程间通信</a>
+          
+            <a href="/tech/tags/IPC/" rel="tag"># IPC</a>
           
         </div>
       
@@ -840,8 +692,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/tech/2018/10/16/git-deep/" rel="next" title="git深入理解">
-                <i class="fa fa-chevron-left"></i> git深入理解
+              <a href="/tech/2018/10/31/studyNote-Mach/" rel="next" title="Mach 原语-学习笔记">
+                <i class="fa fa-chevron-left"></i> Mach 原语-学习笔记
               </a>
             
           </div>
@@ -850,8 +702,8 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/tech/2018/10/31/IPC/" rel="prev" title="IPC-进程间通信">
-                IPC-进程间通信 <i class="fa fa-chevron-right"></i>
+              <a href="/tech/2018/10/31/studyNote-mach-synchronization/" rel="prev" title="Mach 同步机制-学习笔记">
+                Mach 同步机制-学习笔记 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -1159,7 +1011,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#Mach-概述"><span class="nav-number">1.</span> <span class="nav-text">Mach 概述</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Mach设计原则"><span class="nav-number">1.1.</span> <span class="nav-text">Mach设计原则</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Mach-设计目标"><span class="nav-number">1.2.</span> <span class="nav-text">Mach 设计目标</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Mach消息"><span class="nav-number">2.</span> <span class="nav-text">Mach消息</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#简单消息"><span class="nav-number">2.1.</span> <span class="nav-text">简单消息</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#复杂消息"><span class="nav-number">2.2.</span> <span class="nav-text">复杂消息</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#发送消息"><span class="nav-number">2.3.</span> <span class="nav-text">发送消息</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#端口"><span class="nav-number">2.4.</span> <span class="nav-text">端口</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Mach-接口生成器-MIG"><span class="nav-number">2.5.</span> <span class="nav-text">Mach 接口生成器(MIG)</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#端口"><span class="nav-number">1.</span> <span class="nav-text">端口</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#消息传递的实现"><span class="nav-number">2.</span> <span class="nav-text">消息传递的实现</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#发送消息"><span class="nav-number">2.1.</span> <span class="nav-text">发送消息</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#接收消息"><span class="nav-number">2.2.</span> <span class="nav-text">接收消息</span></a></li></ol></li></ol></div>
             
 
           </div>
