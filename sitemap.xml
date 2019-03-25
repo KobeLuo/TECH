@@ -2,6 +2,13 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://kobeluo.com/about/index.html</loc>
+    
+    <lastmod>2019-03-25T05:47:05.582Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://kobeluo.com/2017/04/07/Hexo-useage-note/</loc>
     
     <lastmod>2019-03-21T08:23:23.395Z</lastmod>
@@ -33,13 +40,6 @@
     <loc>http://kobeluo.com/2018/10/31/studyNote-IPC/</loc>
     
     <lastmod>2019-03-21T07:49:31.205Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://kobeluo.com/about/index.html</loc>
-    
-    <lastmod>2019-03-21T06:23:23.396Z</lastmod>
     
   </url>
   
