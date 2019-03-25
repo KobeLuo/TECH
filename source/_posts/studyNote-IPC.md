@@ -1,5 +1,5 @@
 ---
-title: IPC-进程间通信
+title: IPC-进程间通信-学习笔记
 type: categories
 comments: true
 date: 2018-10-31 16:06:25

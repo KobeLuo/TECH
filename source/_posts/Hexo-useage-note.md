@@ -189,12 +189,33 @@ npm install hexo-deployer-git --save 安装 hexo d
 如果你本地有多个github账号，因此而产生的权限问题，请左转[ssh key](#多账号管理)
 hexo d实质是将你本地public文件夹的内容push到博客`_config.yml`所指定的分支上去,如果`hexo d`报权限错误，
 请一定检查
+
 ```ruby
 deploy:
 type: git
 repo: git@github.com:KobeLuo/TECH.git
 branch: gh-pages
-```  
+```
+
+### <center> 2019.03.21 日更新</center >
+---
+
+#### 博客管理
+
+当博客数量越来越多时，直接从sublime中查找相应文章会变得比较困难，特别在文章名称和title又不一致时会更严重，hexo-admin似乎可以从一定程度上解决这个问题，安装命令：
+```ruby
+cd /path/to/your/blog/root
+npm install --save hexo-admin
+
+```
+等待安装完成，执行`hexo s`，
+调试地址：
+`http://localhost:4000`或`http://localhost:4000/some/`
+
+相应的admin地址是：
+`http://localhost:4000/admin/`或`http://localhost:4000/some/admin/`
+
+在地址后面跟一个admin目录，复制从浏览器打开即可
 
 ### 友情链接
 
