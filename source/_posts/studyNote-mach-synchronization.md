@@ -2,7 +2,7 @@
 title: Mach 同步机制-学习笔记
 type: categories
 comments: true
-date: 2018-10-31 16:59:31
+date: 2016-10-31 16:59:31
 categories: OS Kernal
 tags: [Mach同步机制，同步，mutex，自旋锁，信号量]
 ---

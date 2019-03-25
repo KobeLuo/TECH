@@ -2,7 +2,7 @@
 title: OS X文件权限控制（未完结）
 type: categories
 comments: true
-date: 2019-02-22 09:37:11
+date: 2015-02-22 09:37:11
 categories:
 tags:
 ---

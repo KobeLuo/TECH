@@ -2,7 +2,7 @@
 title: Mach 原语-学习笔记
 type: categories
 comments: true
-date: 2018-10-31 10:21:59
+date: 2016-10-31 10:21:59
 categories: OS Kernal
 tags: [Mach,MAC OS,Mac内核]
 ---
