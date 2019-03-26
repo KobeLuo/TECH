@@ -2,6 +2,20 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://kobeluo.com/2015/09/06/IPC-methods-and-compare/</loc>
+    
+    <lastmod>2019-03-26T02:04:31.864Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://kobeluo.com/2016/10/29/studyNote-mach-synchronization/</loc>
+    
+    <lastmod>2019-03-26T02:00:54.801Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://kobeluo.com/2016/10/31/studyNote-Mach/</loc>
     
     <lastmod>2019-03-26T01:28:25.442Z</lastmod>
@@ -10,13 +24,6 @@
   
   <url>
     <loc>http://kobeluo.com/2016/10/31/studyNote-IPC/</loc>
-    
-    <lastmod>2019-03-26T01:28:25.442Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://kobeluo.com/2016/10/31/studyNote-mach-synchronization/</loc>
     
     <lastmod>2019-03-26T01:28:25.442Z</lastmod>
     
@@ -40,13 +47,6 @@
     <loc>http://kobeluo.com/about/index.html</loc>
     
     <lastmod>2019-03-25T05:47:05.582Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://kobeluo.com/2019/03/21/IPC-methods-and-compare/</loc>
-    
-    <lastmod>2019-03-21T08:20:18.145Z</lastmod>
     
   </url>
   
