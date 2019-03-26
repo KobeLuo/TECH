@@ -1,7 +1,7 @@
 title: OS X系统下IPC方案及对比 (未完)
 type: categories
 comments: true
-date: 2015-04-06 21:20:19
+date: 2015-09-06 21:20:19
 author: KOBE LUO
 categories: Mac Develop
 tags:
@@ -13,7 +13,6 @@ tags:
   - XPC
   - Pastboard粘贴板 
   - 
-date: 2019-03-21 16:00:39
 ---
 ### 前言
 
