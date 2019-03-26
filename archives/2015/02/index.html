@@ -129,18 +129,16 @@
 
 
 
-  <meta name="description" content="进程间通信的基础原语: 消息、端口、已经确保并发安全的信号量和锁。这篇文章主要对于这些原语的底层实现和端口的内部实现做一些探讨。 Mach任务是一个对应于进程的高层次抽象，Mach任务包含了一个指向自己的IPC namespace（命名空间），在命名空间中保存了自己的端口，此外mach任务也可以获得系统范围内的端口，如：主机端口、特权端口和其它端口。">
-<meta name="keywords" content="进程,Process Communication,进程间通信,IPC">
-<meta property="og:type" content="article">
-<meta property="og:title" content="IPC-进程间通信-学习笔记">
-<meta property="og:url" content="http://kobeluo.com/2018/10/31/studyNote-IPC/index.html">
+  <meta name="description" content="一个iOS和Mac OS开发的技术渣">
+<meta property="og:type" content="website">
+<meta property="og:title" content="KobeLuo的技术笔记">
+<meta property="og:url" content="http://kobeluo.com/archives/2015/02/index.html">
 <meta property="og:site_name" content="KobeLuo的技术笔记">
-<meta property="og:description" content="进程间通信的基础原语: 消息、端口、已经确保并发安全的信号量和锁。这篇文章主要对于这些原语的底层实现和端口的内部实现做一些探讨。 Mach任务是一个对应于进程的高层次抽象，Mach任务包含了一个指向自己的IPC namespace（命名空间），在命名空间中保存了自己的端口，此外mach任务也可以获得系统范围内的端口，如：主机端口、特权端口和其它端口。">
+<meta property="og:description" content="一个iOS和Mac OS开发的技术渣">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2019-03-21T07:49:31.205Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="IPC-进程间通信-学习笔记">
-<meta name="twitter:description" content="进程间通信的基础原语: 消息、端口、已经确保并发安全的信号量和锁。这篇文章主要对于这些原语的底层实现和端口的内部实现做一些探讨。 Mach任务是一个对应于进程的高层次抽象，Mach任务包含了一个指向自己的IPC namespace（命名空间），在命名空间中保存了自己的端口，此外mach任务也可以获得系统范围内的端口，如：主机端口、特权端口和其它端口。">
+<meta name="twitter:title" content="KobeLuo的技术笔记">
+<meta name="twitter:description" content="一个iOS和Mac OS开发的技术渣">
 
 
 
@@ -149,7 +147,7 @@
 
 
 
-  <link rel="canonical" href="http://kobeluo.com/2018/10/31/studyNote-IPC/"/>
+  <link rel="canonical" href="http://kobeluo.com/archives/2015/02/"/>
 
 
 
@@ -159,7 +157,7 @@
   };
 </script>
 
-  <title>IPC-进程间通信-学习笔记 | KobeLuo的技术笔记</title>
+  <title>归档 | KobeLuo的技术笔记</title>
   
 
 
@@ -207,7 +205,7 @@
     
   
 
-  <div class="container sidebar-position-left page-post-detail">
+  <div class="container sidebar-position-left page-archive">
     <div class="headband"></div>
     <a href="https://github.com/KobeLuo/tech" class="github-corner" aria-label="View source on GitHub"><svg width="80" height="80" viewBox="0 0 250 250" style="fill:#151513; color:#fff; position: absolute; top: 0; border: 0; right: 0;" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a><style>.github-corner:hover .octo-arm{animation:octocat-wave 560ms ease-in-out}@keyframes octocat-wave{0%,100%{transform:rotate(0)}20%,60%{transform:rotate(-25deg)}40%,80%{transform:rotate(10deg)}}@media (max-width:500px){.github-corner:hover .octo-arm{animation:none}.github-corner .octo-arm{animation:octocat-wave 560ms ease-in-out}}</style>
 
@@ -270,7 +268,7 @@
         
         
           
-          <li class="menu-item menu-item-archives">
+          <li class="menu-item menu-item-archives menu-item-active">
 
     
     
@@ -359,6 +357,28 @@
   
     
 
+    
+    
+      
+      
+    
+      
+      
+    
+      
+      
+    
+      
+      
+    
+      
+      
+    
+    
+
+  
+
+
   
 
   
@@ -406,333 +426,80 @@
           <div id="content" class="content">
             
 
-  <div id="posts" class="posts-expand">
-    
+  
+  
+  
+  <div class="post-block archive">
+    <div id="posts" class="posts-collapse">
+      <span class="archive-move-on"></span>
 
-  
+      
+      <span class="archive-page-counter">
+        
+        
+        
+          
+        
+        嗯..! 目前共计 20 篇日志。 继续努力。
+      </span>
+      
 
-  
-  
-  
+      
 
-  
+        
+        
+        
+
+        
+          
+          <div class="collection-title">
+            <h1 class="archive-year" id="archive-year-2015">2015</h1>
+          </div>
+        
+        
+
+        
 
   <article class="post post-type-categories" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://kobeluo.com/tech/2018/10/31/studyNote-IPC/"/>
+    <header class="post-header">
 
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="KOBE LUO"/>
-      <meta itemprop="description" content="一个iOS和Mac OS开发的技术渣"/>
-      <meta itemprop="image" content="/tech/images/avatar.jpeg"/>
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="KobeLuo的技术笔记"/>
-    </span>
-
-    
-      <header class="post-header">
-
+      <h2 class="post-title">
         
+          <a class="post-title-link" href="/tech/2015/02/22/osx-permisson-control/" itemprop="url">
+            
+              <span itemprop="name">OS X文件权限控制（未完结）</span>
+            
+          </a>
         
-          <h1 class="post-title" itemprop="name headline">IPC-进程间通信-学习笔记
+      </h2>
 
-              
-            
-          </h1>
-        
+      <div class="post-meta">
+        <time class="post-time" itemprop="dateCreated"
+              datetime="2015-02-22T09:37:11+08:00"
+              content="2015-02-22">
+          02-22
+        </time>
+      </div>
 
-        <div class="post-meta">
-          <span class="post-time">
-
-            
-            
-            
-
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-
-              
-                
-              
-
-              <time title="创建时间：2018-10-31 16:06:25" itemprop="dateCreated datePublished" datetime="2018-10-31T16:06:25+08:00">2018-10-31</time>
-            
-
-            
-              
-
-              
-                
-                <span class="post-meta-divider">|</span>
-                
-
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">更新于</span>
-                
-                <time title="修改时间：2019-03-21 15:49:31" itemprop="dateModified" datetime="2019-03-21T15:49:31+08:00">2019-03-21</time>
-              
-            
-          </span>
-
-          
-            <span class="post-category">
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/tech/categories/OS-Kernal/" itemprop="url" rel="index"><span itemprop="name">OS Kernal</span></a></span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-            
-              
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-            
-                <a href="/tech/2018/10/31/studyNote-IPC/#comments" itemprop="discussionUrl">
-                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/tech/2018/10/31/studyNote-IPC/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-            <span class="post-meta-divider">|</span>
-            <span class="post-meta-item-icon"
-            >
-            <i class="fa fa-eye"></i>
-             阅读次数： 
-            <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>
-            </span>
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        <p>进程间通信的基础原语: 消息、端口、已经确保并发安全的信号量和锁。这篇文章主要对于这些原语的底层实现和端口的内部实现做一些探讨。</p>
-<p>Mach任务是一个对应于进程的高层次抽象，Mach任务包含了一个指向自己的IPC namespace（命名空间），在命名空间中保存了自己的端口，此外mach任务也可以获得系统范围内的端口，如：主机端口、特权端口和其它端口。</p>
-<a id="more"></a>
-<h3 id="端口"><a href="#端口" class="headerlink" title="端口"></a>端口</h3><hr>
-<p>导出给用户空间的端口对象(mach_port_t)实际上是对”真正”端口对象的一个句柄，后者是<a href="https://opensource.apple.com/source/xnu/xnu-344/osfmk/ipc/ipc_port.h" target="_blank" rel="noopener">ipc_port_t</a>，其数据结构如下:<br><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment"> *  A receive right (port) can be in four states:</span></span><br><span class="line"><span class="comment"> *	1) dead (not active, ip_timestamp has death time)</span></span><br><span class="line"><span class="comment"> *	2) in a space (ip_receiver_name != 0, ip_receiver points</span></span><br><span class="line"><span class="comment"> *	to the space but doesn't hold a ref for it)</span></span><br><span class="line"><span class="comment"> *	3) in transit (ip_receiver_name == 0, ip_destination points</span></span><br><span class="line"><span class="comment"> *	to the destination port and holds a ref for it)</span></span><br><span class="line"><span class="comment"> *	4) in limbo (ip_receiver_name == 0, ip_destination == IP_NULL)</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> *  If the port is active, and ip_receiver points to some space,</span></span><br><span class="line"><span class="comment"> *  then ip_receiver_name != 0, and that space holds receive rights.</span></span><br><span class="line"><span class="comment"> *  If the port is not active, then ip_timestamp contains a timestamp</span></span><br><span class="line"><span class="comment"> *  taken when the port was destroyed.</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">typedef</span> <span class="keyword">unsigned</span> <span class="keyword">int</span> <span class="keyword">ipc_port_timestamp_t</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">typedef</span> <span class="keyword">unsigned</span> <span class="keyword">int</span> <span class="keyword">ipc_port_flags_t</span>;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">ipc_port</span> &#123;</span></span><br><span class="line"></span><br><span class="line">	<span class="comment">/*</span></span><br><span class="line"><span class="comment">	 * Initial sub-structure in common with ipc_pset and rpc_port</span></span><br><span class="line"><span class="comment">	 * First element is an ipc_object</span></span><br><span class="line"><span class="comment">	 */</span></span><br><span class="line">	<span class="class"><span class="keyword">struct</span> <span class="title">ipc_object</span> <span class="title">ip_object</span>;</span> <span class="comment">//ipc对象，初始化子结构跟ipc_pset和rpc_port一致。</span></span><br><span class="line"></span><br><span class="line">	<span class="keyword">union</span> &#123;</span><br><span class="line">		<span class="class"><span class="keyword">struct</span> <span class="title">ipc_space</span> *<span class="title">receiver</span>;</span> <span class="comment">//指向接收者的IPC指针</span></span><br><span class="line">		<span class="class"><span class="keyword">struct</span> <span class="title">ipc_port</span> *<span class="title">destination</span>;</span> <span class="comment">//指向全局端口的指针</span></span><br><span class="line">		<span class="keyword">ipc_port_timestamp_t</span> timestamp;</span><br><span class="line">	&#125; data;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">ipc_kobject_t</span> ip_kobject;</span><br><span class="line">	<span class="keyword">mach_port_mscount_t</span> ip_mscount;</span><br><span class="line">	<span class="keyword">mach_port_rights_t</span> ip_srights;</span><br><span class="line">	<span class="keyword">mach_port_rights_t</span> ip_sorights;</span><br><span class="line"></span><br><span class="line">	<span class="class"><span class="keyword">struct</span> <span class="title">ipc_port</span> *<span class="title">ip_nsrequest</span>;</span></span><br><span class="line">	<span class="class"><span class="keyword">struct</span> <span class="title">ipc_port</span> *<span class="title">ip_pdrequest</span>;</span></span><br><span class="line">	<span class="class"><span class="keyword">struct</span> <span class="title">ipc_port_request</span> *<span class="title">ip_dnrequests</span>;</span></span><br><span class="line"></span><br><span class="line">	<span class="keyword">unsigned</span> <span class="keyword">int</span> ip_pset_count;</span><br><span class="line">	<span class="class"><span class="keyword">struct</span> <span class="title">ipc_mqueue</span> <span class="title">ip_messages</span>;</span> <span class="comment">//消息队列</span></span><br><span class="line">	<span class="class"><span class="keyword">struct</span> <span class="title">ipc_kmsg</span> *<span class="title">ip_premsg</span>;</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">if</span>	NORMA_VM</span></span><br><span class="line">	<span class="comment">/*</span></span><br><span class="line"><span class="comment">	 *	These fields are needed for the use of XMM.</span></span><br><span class="line"><span class="comment">	 *	Few ports need this information; it should</span></span><br><span class="line"><span class="comment">	 *	be kept in XMM instead (TBD).  XXX</span></span><br><span class="line"><span class="comment">	 */</span></span><br><span class="line">	<span class="keyword">long</span>		ip_norma_xmm_object_refs;</span><br><span class="line">	<span class="class"><span class="keyword">struct</span> <span class="title">ipc_port</span>	*<span class="title">ip_norma_xmm_object</span>;</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">endif</span></span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">if</span>	MACH_ASSERT</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span>	IP_NSPARES		10</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span>	IP_CALLSTACK_MAX	10</span></span><br><span class="line">	<span class="keyword">queue_chain_t</span>	ip_port_links;	<span class="comment">/* all allocated ports */</span></span><br><span class="line">	<span class="keyword">natural_t</span>	ip_thread;	<span class="comment">/* who made me?  thread context */</span></span><br><span class="line">	<span class="keyword">unsigned</span> <span class="keyword">long</span>	ip_timetrack;	<span class="comment">/* give an idea of "when" created */</span></span><br><span class="line">	<span class="keyword">natural_t</span>	ip_callstack[IP_CALLSTACK_MAX]; <span class="comment">/* stack trace */</span></span><br><span class="line">	<span class="keyword">unsigned</span> <span class="keyword">long</span>	ip_spares[IP_NSPARES]; <span class="comment">/* for debugging */</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">endif</span>	<span class="comment">/* MACH_ASSERT */</span></span></span><br><span class="line">	<span class="keyword">int</span>		alias;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
-<h3 id="消息传递的实现"><a href="#消息传递的实现" class="headerlink" title="消息传递的实现"></a>消息传递的实现</h3><hr>
-<p>用户态的Mach消息传递使用的函数是<code>mach_msg()</code>函数，这个函数通过内核的Mach trap调用内核函数<code>mach_msg_trap()</code>。然后<code>mach_msg_trap</code>调用<code>mach_msg_overwrite_trap()</code>,<code>mach_msg_overwrite_trap</code>通过测试<code>MACH_SEND_MSG</code>和<code>MACH_RCV_MSG</code>标志位来判断是发送操作还是接收操作。</p>
-<p>下面分析IPC最重要的两个函数<code>mach_msg_send()</code>和<code>mach_msg_receive()</code>的实现</p>
-<h4 id="发送消息"><a href="#发送消息" class="headerlink" title="发送消息"></a>发送消息</h4><p>Mach 消息发送的核心逻辑在内核中有两处实现: <code>mach_msg_overwrite_trap()</code>和<code>mach_msg_send()</code>。后者只用于内核态的消息传递，对用户态不可见。两处实现的逻辑大同小异并遵循以下流程：</p>
-<ul>
-<li>调用<code>current_space()</code>来获取当前的IPC空间。</li>
-<li>调用<code>current_map()</code>来获取当前VM空间(<a href="https://www.freebsd.org/cgi/man.cgi?query=vm_map&amp;sektion=9&amp;apropos=0&amp;manpath=FreeBSD+11-current" target="_blank" rel="noopener">vm_map</a>)</li>
-<li>对消息的大小进行正确性检查。</li>
-<li>计算要分配的消息大小，从send_size参数获得大小再加上硬编码的MAX_TRAILER_SIZE。</li>
-<li>通过ipc_kmsg_alloc分配消息。</li>
-<li>复制消息(复制消息send_size字节的部分)，然后在消息头设置msgh_size。</li>
-<li>复制消息关联的端口权限，然后通过ipc_kmsg_copyin将所有的OOL数据的内存复制到当前的vm_map。 ipc_kmsg_copyin函数调用了ipc_kmsg_copyin_header和ipc_kmsg_copyin_body。</li>
-<li>调用ipc_kmsg_send()发送消息：<ul>
-<li>获得msgh_remote_port引用，并锁定端口。</li>
-<li>如果该端口是一个内核端口（即端口的ip_receiver是内核的IPC空间），那么通过ipc_kobject_server()函数处理消息。该函数会在内核中找到相应的函数来执行消息，还会生成消息的应答。</li>
-<li>不论哪种端口，调用ipc_mqueue_send(),这个函数将消息直接复制到端口的ip_messages队列中并唤醒任何正在等待的线程处理消息。</li>
-</ul>
-</li>
-</ul>
-<h4 id="接收消息"><a href="#接收消息" class="headerlink" title="接收消息"></a>接收消息</h4><p>Mach接收消息的方式个发送类似，也体现在内核的两个地方，<code>mach_msg_overwrite_trap()</code>用用户态接收请求，而内核通过<code>mach_msg_receive()</code>函数接收消息。</p>
-<ul>
-<li>调用current_space()来获取当前的IPC空间</li>
-<li>调用current_map()</li>
-<li>不校对消息大小，因为发送的时候已经校对过了</li>
-<li>通过调用ipc_mqueue_copyin()获取IPC队列</li>
-<li>持有当前线程的一个引用。使用当前线程的引用可使它适合使用Mach的续体模型，续体(continuation)模型可以表面维护完整线程栈的必要性。<code>续体是撒玩意儿博主也弄不明白</code></li>
-<li>调用ipc_mqueue_receive()从队列中取出消息</li>
-<li>调用mach_msg_receive_results()函数，该函数也可以从续体中调用</li>
-</ul>
-
-      
-    </div>
-
-    
-
-    
-    
-    
-
-    <div>
-          
-          <div>
-    
-        <div style="text-align:center;color: #ccc;font-size:14px;">------ 本文结束 ------</div>
-    
-</div>
-          
-    </div>
-
-    <div>
-      
-        
-
-      
-    </div>
-
-    <div>
-      
-        
-  <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
-    <div>坚持原创技术分享，您的支持将鼓励我继续创作！</div>
-    <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
-      <span>赏</span>
-    </button>
-    <div id="QR" style="display: none;">
-      
-        <div id="wechat" style="display: inline-block">
-          <img id="wechat_qr" src="https://wx2.sinaimg.cn/mw690/006AZU4wgy1fw6n5xbgnmj30og0zktaf.jpg" alt="KOBE LUO WeChat Pay"/>
-          <p>微信打赏</p>
-        </div>
-      
-      
-        <div id="alipay" style="display: inline-block">
-          <img id="alipay_qr" src="https://wx4.sinaimg.cn/mw690/006AZU4wgy1fw6n5w7j3kj30go0p0wfj.jpg" alt="KOBE LUO Alipay"/>
-          <p>支付宝打赏</p>
-        </div>
-      
-    </div>
-  </div>
-
-
-      
-    </div>
-
-    <div>
-      
-        
-  <ul class="post-copyright">
-    <li class="post-copyright-author">
-      <strong>本文作者：</strong>
-      KOBE LUO
-    </li>
-    <li class="post-copyright-title">
-      <strong>本文标题：</strong>
-      IPC-进程间通信-学习笔记
-    </li>
-    <li class="post-copyright-link">
-      <strong>本文链接：</strong>
-      <a href="http://www.kobeluo.com/tech/2018/10/31/studyNote-IPC/" title="IPC-进程间通信-学习笔记">http://www.kobeluo.com/tech/2018/10/31/studyNote-IPC/</a>
-    </li>
-    <li class="post-copyright-license">
-      <strong>版权声明： </strong>
-      本博客所有文章除特别声明外，均采用 https://creativecommons.org/licenses/by-nc-sa/4.0/ 许可协议。转载请注明出处！
-    </li>
-  </ul>
-
-
-      
-    </div>
-
-    <footer class="post-footer">
-      
-        <div class="post-tags">
-          
-            <a href="/tech/tags/进程/" rel="tag"># 进程</a>
-          
-            <a href="/tech/tags/Process-Communication/" rel="tag"># Process Communication</a>
-          
-            <a href="/tech/tags/进程间通信/" rel="tag"># 进程间通信</a>
-          
-            <a href="/tech/tags/IPC/" rel="tag"># IPC</a>
-          
-        </div>
-      
-
-      
-      
-      
-
-      
-        <div class="post-nav">
-          <div class="post-nav-next post-nav-item">
-            
-              <a href="/tech/2018/10/31/studyNote-Mach/" rel="next" title="Mach 原语-学习笔记">
-                <i class="fa fa-chevron-left"></i> Mach 原语-学习笔记
-              </a>
-            
-          </div>
-
-          <span class="post-nav-divider"></span>
-
-          <div class="post-nav-prev post-nav-item">
-            
-              <a href="/tech/2018/10/31/studyNote-mach-synchronization/" rel="prev" title="Mach 同步机制-学习笔记">
-                Mach 同步机制-学习笔记 <i class="fa fa-chevron-right"></i>
-              </a>
-            
-          </div>
-        </div>
-      
-
-      
-      
-    </footer>
-  </div>
-  
-  
-  
+    </header>
   </article>
 
 
+
+      
+
+    </div>
   </div>
+  
+  
+  
+
+  
+
 
 
           </div>
           
-
-  
-    <div class="comments" id="comments">
-    </div>
-
-  
-
-
 
         </div>
         
@@ -755,17 +522,8 @@
       
 
       
-        <ul class="sidebar-nav motion-element">
-          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
-            文章目录
-          </li>
-          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
-            站点概览
-          </li>
-        </ul>
-      
 
-      <div class="site-overview-wrap sidebar-panel">
+      <div class="site-overview-wrap sidebar-panel sidebar-panel-active">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -1019,23 +777,6 @@
       </div>
 
       
-      <!--noindex-->
-        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
-          <div class="post-toc">
-
-            
-            
-            
-            
-
-            
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#端口"><span class="nav-number">1.</span> <span class="nav-text">端口</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#消息传递的实现"><span class="nav-number">2.</span> <span class="nav-text">消息传递的实现</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#发送消息"><span class="nav-number">2.1.</span> <span class="nav-text">发送消息</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#接收消息"><span class="nav-number">2.2.</span> <span class="nav-text">接收消息</span></a></li></ol></li></ol></div>
-            
-
-          </div>
-        </div>
-      <!--/noindex-->
-      
 
       
         <div class="back-to-top">
@@ -1179,10 +920,6 @@
 
 
   
-  <script src="/tech/js/src/scrollspy.js?v=6.7.0"></script>
-<script src="/tech/js/src/post-details.js?v=6.7.0"></script>
-
-
 
   
 
@@ -1230,8 +967,6 @@
 
 
 
-
-  
 
 
   
@@ -1604,7 +1339,7 @@
   <script src="/tech/lib/bookmark/bookmark.min.js?v=1.0"></script>
   <script>
   
-    bookmark.scrollToMark('auto', "#更多");
+    bookmark.loadBookmark();
   
   </script>
 
