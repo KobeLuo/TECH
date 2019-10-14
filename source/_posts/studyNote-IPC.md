@@ -2,7 +2,7 @@
 title: IPC-进程间通信-学习笔记
 type: categories
 comments: true
-date: 2016-10-31 16:06:25
+date: 2016-10-28 16:06:25
 categories: OS Kernal
 tags: [进程,Process Communication,进程间通信,IPC]
 ---

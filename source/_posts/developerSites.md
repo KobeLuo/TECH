@@ -69,3 +69,5 @@ launchctl unload /path/to/plist
 
 ```
 
+### run as root application
+[Authorization service](https://developer.apple.com/library/archive/documentation/Security/Conceptual/authorization_concepts/03authtasks/authtasks.html#//apple_ref/doc/uid/TP30000995-CH206-TPXREF12)

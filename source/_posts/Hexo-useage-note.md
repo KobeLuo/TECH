@@ -2,7 +2,7 @@
 title: Hexo使用笔记
 type: categories
 comments: true
-date: 2016-04-07 21:20:19
+date: 2017-04-07 21:20:19
 categories: Hexo
 tags: [hexo使用]
 ---
@@ -14,7 +14,6 @@ tags: [hexo使用]
 个人博客站点:[KobeLuo的博客](https://kobeluo.github.io/TECH/)
 
 {% endcq %}
-
 
 <!--more-->
 

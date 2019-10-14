@@ -1,4 +1,4 @@
----
+	---
 title: 个人简介
 date: 2017-04-06 14:08:46
 comments: false
@@ -22,7 +22,7 @@ comments: false
 - 6年Objective-C，熟悉(7/10)，能熟练应用各种语法特性来使项目结构和性能更优化
 - 1年Swift，(熟悉 4/10)，能熟练使用Swift开发高性能产品，自认为对于swift语言的精髓掌握不够到位
 - 0.5年HTML5，(略懂 1/10)，曾使用HTML+CSS+JS+JQuery做过iTrip产品活动页面
-- 三方框架：GPUImage、Bee、RAC、git等有一定了解，基本的三方库不在讨论之列
+- 三方框架：GPUImage、Bee、RAC、git和一些基础的三方库等有一定了解
 ---
 
 #### 项目经验
@@ -83,6 +83,8 @@ comments: false
 - <font color="#5bc0de">拥抱变化</font>，能随时跟随公司的业务变更改变自身角色
 
 ---
+
+#### [<font color="#fb3003"> 点我下载简历](resume_luogang.pdf)
 
 #### 联系我
 {% note info %}
