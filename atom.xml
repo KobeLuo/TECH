@@ -38,32 +38,6 @@
   </entry>
   
   <entry>
-    <title>Golang study record</title>
-    <link href="http://kobeluo.com/2019/05/22/GolangStudy/"/>
-    <id>http://kobeluo.com/2019/05/22/GolangStudy/</id>
-    <published>2019-05-22T07:50:12.000Z</published>
-    <updated>2019-08-01T07:56:04.000Z</updated>
-    
-    <content type="html"><![CDATA[<h1 id="Go相关网站"><a href="#Go相关网站" class="headerlink" title="Go相关网站"></a>Go相关网站</h1><ul><li><a href="http://c.biancheng.net/golang/" target="_blank" rel="noopener">Go教程中文网</a></li><li><a href="https://golang.org/doc/install?download=go1.12.5.darwin-amd64.pkg" target="_blank" rel="noopener">Go安装教程</a></li></ul><h1 id="Go基本命令"><a href="#Go基本命令" class="headerlink" title="Go基本命令"></a>Go基本命令</h1><figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//command line tool 跳转到 hello文件夹下</span></span><br><span class="line">$ cd /path/to/hello</span><br><span class="line"></span><br><span class="line"><span class="comment">//编译该目录下的.go文件，生成可执行文件</span></span><br><span class="line">$ <span class="keyword">go</span> build </span><br><span class="line"></span><br><span class="line"><span class="comment">//执行可执行文件 </span></span><br><span class="line">$ ./hello  </span><br><span class="line"></span><br><span class="line"><span class="comment">//清除可执行文件</span></span><br><span class="line">$ <span class="keyword">go</span> clean -i</span><br></pre></td></tr></table></figure><hr><h1 id="Go基础语法"><a href="#Go基础语法" class="headerlink" title="Go基础语法"></a>Go基础语法</h1><h2 id="变量命名"><a href="#变量命名" class="headerlink" title="变量命名"></a>变量命名</h2><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> a <span class="keyword">int</span></span><br><span class="line"><span class="keyword">var</span> b <span class="keyword">string</span></span><br><span class="line"><span class="keyword">var</span> c []<span class="keyword">float32</span></span><br><span class="line"><span class="keyword">var</span> d <span class="function"><span class="keyword">func</span><span class="params">()</span> <span class="title">bool</span></span></span><br><span class="line"><span class="function"><span class="title">var</span> <span class="title">e</span> <span class="title">struct</span></span> &#123;</span><br><span class="line"></span><br><span class="line">x <span class="keyword">int</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">以上申明方式等同于</span><br><span class="line"><span class="keyword">var</span> (</span><br><span class="line"></span><br><span class="line">a <span class="keyword">int</span></span><br><span class="line">b <span class="keyword">string</span></span><br><span class="line">...</span><br><span class="line">)</span><br></pre></td></tr></table></figure><h2 id="变量初始化"><a href="#变量初始化" class="headerlink" title="变量初始化"></a>变量初始化</h2><ul><li>float和int默认值为0;</li><li>字符串默认空串;</li><li>布尔型默认为bool;</li><li>切片、函数、指针变量默认为nil;</li><li>初始化的同时赋值  var a  int = 10,省略int 编译器将尝试使用右值来推导变量类型</li><li>对于float，如果没有指定类型，则尽量提高精度</li><li>a := 10,表示声明并赋值，这种方式只适用于未定义的变量，若变量被定义过则会编译失败</li><li>a, b := funcA() 表示funcA函数返回两个变量，多变量必须保证左边至少有一个变量是未被定义过的</li><li>go支持多重赋值，a := 1 b := 2 a,b = b,a</li><li>go中匿名变量使用<code>_</code>表示，匿名变量不占用命名空间，不会分配内存。匿名变量与匿名变量之间也不会因为多次声明而无法使用。</li><li>go中，byte是uint8，可用来表示传统ASCII的单个字节,rune是int32的别名，用来处理中文日文等复合型字符串。</li></ul><h2 id="浮点数"><a href="#浮点数" class="headerlink" title="浮点数"></a>浮点数</h2><p>float32大概可以提供6个十进制数的精度，float64大概可以提供15个十进制数的精度；通常应该使用float64，因为float32类型误差很容易扩散，它能表示的值并不大，一下代码将出现问题:<br><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> f <span class="keyword">float32</span> = <span class="number">16777216</span> <span class="comment">// 1&lt;&lt;24</span></span><br><span class="line">fmt.Println(f == f+<span class="number">1</span>) <span class="comment">// "true"</span></span><br></pre></td></tr></table></figure></p><ul><li>小数点前面或后面的数字都可以被省略(例如: .717和 1.)，很大（小）的数则最好使用科学计数法，如：<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> Avogadro = <span class="number">6.02214129e23</span>  <span class="comment">// 阿伏伽德罗常数</span></span><br><span class="line"><span class="keyword">const</span> Planck   = <span class="number">6.62606957e-34</span> <span class="comment">// 普朗克常数</span></span><br></pre></td></tr></table></figure></li></ul>]]></content>
-    
-    <summary type="html">
-    
-      
-      
-        &lt;h1 id=&quot;Go相关网站&quot;&gt;&lt;a href=&quot;#Go相关网站&quot; class=&quot;headerlink&quot; title=&quot;Go相关网站&quot;&gt;&lt;/a&gt;Go相关网站&lt;/h1&gt;&lt;ul&gt;
-&lt;li&gt;&lt;a href=&quot;http://c.biancheng.net/golang/&quot; target=
-      
-    
-    </summary>
-    
-      <category term="Golang" scheme="http://kobeluo.com/categories/Golang/"/>
-    
-    
-      <category term="Golang学习" scheme="http://kobeluo.com/tags/Golang%E5%AD%A6%E4%B9%A0/"/>
-    
-  </entry>
-  
-  <entry>
     <title>Monitor Filesystem on Mac OS X</title>
     <link href="http://kobeluo.com/2019/01/15/monitorFSOnOSX/"/>
     <id>http://kobeluo.com/2019/01/15/monitorFSOnOSX/</id>
@@ -314,6 +288,32 @@
       <category term="Mount Disk" scheme="http://kobeluo.com/tags/Mount-Disk/"/>
     
       <category term="LookbackFS" scheme="http://kobeluo.com/tags/LookbackFS/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Golang study record</title>
+    <link href="http://kobeluo.com/2017/05/22/GolangStudy/"/>
+    <id>http://kobeluo.com/2017/05/22/GolangStudy/</id>
+    <published>2017-05-22T07:50:12.000Z</published>
+    <updated>2019-10-14T08:34:58.928Z</updated>
+    
+    <content type="html"><![CDATA[<h1 id="Go相关网站"><a href="#Go相关网站" class="headerlink" title="Go相关网站"></a>Go相关网站</h1><ul><li><a href="http://c.biancheng.net/golang/" target="_blank" rel="noopener">Go教程中文网</a></li><li><a href="https://golang.org/doc/install?download=go1.12.5.darwin-amd64.pkg" target="_blank" rel="noopener">Go安装教程</a></li></ul><h1 id="Go基本命令"><a href="#Go基本命令" class="headerlink" title="Go基本命令"></a>Go基本命令</h1><figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//command line tool 跳转到 hello文件夹下</span></span><br><span class="line">$ cd /path/to/hello</span><br><span class="line"></span><br><span class="line"><span class="comment">//编译该目录下的.go文件，生成可执行文件</span></span><br><span class="line">$ <span class="keyword">go</span> build </span><br><span class="line"></span><br><span class="line"><span class="comment">//执行可执行文件 </span></span><br><span class="line">$ ./hello  </span><br><span class="line"></span><br><span class="line"><span class="comment">//清除可执行文件</span></span><br><span class="line">$ <span class="keyword">go</span> clean -i</span><br></pre></td></tr></table></figure><hr><h1 id="Go基础语法"><a href="#Go基础语法" class="headerlink" title="Go基础语法"></a>Go基础语法</h1><h2 id="变量命名"><a href="#变量命名" class="headerlink" title="变量命名"></a>变量命名</h2><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> a <span class="keyword">int</span></span><br><span class="line"><span class="keyword">var</span> b <span class="keyword">string</span></span><br><span class="line"><span class="keyword">var</span> c []<span class="keyword">float32</span></span><br><span class="line"><span class="keyword">var</span> d <span class="function"><span class="keyword">func</span><span class="params">()</span> <span class="title">bool</span></span></span><br><span class="line"><span class="function"><span class="title">var</span> <span class="title">e</span> <span class="title">struct</span></span> &#123;</span><br><span class="line"></span><br><span class="line">x <span class="keyword">int</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">以上申明方式等同于</span><br><span class="line"><span class="keyword">var</span> (</span><br><span class="line"></span><br><span class="line">a <span class="keyword">int</span></span><br><span class="line">b <span class="keyword">string</span></span><br><span class="line">...</span><br><span class="line">)</span><br></pre></td></tr></table></figure><h2 id="变量初始化"><a href="#变量初始化" class="headerlink" title="变量初始化"></a>变量初始化</h2><ul><li>float和int默认值为0;</li><li>字符串默认空串;</li><li>布尔型默认为bool;</li><li>切片、函数、指针变量默认为nil;</li><li>初始化的同时赋值  var a  int = 10,省略int 编译器将尝试使用右值来推导变量类型</li><li>对于float，如果没有指定类型，则尽量提高精度</li><li>a := 10,表示声明并赋值，这种方式只适用于未定义的变量，若变量被定义过则会编译失败</li><li>a, b := funcA() 表示funcA函数返回两个变量，多变量必须保证左边至少有一个变量是未被定义过的</li><li>go支持多重赋值，a := 1 b := 2 a,b = b,a</li><li>go中匿名变量使用<code>_</code>表示，匿名变量不占用命名空间，不会分配内存。匿名变量与匿名变量之间也不会因为多次声明而无法使用。</li><li>go中，byte是uint8，可用来表示传统ASCII的单个字节,rune是int32的别名，用来处理中文日文等复合型字符串。</li></ul><h2 id="浮点数"><a href="#浮点数" class="headerlink" title="浮点数"></a>浮点数</h2><p>float32大概可以提供6个十进制数的精度，float64大概可以提供15个十进制数的精度；通常应该使用float64，因为float32类型误差很容易扩散，它能表示的值并不大，一下代码将出现问题:<br><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> f <span class="keyword">float32</span> = <span class="number">16777216</span> <span class="comment">// 1&lt;&lt;24</span></span><br><span class="line">fmt.Println(f == f+<span class="number">1</span>) <span class="comment">// "true"</span></span><br></pre></td></tr></table></figure></p><ul><li>小数点前面或后面的数字都可以被省略(例如: .717和 1.)，很大（小）的数则最好使用科学计数法，如：<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> Avogadro = <span class="number">6.02214129e23</span>  <span class="comment">// 阿伏伽德罗常数</span></span><br><span class="line"><span class="keyword">const</span> Planck   = <span class="number">6.62606957e-34</span> <span class="comment">// 普朗克常数</span></span><br></pre></td></tr></table></figure></li></ul>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;h1 id=&quot;Go相关网站&quot;&gt;&lt;a href=&quot;#Go相关网站&quot; class=&quot;headerlink&quot; title=&quot;Go相关网站&quot;&gt;&lt;/a&gt;Go相关网站&lt;/h1&gt;&lt;ul&gt;
+&lt;li&gt;&lt;a href=&quot;http://c.biancheng.net/golang/&quot; target=
+      
+    
+    </summary>
+    
+      <category term="Golang" scheme="http://kobeluo.com/categories/Golang/"/>
+    
+    
+      <category term="Golang学习" scheme="http://kobeluo.com/tags/Golang%E5%AD%A6%E4%B9%A0/"/>
     
   </entry>
   
