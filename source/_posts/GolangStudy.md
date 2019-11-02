@@ -2,7 +2,7 @@
 title: Golang study record
 type: categories
 comments: true
-date: 2019-05-22 15:50:12
+date: 2017-05-22 15:50:12
 categories: Golang
 tags: 
 - Golang学习

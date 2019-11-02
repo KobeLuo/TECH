@@ -41,7 +41,7 @@ tags: [OS Lock, 锁, locks, osunfairlock,mutex, semaphore, nslock, NSConditionLo
 - semaphore (信号量) 
 其实它是一个用户态的锁，Mach中的信号量跟POSIX中的信号量不是一个概念，API也不一样，但是XNU上POSIX信号量的底层是通过Mach信号量来实现的。
 
-关于内核态的同步机制，博主也写了一篇[学习笔记](http://www.kobeluo.com/TECH/2018/10/31/mach-synchronization/),有兴趣可以了解一下。
+关于内核态的同步机制，博主也写了一篇[学习笔记](http://www.kobeluo.com/tech/2018/10/31/mach-synchronization/),有兴趣可以了解一下。
 
 ### 锁的测试结果
 
@@ -290,7 +290,7 @@ private func testPthreadMutexRecusive() {
 
 #### Dispatch_semaphore_t
 
-信号量跟其它的锁概念有所不同，OS上的锁其本质上都是通过Mach内核中的互斥锁`lck_mtx_t`根据不同的不同的场景需求而设计的锁，它们大多采用阻塞的方式，少部分使用忙等的方式；而信号量不一致，它是使用信号的方式来控制多线程对于资源的控制，并且信号量可同时释放信号量以保证多个线程同时访问资源，博主曾经写过[这篇博客](http://www.kobeluo.com/TECH/2017/03/28/dispatch-semaphore/)对信号量的用法做了分析。
+信号量跟其它的锁概念有所不同，OS上的锁其本质上都是通过Mach内核中的互斥锁`lck_mtx_t`根据不同的不同的场景需求而设计的锁，它们大多采用阻塞的方式，少部分使用忙等的方式；而信号量不一致，它是使用信号的方式来控制多线程对于资源的控制，并且信号量可同时释放信号量以保证多个线程同时访问资源，博主曾经写过[这篇博客](http://www.kobeluo.com/tech/2017/03/28/dispatch-semaphore/)对信号量的用法做了分析。
 
 
 简单使用方式大致如下:

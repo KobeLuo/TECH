@@ -11,7 +11,7 @@ tags: [hexo使用]
 
 博主使用过博客站点有简书、CSDN、博客园、都不同程度的遇到了各种不顺心，MarkDown使用起来也不是特别方便，决定使用GitPages+Hexo来实现编写博客，在完成完成Hexo配置的过程中，踩了不少坑，决定记录下来供大家参考。
 
-个人博客站点:[KobeLuo的博客](https://kobeluo.github.io/TECH/)
+个人博客站点:[KobeLuo的博客](https://kobeluo.github.io/tech/)
 
 {% endcq %}
 
@@ -149,7 +149,7 @@ deploy:
 {% endnote %}
 配置好这一项后，使用`Hexo d`就可以把代码deploy到远程仓库了
 {% note warnning %}
-如果你的Github站点不是以github.io结束的，需要配置`root:`字段，例如，我的技术博客地址是kobeluo.github.io/TECH/ , 那么root:配置就是 **`/TECH/`**,否则github无法连接CSS和JS
+如果你的Github站点不是以github.io结束的，需要配置`root:`字段，例如，我的技术博客地址是kobeluo.github.io/tech/ , 那么root:配置就是 **`/tech/`**,否则github无法连接CSS和JS
 {% endnote %}
 
 ### <center> 2018.10.12日更新</center >
@@ -192,7 +192,7 @@ hexo d实质是将你本地public文件夹的内容push到博客`_config.yml`所
 ```ruby
 deploy:
 type: git
-repo: git@github.com:KobeLuo/TECH.git
+repo: git@github.com:KobeLuo/tech.git
 branch: gh-pages
 ```
 

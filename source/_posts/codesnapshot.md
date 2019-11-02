@@ -35,7 +35,7 @@ public var lastPathComponent: String {
 }
 
 ```
-关于String的格式 FormC 和 FormD，请[右转](http://www.kobeluo.com/TECH/2018/11/05/StringEncode/)
+关于String的格式 FormC 和 FormD，请[右转](http://www.kobeluo.com/tech/2018/11/05/StringEncode/)
 
 #### pathComponents
 ```Swift

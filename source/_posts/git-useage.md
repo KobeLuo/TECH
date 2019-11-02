@@ -94,7 +94,7 @@ git config --global/--systme/--local user.email "youremail"
 
 
 以上内容熟悉后，本地仓库克隆及commit及push基本已经可以了，
-关于多账号的sshkey问题，请[左转](http://www.kobev5.com/TECH/2017/04/07/Hexo-useage-note/#jump)
+关于多账号的sshkey问题，请[左转](http://www.kobeluo.com/tech/2017/04/07/Hexo-useage-note/#jump)
 
 
 ## git branch 分支操作
