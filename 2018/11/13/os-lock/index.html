@@ -145,7 +145,7 @@
 <meta property="og:image" content="http://kobeluo.com/tech/2018/11/13/os-lock/contextResgnMulti.png">
 <meta property="og:image" content="http://kobeluo.com/tech/2018/11/13/os-lock/multiAndContextKeep.png">
 <meta property="og:image" content="http://kobeluo.com/tech/2018/11/13/os-lock/contextKeepMulti.png">
-<meta property="og:updated_time" content="2019-10-14T08:45:29.121Z">
+<meta property="og:updated_time" content="2019-10-14T08:45:29.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="细数Mac OS&#x2F;iOS 系统下的锁(lock)">
 <meta name="twitter:description" content="前言最近一段时间，博主都在做代码性能上的一些优化工作，其中就包括了对Mac OS/iOS锁这一部分的优化，趁此机会，也比较系统的测试了各种用户态的锁分别在单个线程和多个线程中的表现。之所以叫用户态的锁，是因为Mach内核部分其实还有一部分内核态的锁，它并不为用户态所开放，我们一般也使用不到。 对同一个锁对象的加解锁必须保持在同一线程执行，如果尝试在不同线程去加解锁将会引发一个运行时的错误。 用户态">
@@ -291,7 +291,7 @@
       
     
 
-    <a href="/tech/archives" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br/>归档<span class="badge">22</span></a>
+    <a href="/tech/archives" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br/>归档<span class="badge">23</span></a>
 
   </li>
         
@@ -310,7 +310,7 @@
       
     
 
-    <a href="/tech/categories" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br/>分类<span class="badge">5</span></a>
+    <a href="/tech/categories" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br/>分类<span class="badge">6</span></a>
 
   </li>
         
@@ -329,7 +329,7 @@
       
     
 
-    <a href="/tech/tags" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br/>标签<span class="badge">59</span></a>
+    <a href="/tech/tags" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br/>标签<span class="badge">61</span></a>
 
   </li>
         
@@ -603,7 +603,7 @@
 <p>本次测试博主尝试了Repeat不同的次数下，各类锁的耗时情况，发现各类锁的耗时大小顺序并不是固定的，并且差异挺大，仅仅只有单线程且去掉上下文的情况下，测试结果相对稳定，博主猜测大概是因为测试时电脑瞬时性能、CPU使用情况和内核调度的情况有关系，具体原因不敢妄下结论。</p>
 <h4 id="测试结果总结"><a href="#测试结果总结" class="headerlink" title="测试结果总结"></a>测试结果总结</h4><p><strong>测试结果只能从某个方面反映出锁的效率，也许它并不是最准确的结果，它是在特定环境下的真实测试结果。</strong></p>
 <p>去掉上下文的测试结果，仅仅只能说明锁本身的实现复杂度和内部的执行效率,它并不能说明锁在实际使用过程中，结合上下文的执行效率，只能作为理论依据。</p>
-<h4 id="单线程"><a href="#单线程" class="headerlink" title="单线程"></a>单线程</h4><p>关于多线程的测试，其核心片段代码如下:<br><figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">func</span> <span class="title">startThreadCompare</span>(<span class="title">_</span> <span class="title">testTimes</span>: <span class="title">Int</span>) -&gt; <span class="title">Bool</span> </span>&#123;</span><br><span class="line">    <span class="comment">//initial class</span></span><br><span class="line">    <span class="keyword">let</span> compare = <span class="type">OSLockCompare</span>.<span class="keyword">init</span>(testTimes: testTimes)</span><br><span class="line">    <span class="comment">//test locks</span></span><br><span class="line">    compare.testLocks()</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> <span class="literal">true</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h4 id="单线程"><a href="#单线程" class="headerlink" title="单线程"></a>单线程</h4><p>关于多线程的测试，其核心片段代码如下:<br><figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">func</span> <span class="title">startThreadCompare</span>(_ <span class="title">testTimes</span>: <span class="title">Int</span>) -&gt; <span class="title">Bool</span> </span>&#123;</span><br><span class="line">    <span class="comment">//initial class</span></span><br><span class="line">    <span class="keyword">let</span> compare = <span class="type">OSLockCompare</span>.<span class="keyword">init</span>(testTimes: testTimes)</span><br><span class="line">    <span class="comment">//test locks</span></span><br><span class="line">    compare.testLocks()</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> <span class="literal">true</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
 <h5 id="单线程，去掉上下文"><a href="#单线程，去掉上下文" class="headerlink" title="单线程，去掉上下文"></a>单线程，去掉上下文</h5><p><img src="/tech/2018/11/13/os-lock/singleAndContextResign.png" alt="测试元数据"><br><img src="/tech/2018/11/13/os-lock/contextResignSingle.png" alt="测试图表"></p>
 <p>从元数据清单表格上可以看出，随着Repeat次数的逐步增大，信号量(<code>Semaphore</code>)的执行效率逐渐变得更优优势，其次是<code>SpinLock</code>，<code>mutex</code>，<code>unfairLock</code>，效率最低的是<code>NSConditionLock</code><br>至于为什么量级越大，不同的锁在纯粹的加减锁过程中的效率表现会出现差异，有待进一步研究，同时也希望各路大神指点一二。</p>
 <h5 id="单线程，保留上下文"><a href="#单线程，保留上下文" class="headerlink" title="单线程，保留上下文"></a>单线程，保留上下文</h5><p><img src="/tech/2018/11/13/os-lock/singleAndContextKeep.png" alt="测试元数据"><br><img src="/tech/2018/11/13/os-lock/contextKeepSingle.png" alt="测试图表"></p>
@@ -614,7 +614,7 @@
 <li>在高频次的加减锁情况下，<code>semaphore</code>的表现是最好的。</li>
 </ul>
 <p>同时发现其它的一些大牛写的博文跟这里的结果并不一致，这可能跟测试方式、当前OS系统运行情况等多方面有关系，博主所呈现的是真实的测试数据。</p>
-<h4 id="多线程"><a href="#多线程" class="headerlink" title="多线程"></a>多线程</h4><p>关于多线程的测试，其核心片段代码如下:<br><figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">func</span> <span class="title">startMultiThreadCompare</span>(<span class="title">_</span> <span class="title">testTimes</span>: <span class="title">Int</span>, <span class="title">threadCount</span>: <span class="title">Int</span>, <span class="title">ci</span>: @<span class="title">escaping</span> <span class="title">invokeBlock</span>) </span>&#123;</span><br><span class="line">        </span><br><span class="line">    <span class="keyword">let</span> compare = <span class="type">OSLockCompare</span>.<span class="keyword">init</span>(testTimes: testTimes, threadCount)</span><br><span class="line">    <span class="keyword">let</span> labelbase = <span class="string">"com.compare.oslock"</span></span><br><span class="line">    </span><br><span class="line">    compare.invoke = ci</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">var</span> subQueues = [<span class="type">DispatchQueue</span>]()</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">for</span> index <span class="keyword">in</span> <span class="number">1</span>...threadCount &#123;</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">let</span> label = labelbase + <span class="string">".<span class="subst">\(index)</span>"</span></span><br><span class="line">        <span class="keyword">let</span> seriaQueue = <span class="type">DispatchQueue</span>.<span class="keyword">init</span>(label: label)</span><br><span class="line">        </span><br><span class="line">        seriaQueue.async &#123; compare.testLocks() &#125;</span><br><span class="line">        </span><br><span class="line">        subQueues.append(seriaQueue)</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    compare.queues = subQueues</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h4 id="多线程"><a href="#多线程" class="headerlink" title="多线程"></a>多线程</h4><p>关于多线程的测试，其核心片段代码如下:<br><figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">func</span> <span class="title">startMultiThreadCompare</span>(_ <span class="title">testTimes</span>: <span class="title">Int</span>, <span class="title">threadCount</span>: <span class="title">Int</span>, <span class="title">ci</span>: @<span class="title">escaping</span> <span class="title">invokeBlock</span>) </span>&#123;</span><br><span class="line">        </span><br><span class="line">    <span class="keyword">let</span> compare = <span class="type">OSLockCompare</span>.<span class="keyword">init</span>(testTimes: testTimes, threadCount)</span><br><span class="line">    <span class="keyword">let</span> labelbase = <span class="string">"com.compare.oslock"</span></span><br><span class="line">    </span><br><span class="line">    compare.invoke = ci</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">var</span> subQueues = [<span class="type">DispatchQueue</span>]()</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">for</span> index <span class="keyword">in</span> <span class="number">1</span>...threadCount &#123;</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">let</span> label = labelbase + <span class="string">".<span class="subst">\(index)</span>"</span></span><br><span class="line">        <span class="keyword">let</span> seriaQueue = <span class="type">DispatchQueue</span>.<span class="keyword">init</span>(label: label)</span><br><span class="line">        </span><br><span class="line">        seriaQueue.async &#123; compare.testLocks() &#125;</span><br><span class="line">        </span><br><span class="line">        subQueues.append(seriaQueue)</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    compare.queues = subQueues</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
 <p>测试数据中的多线程的<em>Average Per time</em>是指多个线程同时完成一次加减锁所需要的时间。本例是5个线程</p>
 <h5 id="多线程，去掉上下文"><a href="#多线程，去掉上下文" class="headerlink" title="多线程，去掉上下文"></a>多线程，去掉上下文</h5><p><img src="/tech/2018/11/13/os-lock/multiAndContextResign.png" alt="测试元数据"><br><img src="/tech/2018/11/13/os-lock/contextResgnMulti.png" alt="测试图表"></p>
 <p>通过测试数据可以发现，</p>
@@ -877,7 +877,7 @@
                 
                   <a href="/tech/archives">
                 
-                    <span class="site-state-item-count">22</span>
+                    <span class="site-state-item-count">23</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
@@ -900,7 +900,9 @@
                     
                       
                     
-                    <span class="site-state-item-count">5</span>
+                      
+                    
+                    <span class="site-state-item-count">6</span>
                     <span class="site-state-item-name">分类</span>
                   </a>
                 </div>
@@ -1031,7 +1033,11 @@
                     
                       
                     
-                    <span class="site-state-item-count">59</span>
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">61</span>
                     <span class="site-state-item-name">标签</span>
                   </a>
                 </div>
@@ -1147,7 +1153,7 @@
 
     <footer id="footer" class="footer">
       <div class="footer-inner">
-        <div class="copyright">&copy; 2015 – <span itemprop="copyrightYear">2019</span>
+        <div class="copyright">&copy; 2015 – <span itemprop="copyrightYear">2020</span>
   <span class="with-love" id="animate">
     <i class="fa fa-apple"></i>
   </span>

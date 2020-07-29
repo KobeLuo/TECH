@@ -1,6 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title><![CDATA[Splite Obective-C Grammar and Usage]]></title>
+    <url>%2Ftech%2F2020%2F07%2F27%2FObjectiveCGrammar%2F</url>
+    <content type="text"><![CDATA[前言Apple 开源库Apple 开源代码资源]]></content>
+      <categories>
+        <category>iOS Develop</category>
+      </categories>
+      <tags>
+        <tag>builtin_expect</tag>
+        <tag>inline</tag>
+      </tags>
+  </entry>
+  <entry>
     <title><![CDATA[git-config]]></title>
     <url>%2Ftech%2F2019%2F09%2F21%2Fgit-config%2F</url>
     <content type="text"><![CDATA[Git账号密码变更后,本地pull或push代码将失败，运行一下命令，再次操作git会提示重新输入密码.1git config --global credential.helper osxkeychain]]></content>
